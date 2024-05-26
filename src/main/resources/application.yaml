@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: potato-mall
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        url: jdbc:mariadb://potato-mall-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall
+        username: root
+        password: jhan00254!
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                show_sql: true
+                format_sql: true
+                highlight_sql: true
