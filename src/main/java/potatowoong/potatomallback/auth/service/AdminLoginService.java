@@ -26,22 +26,28 @@ public class AdminLoginService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Transactional(readOnly = true)
+    private final AdminLoginLogService adminLoginLogService;
+
+    @Transactional(noRollbackFor = {CustomException.class})
     public TokenDto login(LoginReqDto loginReqDto) {
-        final String userId = loginReqDto.id();
+        final String adminId = loginReqDto.id();
         final String password = loginReqDto.password();
 
         // ID로 Admin 조회
-        Admin savedAdmin = adminRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ErrorCode.FAILED_TO_LOGIN));
+        Admin savedAdmin = adminRepository.findById(adminId)
+            .orElseThrow(() -> {
+                adminLoginLogService.addFailAdminLoginLog(adminId);
+                return new CustomException(ErrorCode.FAILED_TO_LOGIN);
+            });
 
         // Password 일치 여부 확인
         if (!passwordEncoder.matches(password, savedAdmin.getPassword())) {
+            adminLoginLogService.addFailAdminLoginLog(adminId);
             throw new CustomException(ErrorCode.FAILED_TO_LOGIN);
         }
 
         // Authentication 객체 생성
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userId, password, List.of(Role.ROLE_ADMIN::name));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(adminId, password, List.of(Role.ROLE_ADMIN::name));
 
         // 인증 정보를 기반으로 JWT Token 생성
         return jwtTokenProvider.generateToken(authentication);

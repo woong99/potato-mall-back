@@ -39,6 +39,9 @@ class AdminLoginServiceTest {
     @Mock
     private JwtTokenProvider jwtTokenProvider;
 
+    @Mock
+    private AdminLoginLogService adminLoginLogService;
+
     @InjectMocks
     private AdminLoginService adminLoginService;
 
@@ -88,6 +91,7 @@ class AdminLoginServiceTest {
         then(adminRepository).should().findById(userId);
         then(passwordEncoder).shouldHaveNoInteractions();
         then(jwtTokenProvider).shouldHaveNoInteractions();
+        then(adminLoginLogService).should().addFailAdminLoginLog(userId);
     }
 
     @Test
@@ -104,5 +108,6 @@ class AdminLoginServiceTest {
         then(adminRepository).should().findById(userId);
         then(passwordEncoder).should().matches(password, password);
         then(jwtTokenProvider).shouldHaveNoInteractions();
+        then(adminLoginLogService).should().addFailAdminLoginLog(userId);
     }
 }

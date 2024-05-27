@@ -2,6 +2,7 @@ package potatowoong.potatomallback.auth.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import potatowoong.potatomallback.auth.dto.request.LoginReqDto;
+import potatowoong.potatomallback.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.auth.service.AdminLoginService;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
@@ -31,6 +33,9 @@ class AdminLoginControllerTest {
 
     @MockBean
     private AdminLoginService adminLoginService;
+
+    @MockBean
+    private AdminLoginLogService adminLoginLogService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -55,6 +60,8 @@ class AdminLoginControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.accessToken").value(tokenDto.accessToken()))
             .andExpect(jsonPath("$.data.refreshToken").value(tokenDto.refreshToken()));
+        then(adminLoginService).should().login(loginReqDto);
+        then(adminLoginLogService).should().addSuccessAdminLoginLog(loginReqDto.id());
     }
 
     @Test
@@ -73,5 +80,6 @@ class AdminLoginControllerTest {
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.message").value(ErrorCode.FAILED_TO_LOGIN.getMessage()))
             .andExpect(jsonPath("$.code").value(ErrorCode.FAILED_TO_LOGIN.getCode()));
+        then(adminLoginService).should().login(loginReqDto);
     }
 }
