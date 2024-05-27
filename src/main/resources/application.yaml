@@ -3,7 +3,7 @@ spring:
         name: potato-mall
     datasource:
         driver-class-name: org.mariadb.jdbc.Driver
-        url: jdbc:mariadb://potato-mall-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall
+        url: jdbc:mariadb://potato-mall-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
         username: root
         password: jhan00254!
     jpa:
@@ -14,3 +14,7 @@ spring:
                 show_sql: true
                 format_sql: true
                 highlight_sql: true
+jwt:
+    secret: 3067481a1d1797b03b4e914f135c63c930a2fef9ab4ddf9dc18dfce61d581a20f187289cd760f185b02a3d9bf579fc09187cbaff3be9ab7fecb36ca6f71e1367
+    access-token-expiration: 1800 # 30?
+    refresh-token-expiration: 604800 # 7?
