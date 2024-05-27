@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
-import potatowoong.potatomallback.config.jpa.BaseEntity;
+import potatowoong.potatomallback.config.db.BaseEntity;
 
 @Entity
 @Comment("관리자 계정 정보")

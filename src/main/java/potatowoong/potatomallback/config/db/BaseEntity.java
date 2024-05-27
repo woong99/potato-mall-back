@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.config.jpa;
+package potatowoong.potatomallback.config.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.config.jpa;
+package potatowoong.potatomallback.config.db;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
