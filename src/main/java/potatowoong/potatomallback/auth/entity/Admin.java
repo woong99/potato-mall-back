@@ -8,7 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.domain.Persistable;
+import potatowoong.potatomallback.auth.dto.request.AdminAddReqDto;
 import potatowoong.potatomallback.config.db.BaseEntity;
 
 @Entity
@@ -18,7 +21,7 @@ import potatowoong.potatomallback.config.db.BaseEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Admin extends BaseEntity {
+public class Admin extends BaseEntity implements Persistable<String> {
 
     @Id
     @Column(name = "user_id", length = 20, nullable = false, updatable = false)
@@ -32,4 +35,29 @@ public class Admin extends BaseEntity {
     @Column(name = "name", length = 10, nullable = false)
     @Comment("이름")
     private String name;
+
+    public static Admin addOf(AdminAddReqDto dto) {
+        return Admin.builder()
+            .adminId(dto.getAdminId())
+            .password(dto.getPassword())
+            .name(dto.getName())
+            .build();
+    }
+
+    public void modify(final String name, final String password) {
+        this.name = name;
+        if (StringUtils.isNotBlank(password)) {
+            this.password = password;
+        }
+    }
+
+    @Override
+    public String getId() {
+        return this.adminId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return super.getCreatedAt() == null;
+    }
 }

@@ -12,7 +12,11 @@ public enum ErrorCode {
     MISMATCH_PASSWORD_AND_PASSWORD_CONFIRM(HttpStatus.BAD_REQUEST, "AU002", "비밀번호가 일치하지 않습니다."),
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "AU003", "만료된 엑세스 토큰입니다."),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "AU004", "유효하지 않은 엑세스 토큰입니다."),
-    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, "AU005", "로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요.");
+    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, "AU005", "로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요."),
+    ADMIN_NOT_FOUND(HttpStatus.BAD_REQUEST, "AU006", "존재하지 않는 관리자입니다."),
+    INCORRECT_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "AU007", "비밀번호는 8자 이상 20자 이하로 입력해주세요."),
+    SELF_DELETION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "AU008", "자신의 계정은 삭제할 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
 
