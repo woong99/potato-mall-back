@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import potatowoong.potatomallback.auth.dto.response.AdminLoginLogResDto;
 import potatowoong.potatomallback.auth.entity.AdminLoginLog;
 import potatowoong.potatomallback.auth.enums.TryResult;
 import potatowoong.potatomallback.auth.repository.AdminLoginLogRepository;
+import potatowoong.potatomallback.common.PageRequestDto;
+import potatowoong.potatomallback.common.PageResponseDto;
 import potatowoong.potatomallback.utils.ClientUtils;
 
 @Service
@@ -45,6 +48,11 @@ public class AdminLoginLogService {
             .tryResult(TryResult.LOGOUT)
             .build();
         adminLoginLogRepository.save(adminLoginLog);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<AdminLoginLogResDto> getAdminLoginLogWithPage(PageRequestDto pageRequestDto) {
+        return adminLoginLogRepository.findAdminLoginLogWithPage(pageRequestDto);
     }
 
     /**
