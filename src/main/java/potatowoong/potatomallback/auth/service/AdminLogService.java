@@ -18,8 +18,31 @@ public class AdminLogService {
             .adminId(SecurityUtils.getCurrentUserId())
             .menuTitle(menuTitle)
             .action(action)
-            .targetId(targetId)
+            .targetId(String.valueOf(targetId))
             .targetName(targetName)
+            .actionIp(ClientUtils.getRemoteIP())
+            .build();
+        adminLogRepository.save(adminLog);
+    }
+
+    public void addAdminLog(final String menuTitle, final String action, final String targetId, final String targetName) {
+        AdminLog adminLog = AdminLog.builder()
+            .adminId(SecurityUtils.getCurrentUserId())
+            .menuTitle(menuTitle)
+            .action(action)
+            .targetId(String.valueOf(targetId))
+            .targetName(targetName)
+            .actionIp(ClientUtils.getRemoteIP())
+            .build();
+        adminLogRepository.save(adminLog);
+    }
+
+    public void addAdminLog(final String menuTitle, final String action, final String targetId) {
+        AdminLog adminLog = AdminLog.builder()
+            .adminId(SecurityUtils.getCurrentUserId())
+            .menuTitle(menuTitle)
+            .action(action)
+            .targetId(String.valueOf(targetId))
             .actionIp(ClientUtils.getRemoteIP())
             .build();
         adminLogRepository.save(adminLog);

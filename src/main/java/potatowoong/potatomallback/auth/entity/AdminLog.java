@@ -39,9 +39,9 @@ public class AdminLog {
     @Comment("행동")
     private String action;
 
-    @Column(updatable = false)
+    @Column(updatable = false, length = 100)
     @Comment("대상 ID")
-    private Integer targetId;
+    private String targetId;
 
     @Column(updatable = false, length = 200)
     @Comment("대상 이름")
@@ -57,7 +57,7 @@ public class AdminLog {
     private LocalDateTime actionDate;
 
     @Builder
-    public AdminLog(String adminId, String menuTitle, String action, Integer targetId, String targetName, String actionIp, LocalDateTime actionDate) {
+    public AdminLog(String adminId, String menuTitle, String action, String targetId, String targetName, String actionIp, LocalDateTime actionDate) {
         this.adminId = adminId;
         this.menuTitle = menuTitle;
         this.action = action;
