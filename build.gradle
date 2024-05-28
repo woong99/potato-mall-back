@@ -43,10 +43,13 @@ dependencies {
     annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta' \
+    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
 
     // P6Spy
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
+
+    // Apache Commons Lang
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
 
     // MariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
