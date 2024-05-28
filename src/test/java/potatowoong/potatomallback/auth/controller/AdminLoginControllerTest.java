@@ -3,6 +3,7 @@ package potatowoong.potatomallback.auth.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,15 +32,13 @@ import potatowoong.potatomallback.jwt.dto.TokenDto;
 @WithMockUser
 class AdminLoginControllerTest {
 
+    private final String adminId = "adminId";
     @MockBean
     private AdminLoginService adminLoginService;
-
     @MockBean
     private AdminLoginLogService adminLoginLogService;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,7 +46,7 @@ class AdminLoginControllerTest {
     @DisplayName("관리자 로그인 성공")
     void 로그인_성공() throws Exception {
         // given
-        LoginReqDto loginReqDto = new LoginReqDto("adminId", "password");
+        LoginReqDto loginReqDto = new LoginReqDto(adminId, "password");
         TokenDto tokenDto = new TokenDto("accessToken", "refreshToken");
 
         given(adminLoginService.login(any(LoginReqDto.class))).willReturn(tokenDto);
@@ -68,7 +67,7 @@ class AdminLoginControllerTest {
     @DisplayName("관리자 로그인 실패 - 아이디 혹은 비밀번호 불일치")
     void 로그인_실패_아이디_불일치() throws Exception {
         // given
-        LoginReqDto loginReqDto = new LoginReqDto("adminId", "password");
+        LoginReqDto loginReqDto = new LoginReqDto(adminId, "password");
 
         given(adminLoginService.login(any(LoginReqDto.class))).willThrow(new CustomException(ErrorCode.FAILED_TO_LOGIN));
 
@@ -81,5 +80,20 @@ class AdminLoginControllerTest {
             .andExpect(jsonPath("$.message").value(ErrorCode.FAILED_TO_LOGIN.getMessage()))
             .andExpect(jsonPath("$.code").value(ErrorCode.FAILED_TO_LOGIN.getCode()));
         then(adminLoginService).should().login(loginReqDto);
+    }
+
+    @Test
+    @DisplayName("관리자 로그아웃 성공")
+    @WithMockUser("adminId")
+    void 로그아웃_성공() throws Exception {
+        // given
+        willDoNothing().given(adminLoginLogService).addLogoutAdminLoginLog(adminId);
+
+        // when & then
+        mockMvc.perform(post("/api/admin/logout")
+                .with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").value("로그아웃 성공"));
+        then(adminLoginLogService).should().addLogoutAdminLoginLog(adminId);
     }
 }

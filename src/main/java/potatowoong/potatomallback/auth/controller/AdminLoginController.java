@@ -12,6 +12,7 @@ import potatowoong.potatomallback.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.auth.service.AdminLoginService;
 import potatowoong.potatomallback.common.ApiResponseEntity;
 import potatowoong.potatomallback.jwt.dto.TokenDto;
+import potatowoong.potatomallback.utils.SecurityUtils;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -34,5 +35,14 @@ public class AdminLoginController {
         adminLoginLogService.addSuccessAdminLoginLog(loginReqDto.id());
 
         return ResponseEntity.ok(ApiResponseEntity.of(tokenDto));
+    }
+
+    /**
+     * 관리자 로그아웃 API
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseEntity<String>> logout() {
+        adminLoginLogService.addLogoutAdminLoginLog(SecurityUtils.getCurrentUserId());
+        return ResponseEntity.ok(ApiResponseEntity.of("로그아웃 성공"));
     }
 }
