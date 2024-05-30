@@ -1,0 +1,10 @@
+[[success]]
+=== 공통 성공 응답
+
+include::{snippets}/docs-ok/custom-response-fields.adoc[]
+
+'''
+
+=== 공통 에러 응답
+include::{snippets}/docs-error/custom-response-fields.adoc[]
+
