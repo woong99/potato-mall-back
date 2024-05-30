@@ -11,6 +11,8 @@ spring:
             ddl-auto: update
 server:
     forward-headers-strategy: native
+    port: 8080
+    docs-port: 8081
 jwt:
     secret: 3067481a1d1797b03b4e914f135c63c930a2fef9ab4ddf9dc18dfce61d581a20f187289cd760f185b02a3d9bf579fc09187cbaff3be9ab7fecb36ca6f71e1367
     access-token-expiration: 1800 # 30?
