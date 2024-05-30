@@ -1,0 +1,171 @@
+[[admin-management]]
+=== 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/admin-management-list/http-request.adoc[]
+include::{snippets}/admin-management-list/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-list/http-response.adoc[]
+include::{snippets}/admin-management-list/response-fields-data.adoc[]
+
+'''
+
+=== 상세 조회 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-management-detail/http-request.adoc[]
+include::{snippets}/admin-management-detail/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-detail/http-response.adoc[]
+include::{snippets}/admin-management-detail/response-fields-data.adoc[]
+
+'''
+
+=== 상세 조회 실패 - 잘못된 adminId를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-detail-fail/http-request.adoc[]
+include::{snippets}/admin-management-detail-fail/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-detail-fail/http-response.adoc[]
+
+'''
+
+=== 등록 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-management-add/http-request.adoc[]
+include::{snippets}/admin-management-add/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-add/http-response.adoc[]
+
+'''
+
+=== 등록 실패 - 중복된 adminId를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-add-fail/http-request.adoc[]
+include::{snippets}/admin-management-add-fail/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-add-fail/http-response.adoc[]
+
+'''
+
+=== 수정 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-management-modify/http-request.adoc[]
+include::{snippets}/admin-management-modify/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-modify/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 잘못된 adminId를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-modify-fail-incorrect-adminId/http-request.adoc[]
+include::{snippets}/admin-management-modify-fail-incorrect-adminId/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-modify-fail-incorrect-adminId/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 비밀번호와 비밀번호 확인이 일치하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-modify-fail-incorrect-password/http-request.adoc[]
+include::{snippets}/admin-management-modify-fail-incorrect-password/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-modify-fail-incorrect-password/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 비밀번호의 길이가 적절하지 않은 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-modify-fail-incorrect-password-length/http-request.adoc[]
+include::{snippets}/admin-management-modify-fail-incorrect-password-length/request-body.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-modify-fail-incorrect-password-length/http-response.adoc[]
+
+'''
+
+=== 삭제 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-management-remove/http-request.adoc[]
+include::{snippets}/admin-management-remove/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-remove/http-response.adoc[]
+
+'''
+
+=== 삭제 실패 - 잘못된 adminId를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-remove-fail/http-request.adoc[]
+include::{snippets}/admin-management-remove-fail/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-remove-fail/http-response.adoc[]
+
+'''
+
+=== 아이디 중복 체크 - 중복된 아이디가 있는 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-check-duplicate-id-ok/http-request.adoc[]
+include::{snippets}/admin-management-check-duplicate-id-ok/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-check-duplicate-id-ok/http-response.adoc[]
+
+'''
+
+=== 아이디 중복 체크 - 중복된 아이디가 없는 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-management-check-duplicate-id-no/http-request.adoc[]
+include::{snippets}/admin-management-check-duplicate-id-no/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-management-check-duplicate-id-no/http-response.adoc[]
+
+'''

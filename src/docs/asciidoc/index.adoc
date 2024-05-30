@@ -1,0 +1,37 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= Potato Mall Rest API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[COMMON]]
+== 공통 응답
+
+include::api/common.adoc[]
+
+[[COMMON-ERROR]]
+[[ADMIN-LOGIN-API]]
+== 관리자 로그인 API
+
+include::api/login.adoc[]
+
+[[ADMIN-LOGOUT-API]]
+== 관리자 로그아웃 API
+
+include::api/logout.adoc[]
+
+[[ADMIN-LOGIN-LOG-API]]
+== 관리자 로그인 로그 API
+
+include::api/admin-login-log.adoc[]
+
+[[ADMIN-MANAGEMENT]]
+== 관리자 계정 관리 API
+
+include::api/admin-management.adoc[]
+

@@ -1,0 +1,11 @@
+[[admin-logout]]
+=== 로그아웃 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-logout/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-logout/http-response.adoc[]
+

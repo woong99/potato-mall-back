@@ -1,0 +1,25 @@
+[[admin-login]]
+=== 로그인 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-login/http-request.adoc[]
+include::{snippets}/admin-login/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-login/http-response.adoc[]
+include::{snippets}/admin-login/response-fields-data.adoc[]
+
+'''
+
+=== 로그인 실패 - 아이디 혹은 비밀번호 불일치
+
+==== HTTP Request
+
+include::{snippets}/admin-login-fail/http-request.adoc[]
+include::{snippets}/admin-login-fail/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-login-fail/http-response.adoc[]
