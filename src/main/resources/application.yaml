@@ -3,15 +3,12 @@ spring:
         name: potato-mall
     datasource:
         driver-class-name: org.mariadb.jdbc.Driver
-        url: jdbc:mariadb://potato-mall-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
+        url: jdbc:mariadb://potato-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall
         username: root
         password: jhan00254!
     jpa:
         hibernate:
             ddl-auto: update
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MariaDBDialect
 server:
     forward-headers-strategy: native
 jwt:
