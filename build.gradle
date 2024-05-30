@@ -100,12 +100,27 @@ asciidoctor.doFirst {
     delete file('src/main/resources/static/docs')
 }
 
-task copyDocument(type: Copy) {
+tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
+
+    doLast {
+        file("build/resources/main/static/docs").mkdir()
+        copy {
+            from file("src/main/resources/static/docs")
+            into file("build/resources/main/static/docs")
+        }
+    }
 }
 
 build {
     dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn copyDocument
+    from('build/resources/main/static/docs') {
+        into 'static/docs'
+    }
 }
