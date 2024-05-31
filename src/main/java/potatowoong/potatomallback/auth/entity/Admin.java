@@ -3,7 +3,7 @@ package potatowoong.potatomallback.auth.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +18,7 @@ import potatowoong.potatomallback.config.db.BaseEntity;
 @Comment("관리자 계정 정보")
 @Getter
 @ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Admin extends BaseEntity implements Persistable<String> {
 
     @Id
@@ -35,6 +33,13 @@ public class Admin extends BaseEntity implements Persistable<String> {
     @Column(name = "name", length = 10, nullable = false)
     @Comment("이름")
     private String name;
+
+    @Builder
+    public Admin(String adminId, String password, String name) {
+        this.adminId = adminId;
+        this.password = password;
+        this.name = name;
+    }
 
     public static Admin addOf(AdminAddReqDto dto) {
         return Admin.builder()

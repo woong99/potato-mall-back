@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +18,7 @@ import org.hibernate.annotations.Comment;
 @Comment("관리자 활동 내역 정보")
 @Getter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminLog {
 
     @Id
@@ -57,13 +56,12 @@ public class AdminLog {
     private LocalDateTime actionDate;
 
     @Builder
-    public AdminLog(String adminId, String menuTitle, String action, String targetId, String targetName, String actionIp, LocalDateTime actionDate) {
+    public AdminLog(String adminId, String menuTitle, String action, String targetId, String targetName, String actionIp) {
         this.adminId = adminId;
         this.menuTitle = menuTitle;
         this.action = action;
         this.targetId = targetId;
         this.targetName = targetName;
         this.actionIp = actionIp;
-        this.actionDate = actionDate;
     }
 }
