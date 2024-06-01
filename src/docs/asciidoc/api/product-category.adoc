@@ -1,0 +1,132 @@
+[[product-category]]
+=== 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/product-category-search/http-request.adoc[]
+include::{snippets}/product-category-search/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-search/http-response.adoc[]
+include::{snippets}/product-category-search/response-fields-data.adoc[]
+
+'''
+
+=== 상세 조회 성공
+
+==== HTTP Request
+
+include::{snippets}/product-category-detail/http-request.adoc[]
+include::{snippets}/product-category-detail/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-detail/http-response.adoc[]
+include::{snippets}/product-category-detail/response-fields-data.adoc[]
+
+'''
+
+=== 상세 조회 실패 - 존재하지 않는 카테고리 ID를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-category-detail-fail-not-found-category/http-request.adoc[]
+include::{snippets}/product-category-detail-fail-not-found-category/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-detail-fail-not-found-category/http-response.adoc[]
+
+'''
+
+=== 등록 성공
+
+==== HTTP Request
+
+include::{snippets}/product-category-add/http-request.adoc[]
+include::{snippets}/product-category-add/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-add/http-response.adoc[]
+
+'''
+
+=== 등록 실패 - 중복된 카테고리명을 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-category-add-fail-duplicated-category-name/http-request.adoc[]
+include::{snippets}/product-category-add-fail-duplicated-category-name/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-add-fail-duplicated-category-name/http-response.adoc[]
+
+'''
+
+=== 수정 성공
+
+==== HTTP Request
+
+include::{snippets}/product-category-modify/http-request.adoc[]
+include::{snippets}/product-category-modify/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-modify/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 중복된 카테고리명을 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-category-modify-fail-duplicated-category-name/http-request.adoc[]
+include::{snippets}/product-category-modify-fail-duplicated-category-name/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-modify-fail-duplicated-category-name/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 존재하지 않는 카테고리 ID를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-category-modify-fail-not-found-category/http-request.adoc[]
+include::{snippets}/product-category-modify-fail-not-found-category/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-modify-fail-not-found-category/http-response.adoc[]
+
+'''
+
+=== 삭제 성공
+
+==== HTTP Request
+
+include::{snippets}/product-category-remove/http-request.adoc[]
+include::{snippets}/product-category-remove/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-remove/http-response.adoc[]
+
+'''
+
+=== 삭제 실패 - 존재하지 않는 카테고리 ID를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-category-remove-fail-not-found-category/http-request.adoc[]
+include::{snippets}/product-category-remove-fail-not-found-category/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-category-remove-fail-not-found-category/http-response.adoc[]
+
+'''

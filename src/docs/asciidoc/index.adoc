@@ -35,3 +35,8 @@ include::api/admin-login-log.adoc[]
 
 include::api/admin-management.adoc[]
 
+[[PRODUCT-CATEGORY]]
+== 상품 카테고리 API
+
+include::api/product-category.adoc[]
+
