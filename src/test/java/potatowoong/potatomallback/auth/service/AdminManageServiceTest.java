@@ -80,7 +80,7 @@ class AdminManageServiceTest {
                 .password(password)
                 .passwordConfirm(password)
                 .build();
-            given(adminRepository.findById(any())).willReturn(Optional.of(new Admin()));
+            given(adminRepository.findById(any())).willReturn(Optional.of(Admin.builder().build()));
 
             // when
             assertThatThrownBy(() -> adminManageService.addAdmin(dto))
@@ -158,7 +158,7 @@ class AdminManageServiceTest {
                 .adminId(adminId)
                 .name(name)
                 .build();
-            given(adminRepository.findById(any())).willReturn(Optional.of(new Admin()));
+            given(adminRepository.findById(any())).willReturn(Optional.of(createAdmin()));
 
             // when
             adminManageService.modifyAdmin(dto);
@@ -178,7 +178,7 @@ class AdminManageServiceTest {
                 .password(password)
                 .passwordConfirm(password)
                 .build();
-            given(adminRepository.findById(any())).willReturn(Optional.of(new Admin()));
+            given(adminRepository.findById(any())).willReturn(Optional.of(createAdmin()));
 
             // when
             adminManageService.modifyAdmin(dto);
@@ -218,7 +218,7 @@ class AdminManageServiceTest {
                 .password(password)
                 .passwordConfirm("invalidPassword")
                 .build();
-            given(adminRepository.findById(any())).willReturn(Optional.of(new Admin()));
+            given(adminRepository.findById(any())).willReturn(Optional.of(createAdmin()));
 
             // when
             assertThatThrownBy(() -> adminManageService.modifyAdmin(dto))
@@ -239,7 +239,7 @@ class AdminManageServiceTest {
                 .password("1234")
                 .passwordConfirm("1234")
                 .build();
-            given(adminRepository.findById(any())).willReturn(Optional.of(new Admin()));
+            given(adminRepository.findById(any())).willReturn(Optional.of(createAdmin()));
 
             // when
             assertThatThrownBy(() -> adminManageService.modifyAdmin(dto))
@@ -365,5 +365,13 @@ class AdminManageServiceTest {
             assertThat(result.totalElements()).isEqualTo(100);
             then(adminRepository).should().findAdminWithPage(any());
         }
+    }
+
+    private Admin createAdmin() {
+        return Admin.builder()
+            .adminId(adminId)
+            .name(name)
+            .password(password)
+            .build();
     }
 }
