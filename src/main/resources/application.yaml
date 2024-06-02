@@ -3,7 +3,7 @@ spring:
         name: potato-mall
     datasource:
         driver-class-name: org.mariadb.jdbc.Driver
-        url: ENC(ROXF4pQ53w34RP9GdmYEB49zuypqpNqN791D9M1mMyUJz9xw+JY0xTLgEx5sldKAJvY3qqWeTQ3ABO3mUDTYQoTjP3K8phN5tCE6yGKupAPV+93hnuEYHZmxGkrjQV83OYqHjmM0mvA=)
+        url: ENC(IX2K1DrI0zuHAXcbl2+p2noyvWL0yvEqebr2KDadmv9WDBxgDKu4H6e2O4SJqSuEiW+Jlw6bHQOiw/7S9SzSkWVJwEwU/+ev881BRVWTECR2OxJ5UrmUjzym9zhUr+cp)
         username: ENC(8MbDWgxEMu5l//DlOOFgyA==)
         password: ENC(JH36foeMmGWJH1BfjYCeuyrWHnYm2+7W)
     jpa:
@@ -15,5 +15,5 @@ server:
     docs-port: 8081
 jwt:
     secret: ENC(W4sPi0KgaSIlFAzkqQflG0XYEttZoBq/wrLiDRpav87rDCreIHiOsDO4q4sM+pu3/aI8GNSsOWaS4MsLuvuLVYruj7z88IWC6ej8WWL0r4QNLDd5TnJVxC+ASLbpnnKTjixNDQiQuNBx1cA7xHyBG9QK99xW+uSm93YODtxlPjNX/C7E36SClH/pHoC4Om4C)
-    access-token-expiration: 1800 # 30?
-    refresh-token-expiration: 604800 # 7?
+    access-token-expiration: 1800 # 30일
+    refresh-token-expiration: 604800 # 7일
