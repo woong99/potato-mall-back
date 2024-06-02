@@ -53,12 +53,17 @@ dependencies {
     // Apache Commons Lang
     implementation 'org.apache.commons:commons-lang3:3.14.0'
 
+    // Jasypt
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
     // MariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     // spring-boot-devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -86,6 +91,7 @@ ext {
 
 test {
     useJUnitPlatform()
+    systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password")
     outputs.dir snippetsDir
 }
 

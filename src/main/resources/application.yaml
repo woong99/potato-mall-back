@@ -3,9 +3,9 @@ spring:
         name: potato-mall
     datasource:
         driver-class-name: org.mariadb.jdbc.Driver
-        url: jdbc:mariadb://potato-rds.cn8q2wkua8lc.ap-northeast-2.rds.amazonaws.com:3306/potato_mall
-        username: root
-        password: jhan00254!
+        url: ENC(ROXF4pQ53w34RP9GdmYEB49zuypqpNqN791D9M1mMyUJz9xw+JY0xTLgEx5sldKAJvY3qqWeTQ3ABO3mUDTYQoTjP3K8phN5tCE6yGKupAPV+93hnuEYHZmxGkrjQV83OYqHjmM0mvA=)
+        username: ENC(8MbDWgxEMu5l//DlOOFgyA==)
+        password: ENC(JH36foeMmGWJH1BfjYCeuyrWHnYm2+7W)
     jpa:
         hibernate:
             ddl-auto: update
@@ -14,6 +14,6 @@ server:
     port: 8080
     docs-port: 8081
 jwt:
-    secret: 3067481a1d1797b03b4e914f135c63c930a2fef9ab4ddf9dc18dfce61d581a20f187289cd760f185b02a3d9bf579fc09187cbaff3be9ab7fecb36ca6f71e1367
+    secret: ENC(W4sPi0KgaSIlFAzkqQflG0XYEttZoBq/wrLiDRpav87rDCreIHiOsDO4q4sM+pu3/aI8GNSsOWaS4MsLuvuLVYruj7z88IWC6ej8WWL0r4QNLDd5TnJVxC+ASLbpnnKTjixNDQiQuNBx1cA7xHyBG9QK99xW+uSm93YODtxlPjNX/C7E36SClH/pHoC4Om4C)
     access-token-expiration: 1800 # 30?
     refresh-token-expiration: 604800 # 7?
