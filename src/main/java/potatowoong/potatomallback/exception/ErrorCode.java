@@ -22,7 +22,9 @@ public enum ErrorCode {
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "PF002", "지원하지 않는 파일 확장자입니다."),
     EXCEEDED_FILE_SIZE(HttpStatus.BAD_REQUEST, "PF003", "파일 크기가 초과되었습니다."),
     FAILED_TO_DELETE_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "PF004", "파일 삭제에 실패하였습니다."),
-    ATCH_FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PF005", "존재하지 않는 첨부파일입니다.");
+    ATCH_FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PF005", "존재하지 않는 첨부파일입니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "PD001", "존재하지 않는 상품입니다."),
+    NOT_FOUND_THUMBNAIL(HttpStatus.BAD_REQUEST, "PD002", "썸네일 이미지를 등록해주세요.");
 
     private final HttpStatus httpStatus;
 

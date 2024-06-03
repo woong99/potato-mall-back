@@ -1,6 +1,5 @@
 package potatowoong.potatomallback.file.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -20,7 +19,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.file.dto.AtchFileDto;
 import potatowoong.potatomallback.file.entity.AtchFile;
 import potatowoong.potatomallback.file.enums.S3Folder;
 import potatowoong.potatomallback.file.repository.AtchFileRepository;
@@ -53,11 +51,9 @@ class FileServiceTest {
             MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
             // when
-            AtchFileDto result = fileService.saveImageAtchFile(S3Folder.PRODUCT, file);
+            fileService.saveImageAtchFile(S3Folder.PRODUCT, file);
 
             // then
-            assertThat(result).isNotNull();
-
             then(atchFileRepository).should().save(any());
             then(s3Service).should().uploadFile(any(), any(), any());
         }

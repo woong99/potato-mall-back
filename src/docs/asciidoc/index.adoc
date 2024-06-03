@@ -40,3 +40,8 @@ include::api/admin-management.adoc[]
 
 include::api/product-category.adoc[]
 
+[[PRODUCT]]
+== 상품 API
+
+include::api/product.adoc[]
+

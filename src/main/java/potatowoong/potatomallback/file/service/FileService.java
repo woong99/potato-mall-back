@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.file.dto.AtchFileDto;
 import potatowoong.potatomallback.file.entity.AtchFile;
 import potatowoong.potatomallback.file.enums.S3Folder;
 import potatowoong.potatomallback.file.repository.AtchFileRepository;
@@ -27,7 +26,7 @@ public class FileService {
     private String imageExtension;
 
     @Transactional
-    public AtchFileDto saveImageAtchFile(S3Folder s3Folder, MultipartFile file) {
+    public AtchFile saveImageAtchFile(S3Folder s3Folder, MultipartFile file) {
         // S3 폴더 파라미터 확인
         if (s3Folder == null) {
             throw new CustomException(ErrorCode.FAILED_TO_UPLOAD_FILE);
@@ -57,9 +56,7 @@ public class FileService {
             .fileSize(file.getSize())
             .s3Folder(s3Folder.getFolderName())
             .build();
-        atchFileRepository.save(atchFile);
-
-        return AtchFileDto.of(atchFile);
+        return atchFileRepository.save(atchFile);
     }
 
     @Transactional
