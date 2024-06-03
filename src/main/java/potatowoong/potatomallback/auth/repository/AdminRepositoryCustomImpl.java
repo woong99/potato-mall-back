@@ -32,7 +32,7 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
      */
     private List<AdminResDto> getPagingResult(PageRequestDto pageRequestDto) {
         return jpaQueryFactory.select(
-                Projections.constructor(AdminResDto.class, admin.adminId, admin.name, admin.updatedAt, admin.useFlag))
+                Projections.constructor(AdminResDto.class, admin.adminId, admin.name, admin.updatedAt))
             .from(admin)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())

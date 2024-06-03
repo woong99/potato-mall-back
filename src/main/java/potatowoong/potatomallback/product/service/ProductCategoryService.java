@@ -77,7 +77,6 @@ public class ProductCategoryService {
 
         // TODO : 상품 카테고리에 상품이 존재하는지 확인
 
-        savedProductCategory.deleteEntity();
-        productCategoryRepository.save(savedProductCategory);
+        productCategoryRepository.delete(savedProductCategory);
     }
 }

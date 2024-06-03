@@ -82,8 +82,7 @@ public class AdminManageService {
             throw new CustomException(ErrorCode.SELF_DELETION_NOT_ALLOWED);
         }
 
-        savedAdmin.deleteEntity();
-        adminRepository.save(savedAdmin);
+        adminRepository.delete(savedAdmin);
     }
 
     @Transactional(readOnly = true)

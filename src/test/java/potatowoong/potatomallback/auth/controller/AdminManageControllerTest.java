@@ -47,7 +47,6 @@ import potatowoong.potatomallback.auth.service.AdminLogService;
 import potatowoong.potatomallback.auth.service.AdminManageService;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.config.db.UseFlag;
 import potatowoong.potatomallback.config.security.PortCheckFilter;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
@@ -96,7 +95,6 @@ class AdminManageControllerTest {
                 .adminId("admin")
                 .name("관리자")
                 .updatedAt(LocalDateTime.now())
-                .useFlag(UseFlag.Y)
                 .build();
             PageResponseDto<AdminResDto> pageResponseDto = new PageResponseDto<>(List.of(adminResDto), 1);
             given(adminManageService.getAdminList(pageRequestDto)).willReturn(pageResponseDto);
@@ -134,7 +132,6 @@ class AdminManageControllerTest {
                         fieldWithPath("result[].adminId").type(JsonFieldType.STRING).description("관리자 ID"),
                         fieldWithPath("result[].name").type(JsonFieldType.STRING).description("이름"),
                         fieldWithPath("result[].updatedAt").type(JsonFieldType.STRING).description("최종 수정 일시"),
-                        fieldWithPath("result[].useFlag").type(JsonFieldType.STRING).description("사용여부(Y/N)"),
                         fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 관리자 수")
                     )
                 ));
@@ -156,7 +153,6 @@ class AdminManageControllerTest {
                 .adminId(adminId)
                 .name(name)
                 .updatedAt(LocalDateTime.now())
-                .useFlag(UseFlag.Y)
                 .build());
 
             // when & then
@@ -167,8 +163,7 @@ class AdminManageControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.adminId").value(adminId))
                 .andExpect(jsonPath("$.data.name").value(name))
-                .andExpect(jsonPath("$.data.updatedAt").exists())
-                .andExpect(jsonPath("$.data.useFlag").value(UseFlag.Y.name()));
+                .andExpect(jsonPath("$.data.updatedAt").exists());
 
             actions
                 .andDo(document("admin-management-detail",
@@ -181,8 +176,7 @@ class AdminManageControllerTest {
                         beneathPath("data").withSubsectionId("data"),
                         fieldWithPath("adminId").type(JsonFieldType.STRING).description("관리자 ID"),
                         fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-                        fieldWithPath("updatedAt").type(JsonFieldType.STRING).description("최종 수정 일시"),
-                        fieldWithPath("useFlag").type(JsonFieldType.STRING).description("사용여부(Y/N)")
+                        fieldWithPath("updatedAt").type(JsonFieldType.STRING).description("최종 수정 일시")
                     )
                 ));
 

@@ -271,7 +271,7 @@ class AdminManageServiceTest {
 
             // then
             then(adminRepository).should().findById(any());
-            then(adminRepository).should().save(any());
+            then(adminRepository).should().delete(any());
         }
 
         @Test

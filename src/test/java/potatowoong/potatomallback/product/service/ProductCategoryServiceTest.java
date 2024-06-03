@@ -256,7 +256,7 @@ class ProductCategoryServiceTest {
 
             // then
             then(productCategoryRepository).should().findById(any());
-            then(productCategoryRepository).should().save(any());
+            then(productCategoryRepository).should().delete(any());
         }
 
         @Test

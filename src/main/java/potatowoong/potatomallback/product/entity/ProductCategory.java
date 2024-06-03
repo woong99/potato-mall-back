@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLRestriction;
 import potatowoong.potatomallback.config.db.BaseEntity;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
 
@@ -20,7 +19,6 @@ import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("use_flag = 'Y'")
 public class ProductCategory extends BaseEntity {
 
     @Id
