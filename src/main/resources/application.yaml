@@ -9,6 +9,10 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
 server:
     forward-headers-strategy: native
     port: 8080
@@ -17,3 +21,14 @@ jwt:
     secret: ENC(W4sPi0KgaSIlFAzkqQflG0XYEttZoBq/wrLiDRpav87rDCreIHiOsDO4q4sM+pu3/aI8GNSsOWaS4MsLuvuLVYruj7z88IWC6ej8WWL0r4QNLDd5TnJVxC+ASLbpnnKTjixNDQiQuNBx1cA7xHyBG9QK99xW+uSm93YODtxlPjNX/C7E36SClH/pHoC4Om4C)
     access-token-expiration: 1800 # 30일
     refresh-token-expiration: 604800 # 7일
+cloud:
+    aws:
+        s3:
+            bucket: ENC(iNqedp3X57T/2j6ZLPkzG0Es/TniwyWH)
+            region.static: ENC(SFYdeT86offWiLGNSwDv6oQTW5wHwJd/)
+            stack.auto: false
+            credentials:
+                access-key: ENC(2/x909rY3h+4b3kQNB2+pWg0n7+s6Dudk2Vk/CpX84M=)
+                secret-key: ENC(fGzqAOA7XKgAObfjpk7ip+JrY86jKht8R6KnBWUB4iKvwkKruWRVpt41wYZ6/4dhLCxXGZQXUOc=)
+file:
+    image-extension: jpg, jpeg, png, gif

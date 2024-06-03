@@ -17,7 +17,12 @@ public enum ErrorCode {
     INCORRECT_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "AU007", "비밀번호는 8자 이상 20자 이하로 입력해주세요."),
     SELF_DELETION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "AU008", "자신의 계정은 삭제할 수 없습니다."),
     DUPLICATED_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "PC001", "이미 존재하는 카테고리명입니다."),
-    NOT_FOUND_CATEGORY(HttpStatus.BAD_REQUEST, "PC002", "존재하지 않는 카테고리입니다.");
+    NOT_FOUND_CATEGORY(HttpStatus.BAD_REQUEST, "PC002", "존재하지 않는 카테고리입니다."),
+    FAILED_TO_UPLOAD_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "PF001", "파일 업로드에 실패하였습니다."),
+    INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "PF002", "지원하지 않는 파일 확장자입니다."),
+    EXCEEDED_FILE_SIZE(HttpStatus.BAD_REQUEST, "PF003", "파일 크기가 초과되었습니다."),
+    FAILED_TO_DELETE_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "PF004", "파일 삭제에 실패하였습니다."),
+    ATCH_FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PF005", "존재하지 않는 첨부파일입니다.");
 
     private final HttpStatus httpStatus;
 
