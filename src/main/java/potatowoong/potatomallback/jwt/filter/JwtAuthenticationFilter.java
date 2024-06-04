@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.jwt.component.JwtTokenProvider;
 
 @RequiredArgsConstructor
@@ -22,10 +23,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String token = resolveToken(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (CustomException e) {
+            SecurityContextHolder.clearContext();
+            request.setAttribute("exception", e);
         }
+
         filterChain.doFilter(request, response);
     }
 

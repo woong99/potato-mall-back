@@ -19,7 +19,7 @@ server:
     docs-port: 8081
 jwt:
     secret: ENC(W4sPi0KgaSIlFAzkqQflG0XYEttZoBq/wrLiDRpav87rDCreIHiOsDO4q4sM+pu3/aI8GNSsOWaS4MsLuvuLVYruj7z88IWC6ej8WWL0r4QNLDd5TnJVxC+ASLbpnnKTjixNDQiQuNBx1cA7xHyBG9QK99xW+uSm93YODtxlPjNX/C7E36SClH/pHoC4Om4C)
-    access-token-expiration: 1800 # 30일
+    access-token-expiration: 1800 # 30분
     refresh-token-expiration: 604800 # 7일
 cloud:
     aws:

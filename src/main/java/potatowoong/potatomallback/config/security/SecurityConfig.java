@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import potatowoong.potatomallback.jwt.component.JwtAccessDeniedHandler;
+import potatowoong.potatomallback.jwt.component.JwtAuthenticationEntryPoint;
 import potatowoong.potatomallback.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.jwt.filter.JwtAuthenticationFilter;
 
@@ -22,6 +24,10 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final PortCheckFilter portCheckFilter;
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,9 +41,14 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+            )
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
                     .requestMatchers("/api/admin/login", "/docs/index.html").permitAll()
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
