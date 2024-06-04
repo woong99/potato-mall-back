@@ -1,5 +1,12 @@
 package potatowoong.potatomallback.product.controller;
 
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.PRODUCT_CATEGORY_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +43,7 @@ public class ProductCategoryController {
         PageResponseDto<ProductCategorySearchResDto> result = productCategoryService.getProductCategoryList(pageRequestDto);
 
         // 로그 저장
-        adminLogService.addAdminLog("상품 카테고리 관리", "목록 조회");
+        adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_LIST);
 
         return ResponseEntity.ok(ApiResponseEntity.of(result));
     }
@@ -50,7 +57,7 @@ public class ProductCategoryController {
         ProductCategoryDetailResDto productCategory = productCategoryService.getProductCategory(id);
 
         // 로그 저장
-        adminLogService.addAdminLog("상품 카테고리 관리", "상세 조회", id, productCategory.name());
+        adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_DETAIL, id, productCategory.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of(productCategory));
     }
@@ -64,7 +71,7 @@ public class ProductCategoryController {
         productCategoryService.addProductCategory(dto);
 
         // 로그 저장
-        adminLogService.addAdminLog("상품 카테고리 관리", "등록", "", dto.name());
+        adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, ADD, "", dto.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 등록 성공"));
     }
@@ -78,7 +85,7 @@ public class ProductCategoryController {
         productCategoryService.modifyProductCategory(dto);
 
         // 로그 저장
-        adminLogService.addAdminLog("상품 카테고리 관리", "수정", dto.productCategoryId(), dto.name());
+        adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, MODIFY, dto.productCategoryId(), dto.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 수정 성공"));
     }
@@ -95,7 +102,7 @@ public class ProductCategoryController {
         productCategoryService.removeProductCategory(id);
 
         // 로그 저장
-        adminLogService.addAdminLog("상품 카테고리 관리", "삭제", id, categoryName);
+        adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, REMOVE, id, categoryName);
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 삭제 성공"));
     }

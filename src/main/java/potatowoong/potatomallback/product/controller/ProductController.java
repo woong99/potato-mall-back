@@ -1,5 +1,12 @@
 package potatowoong.potatomallback.product.controller;
 
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.PRODUCT_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +47,7 @@ public class ProductController {
         PageResponseDto<ProductSearchResDto> productSearchResDto = productService.getProductList(pageRequestDto);
 
         // 관리자 로그 등록
-        adminLogService.addAdminLog("상품 관리", "목록 조회");
+        adminLogService.addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
 
         return ResponseEntity.ok(ApiResponseEntity.of(productSearchResDto));
     }
@@ -54,7 +61,7 @@ public class ProductController {
         ProductDetailResDto productDetailResDto = productService.getProduct(productId);
 
         // 관리자 로그 등록
-        adminLogService.addAdminLog("상품 관리", "조회", productId, productDetailResDto.name());
+        adminLogService.addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, productId, productDetailResDto.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of(productDetailResDto));
     }
@@ -68,7 +75,7 @@ public class ProductController {
         productService.addProduct(productAddReqDto, thumbnailFile);
 
         // 관리자 로그 등록
-        adminLogService.addAdminLog("상품 관리", "등록", "", productAddReqDto.name());
+        adminLogService.addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 등록 성공"));
     }
@@ -82,7 +89,7 @@ public class ProductController {
         productService.modifyProduct(productModifyReqDto, thumbnailFile);
 
         // 관리자 로그 등록
-        adminLogService.addAdminLog("상품 관리", "수정", productModifyReqDto.productId(), productModifyReqDto.name());
+        adminLogService.addAdminLog(PRODUCT_MANAGEMENT, MODIFY, productModifyReqDto.productId(), productModifyReqDto.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 수정 성공"));
     }
@@ -96,7 +103,7 @@ public class ProductController {
         productService.removeProduct(productId);
 
         // 관리자 로그 등록
-        adminLogService.addAdminLog("상품 관리", "삭제", productId, "");
+        adminLogService.addAdminLog(PRODUCT_MANAGEMENT, REMOVE, productId, "");
 
         return ResponseEntity.ok(ApiResponseEntity.of("상품 삭제 성공"));
     }

@@ -1,5 +1,12 @@
 package potatowoong.potatomallback.auth.controller;
 
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.ADMIN_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +44,7 @@ public class AdminManageController {
         PageResponseDto<AdminResDto> result = adminManageService.getAdminList(pageRequestDto);
 
         // 로그 저장
-        adminLogService.addAdminLog("관리자 계정 관리", "목록 조회");
+        adminLogService.addAdminLog(ADMIN_MANAGEMENT, SEARCH_LIST);
         return ResponseEntity.ok(ApiResponseEntity.of(result));
     }
 
@@ -49,7 +56,7 @@ public class AdminManageController {
         AdminResDto result = adminManageService.getAdmin(adminId);
 
         // 로그 저장
-        adminLogService.addAdminLog("관리자 계정 관리", "상세 조회", adminId, result.name());
+        adminLogService.addAdminLog(ADMIN_MANAGEMENT, SEARCH_DETAIL, adminId, result.name());
         return ResponseEntity.ok(ApiResponseEntity.of(result));
     }
 
@@ -61,7 +68,7 @@ public class AdminManageController {
         adminManageService.addAdmin(dto);
 
         // 로그 저장
-        adminLogService.addAdminLog("관리자 계정 관리", "등록", dto.getAdminId(), dto.getName());
+        adminLogService.addAdminLog(ADMIN_MANAGEMENT, ADD, dto.getAdminId(), dto.getName());
         return ResponseEntity.ok(ApiResponseEntity.of("관리자 등록 성공"));
     }
 
@@ -73,7 +80,7 @@ public class AdminManageController {
         adminManageService.modifyAdmin(dto);
 
         // 로그 저장
-        adminLogService.addAdminLog("관리자 계정 관리", "수정", dto.getAdminId(), dto.getName());
+        adminLogService.addAdminLog(ADMIN_MANAGEMENT, MODIFY, dto.getAdminId(), dto.getName());
         return ResponseEntity.ok(ApiResponseEntity.of("관리자 수정 성공"));
     }
 
@@ -85,7 +92,7 @@ public class AdminManageController {
         adminManageService.removeAdmin(adminId);
 
         // 로그 저장
-        adminLogService.addAdminLog("관리자 계정 관리", "삭제", adminId);
+        adminLogService.addAdminLog(ADMIN_MANAGEMENT, REMOVE, adminId);
         return ResponseEntity.ok(ApiResponseEntity.of("관리자 삭제 성공"));
     }
 

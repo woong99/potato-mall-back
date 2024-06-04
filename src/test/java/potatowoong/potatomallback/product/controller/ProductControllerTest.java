@@ -18,6 +18,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.PRODUCT_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
@@ -146,7 +152,7 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().getProductList(pageRequestDto);
-            then(adminLogService).should().addAdminLog("상품 관리", "목록 조회");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
         }
     }
 
@@ -208,7 +214,7 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().getProduct(1L);
-            then(adminLogService).should().addAdminLog("상품 관리", "조회", 1L, "감자");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, 1L, "감자");
         }
 
         @Test
@@ -286,7 +292,7 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().addProduct(any(), any());
-            then(adminLogService).should().addAdminLog("상품 관리", "등록", "", "감자");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, ADD, "", "감자");
         }
     }
 
@@ -340,7 +346,7 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().modifyProduct(any(), any());
-            then(adminLogService).should().addAdminLog("상품 관리", "수정", 1L, "감자");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, MODIFY, 1L, "감자");
         }
 
         @Test
@@ -421,7 +427,7 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().removeProduct(1L);
-            then(adminLogService).should().addAdminLog("상품 관리", "삭제", 1L, "");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, REMOVE, 1L, "");
         }
 
         @Test

@@ -17,6 +17,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.PRODUCT_CATEGORY_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
@@ -134,7 +140,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().getProductCategoryList(pageRequestDto);
-            then(adminLogService).should().addAdminLog("상품 카테고리 관리", "목록 조회");
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_LIST);
         }
     }
 
@@ -190,7 +196,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().getProductCategory(categoryId);
-            then(adminLogService).should().addAdminLog("상품 카테고리 관리", "상세 조회", categoryId, resDto.name());
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_DETAIL, categoryId, resDto.name());
         }
 
         @Test
@@ -253,7 +259,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().addProductCategory(dto);
-            then(adminLogService).should().addAdminLog("상품 카테고리 관리", "등록", "", dto.name());
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, ADD, "", dto.name());
         }
 
         @Test
@@ -323,7 +329,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().modifyProductCategory(dto);
-            then(adminLogService).should().addAdminLog("상품 카테고리 관리", "수정", dto.productCategoryId(), dto.name());
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, MODIFY, dto.productCategoryId(), dto.name());
         }
 
         @Test
@@ -425,7 +431,7 @@ class ProductCategoryControllerTest {
 
             then(productCategoryService).should().getProductCategoryName(categoryId);
             then(productCategoryService).should().removeProductCategory(categoryId);
-            then(adminLogService).should().addAdminLog("상품 카테고리 관리", "삭제", categoryId, categoryName);
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, REMOVE, categoryId, categoryName);
         }
 
         @Test
