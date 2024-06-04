@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,14 +25,19 @@ import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryDetailResDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategorySearchResDto;
+import potatowoong.potatomallback.product.entity.Product;
 import potatowoong.potatomallback.product.entity.ProductCategory;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
+import potatowoong.potatomallback.product.repository.ProductRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ProductCategoryServiceTest {
 
     @Mock
     private ProductCategoryRepository productCategoryRepository;
+
+    @Mock
+    private ProductRepository productRepository;
 
     @InjectMocks
     private ProductCategoryService productCategoryService;
@@ -62,19 +69,25 @@ class ProductCategoryServiceTest {
     @DisplayName("상품 카테고리 상세 조회")
     class 상품_카테고리_상세_조회 {
 
-        // TODO : 연관된 상품 목록 추가 (테스트 코드 작성)
-
         @Test
         @DisplayName("성공")
         void 성공() {
             // given
-            given(productCategoryRepository.findById(categoryId)).willReturn(Optional.of(createProductCategory()));
+            Product product = Product.builder()
+                .name("상품명")
+                .build();
+            ProductCategory productCategory = ProductCategory.builder()
+                .name(categoryName)
+                .products(Collections.singletonList(product))
+                .build();
+
+            given(productCategoryRepository.findWithProductsByProductCategoryId(categoryId)).willReturn(Optional.of(productCategory));
 
             // when
             ProductCategoryDetailResDto result = productCategoryService.getProductCategory(categoryId);
 
             // then
-            then(productCategoryRepository).should().findById(categoryId);
+            then(productCategoryRepository).should().findWithProductsByProductCategoryId(categoryId);
             assertThat(result).isNotNull();
         }
 
@@ -82,7 +95,7 @@ class ProductCategoryServiceTest {
         @DisplayName("실패 - 존재하지 않는 카테고리 ID")
         void 실패_존재하지_않는_카테고리_ID() {
             // given
-            given(productCategoryRepository.findById(categoryId)).willReturn(Optional.empty());
+            given(productCategoryRepository.findWithProductsByProductCategoryId(categoryId)).willReturn(Optional.empty());
 
             // when
             assertThatThrownBy(() -> productCategoryService.getProductCategory(categoryId))
@@ -90,7 +103,7 @@ class ProductCategoryServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
 
             // then
-            then(productCategoryRepository).should().findById(categoryId);
+            then(productCategoryRepository).should().findWithProductsByProductCategoryId(categoryId);
         }
     }
 
@@ -250,12 +263,14 @@ class ProductCategoryServiceTest {
             ProductCategory productCategory = createProductCategory();
 
             given(productCategoryRepository.findById(any())).willReturn(Optional.of(productCategory));
+            given(productRepository.existsByProductCategory(any())).willReturn(false);
 
             // when
             productCategoryService.removeProductCategory(categoryId);
 
             // then
             then(productCategoryRepository).should().findById(any());
+            then(productRepository).should().existsByProductCategory(any());
             then(productCategoryRepository).should().delete(any());
         }
 
@@ -272,12 +287,28 @@ class ProductCategoryServiceTest {
 
             // then
             then(productCategoryRepository).should().findById(any());
+            then(productRepository).should(never()).existsByProductCategory(any());
+            then(productCategoryRepository).should(never()).delete(any());
         }
 
         @Test
         @DisplayName("실패 - 카테고리에 속한 상품이 존재하는 경우")
         void 실패_카테고리에_속한_상품이_존재하는_경우() {
-            // TODO : 상품에 대한 개발 후 테스트 코드 작성
+            // given
+            ProductCategory productCategory = createProductCategory();
+
+            given(productCategoryRepository.findById(any())).willReturn(Optional.of(productCategory));
+            given(productRepository.existsByProductCategory(any())).willReturn(true);
+
+            // when
+            assertThatThrownBy(() -> productCategoryService.removeProductCategory(categoryId))
+                .isInstanceOf(CustomException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.EXIST_PRODUCT_IN_CATEGORY);
+
+            // then
+            then(productCategoryRepository).should().findById(any());
+            then(productRepository).should().existsByProductCategory(any());
+            then(productCategoryRepository).should(never()).delete(any());
         }
     }
 

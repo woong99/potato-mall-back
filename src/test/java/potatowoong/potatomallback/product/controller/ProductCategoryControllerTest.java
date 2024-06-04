@@ -49,6 +49,7 @@ import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryDetailResDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategorySearchResDto;
+import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductRelatedResDto;
 import potatowoong.potatomallback.product.service.ProductCategoryService;
 
 @WebMvcTest(controllers = ProductCategoryController.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = PortCheckFilter.class)})
@@ -77,7 +78,6 @@ class ProductCategoryControllerTest {
     @DisplayName("상품 카테고리 목록 조회")
     class 상품_카테고리_목록_조회 {
 
-        // TODO : 연관된 상품 수 추가
         @Test
         @DisplayName("성공")
         void 성공() throws Exception {
@@ -92,6 +92,7 @@ class ProductCategoryControllerTest {
             ProductCategorySearchResDto resDto = ProductCategorySearchResDto.builder()
                 .productCategoryId(categoryId)
                 .name(categoryName)
+                .productCount(10)
                 .updatedAt(LocalDateTime.now())
                 .build();
             PageResponseDto<ProductCategorySearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), 1);
@@ -127,6 +128,7 @@ class ProductCategoryControllerTest {
                         fieldWithPath("result[].productCategoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
                         fieldWithPath("result[].name").type(JsonFieldType.STRING).description("카테고리명"),
                         fieldWithPath("result[].updatedAt").type(JsonFieldType.STRING).description("최종 수정 일시"),
+                        fieldWithPath("result[].productCount").type(JsonFieldType.NUMBER).description("등록된 상품 수"),
                         fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 상품 카테고리 수")
                     )
                 ));
@@ -144,9 +146,15 @@ class ProductCategoryControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
+            ProductRelatedResDto productRelatedResDto = ProductRelatedResDto.builder()
+                .productId(1L)
+                .name("상품명")
+                .price(1000)
+                .build();
             ProductCategoryDetailResDto resDto = ProductCategoryDetailResDto.builder()
                 .productCategoryId(categoryId)
                 .name(categoryName)
+                .products(List.of(productRelatedResDto))
                 .build();
 
             given(productCategoryService.getProductCategory(categoryId)).willReturn(resDto);
@@ -159,7 +167,10 @@ class ProductCategoryControllerTest {
             actions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.productCategoryId").value(categoryId))
-                .andExpect(jsonPath("$.data.name").value(categoryName));
+                .andExpect(jsonPath("$.data.name").value(categoryName))
+                .andExpect(jsonPath("$.data.products[0].productId").value(1L))
+                .andExpect(jsonPath("$.data.products[0].name").value("상품명"))
+                .andExpect(jsonPath("$.data.products[0].price").value(1000));
 
             actions
                 .andDo(document("product-category-detail",
@@ -171,7 +182,10 @@ class ProductCategoryControllerTest {
                     responseFields(
                         beneathPath("data").withSubsectionId("data"),
                         fieldWithPath("productCategoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
-                        fieldWithPath("name").type(JsonFieldType.STRING).description(categoryName)
+                        fieldWithPath("name").type(JsonFieldType.STRING).description(categoryName),
+                        fieldWithPath("products[].productId").type(JsonFieldType.NUMBER).description("상품 ID"),
+                        fieldWithPath("products[].name").type(JsonFieldType.STRING).description("상품명"),
+                        fieldWithPath("products[].price").type(JsonFieldType.NUMBER).description("상품 가격")
                     )
                 ));
 
@@ -443,8 +457,29 @@ class ProductCategoryControllerTest {
 
         @Test
         @DisplayName("실패 - 카테고리에 속한 상품이 존재하는 경우")
-        void 실패_카테고리에_속한_상품이_존재하는_경우() {
-            // TODO : 상품에 대한 개발 후 테스트 코드 작성
+        void 실패_카테고리에_속한_상품이_존재하는_경우() throws Exception {
+            // given
+            willThrow(new CustomException(ErrorCode.EXIST_PRODUCT_IN_CATEGORY)).given(productCategoryService).removeProductCategory(categoryId);
+
+            // when & then
+            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product-category/{id}", categoryId)
+                .with(csrf().asHeader())
+                .contentType("application/json"));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.EXIST_PRODUCT_IN_CATEGORY.getMessage()));
+
+            actions
+                .andDo(document("product-category-remove-fail-exist-product-in-category",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    pathParameters(
+                        parameterWithName("id").description("카테고리 ID")
+                    )
+                ));
+
+            then(productCategoryService).should().removeProductCategory(categoryId);
         }
     }
 }

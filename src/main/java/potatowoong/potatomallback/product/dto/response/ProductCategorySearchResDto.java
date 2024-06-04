@@ -5,9 +5,9 @@ import lombok.Builder;
 
 @Builder
 public record ProductCategorySearchResDto(
-    // TODO : ProductCount 추가
-    Long productCategoryId,
+    long productCategoryId,
     String name,
+    long productCount,
     LocalDateTime updatedAt
 ) {
 

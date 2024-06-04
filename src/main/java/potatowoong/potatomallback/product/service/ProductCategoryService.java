@@ -14,12 +14,15 @@ import potatowoong.potatomallback.product.dto.response.ProductCategoryDetailResD
 import potatowoong.potatomallback.product.dto.response.ProductCategorySearchResDto;
 import potatowoong.potatomallback.product.entity.ProductCategory;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
+import potatowoong.potatomallback.product.repository.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
+
+    private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
     public PageResponseDto<ProductCategorySearchResDto> getProductCategoryList(PageRequestDto pageRequestDto) {
@@ -28,9 +31,7 @@ public class ProductCategoryService {
 
     @Transactional(readOnly = true)
     public ProductCategoryDetailResDto getProductCategory(final long id) {
-        // TODO : 연관된 상품 목록 추가
-
-        return productCategoryRepository.findById(id)
+        return productCategoryRepository.findWithProductsByProductCategoryId(id)
             .map(ProductCategoryDetailResDto::of)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
     }
@@ -75,8 +76,10 @@ public class ProductCategoryService {
         ProductCategory savedProductCategory = productCategoryRepository.findById(productCategoryId)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
-        // TODO : 상품 카테고리에 상품이 존재하는지 확인
-
+        // 카테고리에 상품이 존재하는지 확인
+        if (productRepository.existsByProductCategory(savedProductCategory)) {
+            throw new CustomException(ErrorCode.EXIST_PRODUCT_IN_CATEGORY);
+        }
         productCategoryRepository.delete(savedProductCategory);
     }
 }

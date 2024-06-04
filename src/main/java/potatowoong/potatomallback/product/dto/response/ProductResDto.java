@@ -60,4 +60,20 @@ public class ProductResDto {
                 .build();
         }
     }
+
+    @Builder
+    public record ProductRelatedResDto(
+        Long productId,
+        String name,
+        int price
+    ) {
+
+        public static ProductRelatedResDto of(Product product) {
+            return ProductRelatedResDto.builder()
+                .productId(product.getProductId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .build();
+        }
+    }
 }
