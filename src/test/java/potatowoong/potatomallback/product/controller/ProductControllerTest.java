@@ -79,6 +79,8 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private final long productId = 1L;
+
     @Nested
     @DisplayName("상품 목록 조회")
     class 상품_목록_조회 {
@@ -96,17 +98,8 @@ class ProductControllerTest {
                 .sortDirection(SortDirection.DESCENDING)
                 .build();
 
-            ProductSearchResDto resDto = ProductSearchResDto.builder()
-                .productId(1L)
-                .name("감자")
-                .price(1000)
-                .stockQuantity(10)
-                .categoryName("채소")
-                .thumbnailUrl("https://xxx.s3.xxx.amazonaws.com/xxx/xxxx.jpg")
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-            PageResponseDto<ProductSearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), 1);
+            ProductSearchResDto resDto = getProductSearchResDto();
+            PageResponseDto<ProductSearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), productId);
 
             given(productService.getProductList(pageRequestDto)).willReturn(pageResponseDto);
 
@@ -154,6 +147,18 @@ class ProductControllerTest {
             then(productService).should().getProductList(pageRequestDto);
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
         }
+
+        private ProductSearchResDto getProductSearchResDto() {
+            return ProductSearchResDto.builder()
+                .productId(productId)
+                .name("감자")
+                .price(1000)
+                .stockQuantity(10)
+                .categoryName("채소")
+                .thumbnailUrl("https://xxx.s3.xxx.amazonaws.com/xxx/xxxx.jpg")
+                .updatedAt(LocalDateTime.now())
+                .build();
+        }
     }
 
     @Nested
@@ -164,27 +169,18 @@ class ProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            ProductDetailResDto resDto = ProductDetailResDto.builder()
-                .productId(1L)
-                .name("감자")
-                .description("감자입니다.")
-                .price(1000)
-                .stockQuantity(10)
-                .productCategoryId(1L)
-                .thumbnailUrl("https://xxx.s3.xxx.amazonaws.com/xxx/xxxx.jpg")
-                .thumbnailFileId(1L)
-                .build();
+            ProductDetailResDto resDto = getProductDetailResDto();
 
-            given(productService.getProduct(1L)).willReturn(resDto);
+            given(productService.getProduct(productId)).willReturn(resDto);
 
             // when & then
-            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", 1L)
+            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", productId)
                 .with(csrf().asHeader())
                 .contentType("application/json"));
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.productId").value(1L))
+                .andExpect(jsonPath("$.data.productId").value(productId))
                 .andExpect(jsonPath("$.data.name").value("감자"))
                 .andExpect(jsonPath("$.data.description").value("감자입니다."))
                 .andExpect(jsonPath("$.data.price").value(1000))
@@ -213,18 +209,18 @@ class ProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getProduct(1L);
-            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, 1L, "감자");
+            then(productService).should().getProduct(productId);
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, productId, resDto.name());
         }
 
         @Test
         @DisplayName("실패 - 존재하지 않는 상품 ID")
         void 실패_존재하지_않는_상품_ID() throws Exception {
             // given
-            given(productService.getProduct(1L)).willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+            given(productService.getProduct(productId)).willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
             // when & then
-            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", 1L)
+            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", productId)
                 .with(csrf().asHeader())
                 .contentType("application/json"));
 
@@ -241,8 +237,21 @@ class ProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getProduct(1L);
+            then(productService).should().getProduct(productId);
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+
+        private ProductDetailResDto getProductDetailResDto() {
+            return ProductDetailResDto.builder()
+                .productId(1L)
+                .name("감자")
+                .description("감자입니다.")
+                .price(1000)
+                .stockQuantity(10)
+                .productCategoryId(1L)
+                .thumbnailUrl("https://xxx.s3.xxx.amazonaws.com/xxx/xxxx.jpg")
+                .thumbnailFileId(1L)
+                .build();
         }
     }
 
@@ -254,13 +263,7 @@ class ProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            ProductAddReqDto productAddReqDto = ProductAddReqDto.builder()
-                .name("감자")
-                .content("감자입니다.")
-                .price(1000)
-                .stockQuantity(10)
-                .productCategoryId(1L)
-                .build();
+            ProductAddReqDto productAddReqDto = getProductAddReqDto();
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "썸네일 파일".getBytes());
             MockMultipartFile data = new MockMultipartFile("productAddReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productAddReqDto).getBytes());
@@ -292,7 +295,17 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().addProduct(any(), any());
-            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, ADD, "", "감자");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
+        }
+
+        private ProductAddReqDto getProductAddReqDto() {
+            return ProductAddReqDto.builder()
+                .name("감자")
+                .content("감자입니다.")
+                .price(1000)
+                .stockQuantity(10)
+                .productCategoryId(1L)
+                .build();
         }
     }
 
@@ -304,15 +317,7 @@ class ProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
-                .productId(1L)
-                .name("감자")
-                .content("감자입니다.")
-                .price(1000)
-                .stockQuantity(10)
-                .productCategoryId(1L)
-                .thumbnailFileId(1L)
-                .build();
+            ProductModifyReqDto productModifyReqDto = getProductModifyReqDto();
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
             MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
@@ -346,22 +351,14 @@ class ProductControllerTest {
                 ));
 
             then(productService).should().modifyProduct(any(), any());
-            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, MODIFY, 1L, "감자");
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, MODIFY, productId, productModifyReqDto.name());
         }
 
         @Test
         @DisplayName("실패 - 존재하지 않는 상품 ID")
         void 실패_존재하지_않는_상품_ID() throws Exception {
             // given
-            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
-                .productId(1L)
-                .name("감자")
-                .content("감자입니다.")
-                .price(1000)
-                .stockQuantity(10)
-                .productCategoryId(1L)
-                .thumbnailFileId(1L)
-                .build();
+            ProductModifyReqDto productModifyReqDto = getProductModifyReqDto();
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
             MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
@@ -399,6 +396,18 @@ class ProductControllerTest {
             then(productService).should().modifyProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
+
+        private ProductModifyReqDto getProductModifyReqDto() {
+            return ProductModifyReqDto.builder()
+                .productId(productId)
+                .name("감자")
+                .content("감자입니다.")
+                .price(1000)
+                .stockQuantity(10)
+                .productCategoryId(1L)
+                .thumbnailFileId(1L)
+                .build();
+        }
     }
 
     @Nested
@@ -409,7 +418,7 @@ class ProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // when & then
-            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product/{productId}", 1L)
+            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product/{productId}", productId)
                 .with(csrf().asHeader())
                 .contentType("application/json"));
 
@@ -426,18 +435,18 @@ class ProductControllerTest {
                     )
                 ));
 
-            then(productService).should().removeProduct(1L);
-            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, REMOVE, 1L, "");
+            then(productService).should().removeProduct(productId);
+            then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, REMOVE, productId, "");
         }
 
         @Test
         @DisplayName("실패 - 존재하지 않는 상품 ID")
         void 실패_존재하지_않는_상품_ID() throws Exception {
             // given
-            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(productService).removeProduct(1L);
+            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(productService).removeProduct(productId);
 
             // when & then
-            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product/{productId}", 1L)
+            ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product/{productId}", productId)
                 .with(csrf().asHeader())
                 .contentType("application/json"));
 
@@ -454,7 +463,7 @@ class ProductControllerTest {
                     )
                 ));
 
-            then(productService).should().removeProduct(1L);
+            then(productService).should().removeProduct(productId);
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }

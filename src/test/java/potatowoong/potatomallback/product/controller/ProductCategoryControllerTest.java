@@ -1,8 +1,10 @@
 package potatowoong.potatomallback.product.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -224,6 +226,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().getProductCategory(categoryId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
@@ -259,7 +262,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().addProductCategory(dto);
-            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, ADD, "", dto.name());
+            then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, ADD, "", categoryName);
         }
 
         @Test
@@ -292,6 +295,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().addProductCategory(dto);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
@@ -364,6 +368,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().modifyProductCategory(dto);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
         @Test
@@ -398,6 +403,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().modifyProductCategory(dto);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
@@ -459,6 +465,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().removeProductCategory(categoryId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
         @Test
@@ -486,6 +493,7 @@ class ProductCategoryControllerTest {
                 ));
 
             then(productCategoryService).should().removeProductCategory(categoryId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 }

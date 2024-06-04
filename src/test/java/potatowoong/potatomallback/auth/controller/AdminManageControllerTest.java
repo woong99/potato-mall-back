@@ -1,9 +1,11 @@
 package potatowoong.potatomallback.auth.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -17,6 +19,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static potatowoong.potatomallback.common.LogMessage.ADD;
+import static potatowoong.potatomallback.common.LogMessage.ADMIN_MANAGEMENT;
+import static potatowoong.potatomallback.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
@@ -137,7 +145,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().getAdminList(pageRequestDto);
-            then(adminLogService).should().addAdminLog(any(), any());
+            then(adminLogService).should().addAdminLog(ADMIN_MANAGEMENT, SEARCH_LIST);
         }
     }
 
@@ -181,7 +189,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().getAdmin(adminId);
-            then(adminLogService).should().addAdminLog(any(), any(), any(), any());
+            then(adminLogService).should().addAdminLog(eq(ADMIN_MANAGEMENT), eq(SEARCH_DETAIL), any(), any());
         }
 
         @Test
@@ -211,11 +219,12 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().getAdmin(adminId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
     @Nested
-    @DisplayName("관리자 저장")
+    @DisplayName("관리자 등록")
     class 관리자_저장 {
 
         @Test
@@ -246,7 +255,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().addAdmin(any());
-            then(adminLogService).should().addAdminLog(any(), any(), any(), any());
+            then(adminLogService).should().addAdminLog(eq(ADMIN_MANAGEMENT), eq(ADD), any(), any());
         }
 
         @Test
@@ -278,6 +287,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().addAdmin(any(AdminAddReqDto.class));
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
         @Test
@@ -309,6 +319,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().addAdmin(any(AdminAddReqDto.class));
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
@@ -344,7 +355,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().modifyAdmin(any());
-            then(adminLogService).should().addAdminLog(any(), any(), any(), any());
+            then(adminLogService).should().addAdminLog(eq(ADMIN_MANAGEMENT), eq(MODIFY), any(), any());
         }
 
         @Test
@@ -376,6 +387,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().modifyAdmin(any(AdminModifyReqDto.class));
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
         @Test
@@ -407,6 +419,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().modifyAdmin(any(AdminModifyReqDto.class));
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
         @Test
@@ -438,6 +451,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().modifyAdmin(any(AdminModifyReqDto.class));
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }
 
@@ -466,7 +480,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().removeAdmin(adminId);
-            then(adminLogService).should().addAdminLog(any(), any(), any());
+            then(adminLogService).should().addAdminLog(eq(ADMIN_MANAGEMENT), eq(REMOVE), any());
         }
 
         @Test
@@ -493,6 +507,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().removeAdmin(adminId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any());
         }
 
         @Test
@@ -519,6 +534,7 @@ class AdminManageControllerTest {
                 ));
 
             then(adminManageService).should().removeAdmin(adminId);
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any());
         }
     }
 
