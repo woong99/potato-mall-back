@@ -17,6 +17,7 @@ public enum ErrorCode {
     INCORRECT_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "AU007", "비밀번호는 8자 이상 20자 이하로 입력해주세요."),
     SELF_DELETION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "AU008", "자신의 계정은 삭제할 수 없습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "AU009", "접근 권한이 없습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AU010", "로그인이 필요합니다."),
     DUPLICATED_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "PC001", "이미 존재하는 카테고리명입니다."),
     NOT_FOUND_CATEGORY(HttpStatus.BAD_REQUEST, "PC002", "존재하지 않는 카테고리입니다."),
     EXIST_PRODUCT_IN_CATEGORY(HttpStatus.BAD_REQUEST, "PC003", "해당 카테고리에 상품이 존재합니다."),

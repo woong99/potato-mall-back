@@ -9,6 +9,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
+import potatowoong.potatomallback.jwt.dto.AccessTokenDto;
+import potatowoong.potatomallback.jwt.dto.RefreshTokenDto;
 import potatowoong.potatomallback.jwt.dto.TokenDto;
 
 @Component
@@ -42,6 +45,19 @@ public class JwtTokenProvider {
      * Access Token과 Refresh Token을 생성하는 메소드
      */
     public TokenDto generateToken(Authentication authentication) {
+        AccessTokenDto accessTokenDto = generateAccessToken(authentication);
+        RefreshTokenDto refreshTokenDto = generateRefreshToken();
+
+        return TokenDto.builder()
+            .accessTokenDto(accessTokenDto)
+            .refreshTokenDto(refreshTokenDto)
+            .build();
+    }
+
+    /**
+     * Access Token을 생성하는 메소드
+     */
+    public AccessTokenDto generateAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(","));
@@ -51,9 +67,6 @@ public class JwtTokenProvider {
         // Access Token 만료 시간 설정
         Date accessTokenExpiresIn = new Date(now + 1000 * Long.parseLong(accessTokenExpiration));
 
-        // Refresh Token 만료 시간 설정
-        Date refreshTokenExpiresIn = new Date(now + 1000 * Long.parseLong(refreshTokenExpiration));
-
         // Access Token 생성
         String accessToken = Jwts.builder()
             .subject(authentication.getName())
@@ -62,15 +75,29 @@ public class JwtTokenProvider {
             .signWith(getSigningKey(), SIG.HS256)
             .compact();
 
+        return AccessTokenDto.builder()
+            .token(accessToken)
+            .build();
+    }
+
+    /**
+     * Refresh Token을 생성하는 메소드
+     */
+    private RefreshTokenDto generateRefreshToken() {
+        long now = (new Date()).getTime();
+
+        // Refresh Token 만료 시간 설정
+        Date refreshTokenExpiresIn = new Date(now + 1000 * Long.parseLong(refreshTokenExpiration));
+
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
             .expiration(refreshTokenExpiresIn)
             .signWith(getSigningKey(), SIG.HS256)
             .compact();
 
-        return TokenDto.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
+        return RefreshTokenDto.builder()
+            .token(refreshToken)
+            .tokenExpiresIn(refreshTokenExpiresIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
             .build();
     }
 

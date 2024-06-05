@@ -9,6 +9,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import potatowoong.potatomallback.exception.CustomException;
+import potatowoong.potatomallback.exception.ErrorCode;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +21,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         CustomException customException = (CustomException) request.getAttribute("exception");
+        if (customException == null) {
+            customException = new CustomException(ErrorCode.UNAUTHORIZED);
+        }
 
         resolver.resolveException(request, response, null, customException);
     }

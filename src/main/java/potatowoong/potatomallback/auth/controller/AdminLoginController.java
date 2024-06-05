@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import potatowoong.potatomallback.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.auth.service.AdminLoginService;
 import potatowoong.potatomallback.common.ApiResponseEntity;
+import potatowoong.potatomallback.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.jwt.dto.TokenDto;
 import potatowoong.potatomallback.utils.SecurityUtils;
 
@@ -44,5 +46,16 @@ public class AdminLoginController {
     public ResponseEntity<ApiResponseEntity<String>> logout() {
         adminLoginLogService.addLogoutAdminLoginLog(SecurityUtils.getCurrentUserId());
         return ResponseEntity.ok(ApiResponseEntity.of("로그아웃 성공"));
+    }
+
+    /**
+     * 토큰 갱신 API
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponseEntity<AccessTokenDto>> refresh(HttpServletRequest request) {
+        // Access Token 갱신
+        AccessTokenDto accessTokenDto = adminLoginService.refresh(request);
+
+        return ResponseEntity.ok(ApiResponseEntity.of(accessTokenDto));
     }
 }

@@ -4,8 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record TokenDto(
-    String accessToken,
-    String refreshToken
+    AccessTokenDto accessTokenDto,
+    RefreshTokenDto refreshTokenDto
 ) {
 
 }
