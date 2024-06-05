@@ -1,4 +1,6 @@
 spring:
+    profiles:
+        active: dev
     application:
         name: potato-mall
     datasource:
@@ -6,9 +8,6 @@ spring:
         url: ENC(IX2K1DrI0zuHAXcbl2+p2noyvWL0yvEqebr2KDadmv9WDBxgDKu4H6e2O4SJqSuEiW+Jlw6bHQOiw/7S9SzSkWVJwEwU/+ev881BRVWTECR2OxJ5UrmUjzym9zhUr+cp)
         username: ENC(8MbDWgxEMu5l//DlOOFgyA==)
         password: ENC(JH36foeMmGWJH1BfjYCeuyrWHnYm2+7W)
-    jpa:
-        hibernate:
-            ddl-auto: update
     servlet:
         multipart:
             max-file-size: 10MB
@@ -32,3 +31,5 @@ cloud:
                 secret-key: ENC(fGzqAOA7XKgAObfjpk7ip+JrY86jKht8R6KnBWUB4iKvwkKruWRVpt41wYZ6/4dhLCxXGZQXUOc=)
 file:
     image-extension: jpg, jpeg, png, gif
+#logging:
+#    config: classpath:log4j2.xml

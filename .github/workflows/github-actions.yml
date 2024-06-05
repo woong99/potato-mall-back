@@ -28,7 +28,7 @@ jobs:
                     gradle-version: '8.7'
 
             -   name: Build with Gradle
-                run: ./gradlew build -Djasypt.encryptor.password=${{secrets.JASYPT_PASSWORD }}
+                run: ./gradlew build -Djasypt.encryptor.password=${{secrets.JASYPT_PASSWORD }} -Pprofile=prod
 
             -   name: Upload Build File
                 uses: actions/upload-artifact@v4
