@@ -48,7 +48,7 @@ public class ProductCategoryRepositoryCustomImpl implements ProductCategoryRepos
             .from(productCategory)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.getFirstIndex() + pageRequestDto.size())
+            .limit(pageRequestDto.size())
             .orderBy(productCategory.productCategoryId.desc())
             .fetch();
     }
