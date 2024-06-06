@@ -22,10 +22,10 @@ import potatowoong.potatomallback.auth.service.AdminLogService;
 import potatowoong.potatomallback.common.ApiResponseEntity;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
-import potatowoong.potatomallback.product.dto.request.ProductCategoryModifyReqDto;
-import potatowoong.potatomallback.product.dto.response.ProductCategoryDetailResDto;
-import potatowoong.potatomallback.product.dto.response.ProductCategorySearchResDto;
+import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
+import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.product.service.ProductCategoryService;
 
 @RestController

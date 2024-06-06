@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
 import potatowoong.potatomallback.config.db.BaseEntity;
-import potatowoong.potatomallback.product.dto.request.ProductCategoryAddReqDto;
+import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 
 @Entity
 @Comment("상품 카테고리 정보")

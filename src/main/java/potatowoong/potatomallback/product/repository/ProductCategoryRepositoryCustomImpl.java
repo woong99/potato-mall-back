@@ -14,7 +14,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.product.dto.response.ProductCategorySearchResDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 
 @RequiredArgsConstructor
 public class ProductCategoryRepositoryCustomImpl implements ProductCategoryRepositoryCustom {
