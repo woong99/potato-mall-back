@@ -16,6 +16,7 @@ public class ProductResDto {
     public record ProductSearchResDto(
         Long productId,
         String name,
+        String description,
         int price,
         int stockQuantity,
         String categoryName,
@@ -23,9 +24,10 @@ public class ProductResDto {
         LocalDateTime updatedAt
     ) {
 
-        public ProductSearchResDto(Long productId, String name, int price, int stockQuantity, String categoryName, String thumbnailUrl, LocalDateTime updatedAt) {
+        public ProductSearchResDto(Long productId, String name, String description, int price, int stockQuantity, String categoryName, String thumbnailUrl, LocalDateTime updatedAt) {
             this.productId = productId;
             this.name = name;
+            this.description = description;
             this.price = price;
             this.stockQuantity = stockQuantity;
             this.categoryName = categoryName;

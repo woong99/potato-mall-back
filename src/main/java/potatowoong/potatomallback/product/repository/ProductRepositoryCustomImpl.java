@@ -33,11 +33,11 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
      */
     private List<ProductSearchResDto> getPagingResult(PageRequestDto pageRequestDto) {
         return jpaQueryFactory.select(
-                Projections.constructor(ProductSearchResDto.class, product.productId, product.name, product.price, product.stockQuantity, product.productCategory.name, product.thumbnailFile.storedFileName, product.updatedAt))
+                Projections.constructor(ProductSearchResDto.class, product.productId, product.name, product.content, product.price, product.stockQuantity, product.productCategory.name, product.thumbnailFile.storedFileName, product.updatedAt))
             .from(product)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.getFirstIndex() + pageRequestDto.size())
+            .limit(pageRequestDto.size())
             .orderBy(getOrderConditions(pageRequestDto))
             .fetch();
     }
