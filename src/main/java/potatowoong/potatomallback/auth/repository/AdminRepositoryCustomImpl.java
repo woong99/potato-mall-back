@@ -36,7 +36,7 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
             .from(admin)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.getFirstIndex() + pageRequestDto.size())
+            .limit(pageRequestDto.size())
             .orderBy(getOrderConditions(pageRequestDto))
             .fetch();
     }
@@ -64,7 +64,7 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
         return builder
             .and(searchCondition.equals("adminId") ? admin.adminId.contains(searchWord) : null)
             .and(searchCondition.equals("name") ? admin.name.contains(searchWord) : null)
-            .and(StringUtils.isBlank(searchCondition) && StringUtils.isNotBlank(searchWord)
+            .and((StringUtils.isBlank(searchCondition) || searchCondition.equals("all")) && StringUtils.isNotBlank(searchWord)
                 ? admin.adminId.contains(searchWord).or(admin.name.contains(searchWord))
                 : null);
     }
@@ -76,14 +76,14 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
         final String sortCondition = pageRequestDto.sortCondition();
         final SortDirection sortDirection = pageRequestDto.sortDirection();
         if (StringUtils.isBlank(sortCondition)) {
-            return admin.updatedAt.desc();
+            return admin.createdAt.desc();
         }
 
         return switch (sortCondition) {
             case "adminId" -> sortDirection == SortDirection.ASCENDING ? admin.adminId.asc() : admin.adminId.desc();
             case "name" -> sortDirection == SortDirection.ASCENDING ? admin.name.asc() : admin.name.desc();
             case "updatedAt" -> sortDirection == SortDirection.ASCENDING ? admin.updatedAt.asc() : admin.updatedAt.desc();
-            default -> admin.updatedAt.desc();
+            default -> admin.createdAt.desc();
         };
     }
 }
