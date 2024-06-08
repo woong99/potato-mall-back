@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.product.repository;
 
+import static potatowoong.potatomallback.file.entity.QAtchFile.atchFile;
 import static potatowoong.potatomallback.product.entity.QProduct.product;
 
 import com.querydsl.core.BooleanBuilder;
@@ -33,8 +34,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
      */
     private List<ProductSearchResDto> getPagingResult(PageRequestDto pageRequestDto) {
         return jpaQueryFactory.select(
-                Projections.constructor(ProductSearchResDto.class, product.productId, product.name, product.content, product.price, product.stockQuantity, product.productCategory.name, product.thumbnailFile.storedFileName, product.updatedAt))
+                Projections.constructor(ProductSearchResDto.class, product.productId, product.name, product.price, product.stockQuantity, product.productCategory.name, product.thumbnailFile.storedFileName, product.updatedAt))
             .from(product)
+            .leftJoin(product.thumbnailFile, atchFile)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
             .limit(pageRequestDto.size())
@@ -61,7 +63,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         return builder
-            .and(product.name.contains(pageRequestDto.searchWord()));
+            .and(StringUtils.isNotBlank(pageRequestDto.searchWord()) ? product.name.contains(pageRequestDto.searchWord()) : null);
     }
 
     /**

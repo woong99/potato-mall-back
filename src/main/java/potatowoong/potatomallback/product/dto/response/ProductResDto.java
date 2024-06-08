@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import potatowoong.potatomallback.file.entity.AtchFile;
 import potatowoong.potatomallback.file.enums.S3Folder;
 import potatowoong.potatomallback.product.entity.Product;
@@ -16,7 +17,6 @@ public class ProductResDto {
     public record ProductSearchResDto(
         Long productId,
         String name,
-        String description,
         int price,
         int stockQuantity,
         String categoryName,
@@ -24,14 +24,13 @@ public class ProductResDto {
         LocalDateTime updatedAt
     ) {
 
-        public ProductSearchResDto(Long productId, String name, String description, int price, int stockQuantity, String categoryName, String thumbnailUrl, LocalDateTime updatedAt) {
+        public ProductSearchResDto(Long productId, String name, int price, int stockQuantity, String categoryName, String thumbnailUrl, LocalDateTime updatedAt) {
             this.productId = productId;
             this.name = name;
-            this.description = description;
             this.price = price;
             this.stockQuantity = stockQuantity;
             this.categoryName = categoryName;
-            this.thumbnailUrl = S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
+            this.thumbnailUrl = StringUtils.isBlank(thumbnailUrl) ? "" : S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
             this.updatedAt = updatedAt;
         }
     }
@@ -57,8 +56,8 @@ public class ProductResDto {
                 .price(product.getPrice())
                 .stockQuantity(product.getStockQuantity())
                 .productCategoryId(product.getProductCategory().getProductCategoryId())
-                .thumbnailUrl(S3Utils.getS3FileUrl() + atchFile.getS3Folder() + "/" + atchFile.getStoredFileName())
-                .thumbnailFileId(atchFile.getAtchFileId())
+                .thumbnailUrl(atchFile == null ? null : S3Utils.getS3FileUrl() + atchFile.getS3Folder() + "/" + atchFile.getStoredFileName())
+                .thumbnailFileId(atchFile == null ? null : atchFile.getAtchFileId())
                 .build();
         }
     }
