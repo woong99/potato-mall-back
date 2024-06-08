@@ -8,6 +8,7 @@ import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
 import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import potatowoong.potatomallback.common.PageResponseDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryListResDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.product.service.ProductCategoryService;
 
@@ -60,6 +62,14 @@ public class ProductCategoryController {
         adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_DETAIL, id, productCategory.name());
 
         return ResponseEntity.ok(ApiResponseEntity.of(productCategory));
+    }
+
+    /**
+     * 상품 카테고리 전체 조회 API
+     */
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponseEntity<List<ProductCategoryListResDto>>> getAllProductCategoryList() {
+        return ResponseEntity.ok(ApiResponseEntity.of(productCategoryService.getAllProductCategoryList()));
     }
 
     /**

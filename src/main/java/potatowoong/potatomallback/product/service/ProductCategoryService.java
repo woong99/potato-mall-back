@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.product.service;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import potatowoong.potatomallback.exception.ErrorCode;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryListResDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.product.entity.ProductCategory;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
@@ -41,6 +43,13 @@ public class ProductCategoryService {
         return productCategoryRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY))
             .getName();
+    }
+    
+    @Transactional(readOnly = true)
+    public List<ProductCategoryListResDto> getAllProductCategoryList() {
+        return productCategoryRepository.findAll().stream()
+            .map(ProductCategoryListResDto::of)
+            .toList();
     }
 
     @Transactional

@@ -38,4 +38,18 @@ public class ProductCategoryResDto {
     ) {
 
     }
+
+    @Builder
+    public record ProductCategoryListResDto(
+        long productCategoryId,
+        String name
+    ) {
+
+        public static ProductCategoryListResDto of(ProductCategory productCategory) {
+            return ProductCategoryListResDto.builder()
+                .productCategoryId(productCategory.getProductCategoryId())
+                .name(productCategory.getName())
+                .build();
+        }
+    }
 }

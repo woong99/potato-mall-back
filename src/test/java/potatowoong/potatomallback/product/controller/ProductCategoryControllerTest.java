@@ -56,6 +56,7 @@ import potatowoong.potatomallback.exception.ErrorCode;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
+import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryListResDto;
 import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductRelatedResDto;
 import potatowoong.potatomallback.product.service.ProductCategoryService;
@@ -227,6 +228,45 @@ class ProductCategoryControllerTest {
 
             then(productCategoryService).should().getProductCategory(categoryId);
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("상품 카테고리 전체 조회")
+    class 상품_카테고리_전체_조회 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() throws Exception {
+            // given
+            ProductCategoryListResDto resDto = ProductCategoryListResDto.builder()
+                .productCategoryId(categoryId)
+                .name(categoryName)
+                .build();
+
+            given(productCategoryService.getAllProductCategoryList()).willReturn(List.of(resDto));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(get("/api/admin/product-category/all")
+                .with(csrf().asHeader())
+                .contentType("application/json"));
+
+            actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists());
+
+            actions
+                .andDo(document("product-category-all",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    responseFields(
+                        beneathPath("data").withSubsectionId("data"),
+                        fieldWithPath("productCategoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
+                        fieldWithPath("name").type(JsonFieldType.STRING).description("카테고리명")
+                    )
+                ));
+
+            then(productCategoryService).should().getAllProductCategoryList();
         }
     }
 

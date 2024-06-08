@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -137,6 +138,27 @@ class ProductCategoryServiceTest {
 
             // then
             then(productCategoryRepository).should().findById(categoryId);
+        }
+    }
+
+    @Nested
+    @DisplayName("전체 상품 카테고리 목록 조회")
+    class 전체_상품_카테고리_목록_조회 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() {
+            // given
+            ProductCategory productCategory = spy(createProductCategory());
+
+            given(productCategory.getProductCategoryId()).willReturn(1L);
+            given(productCategoryRepository.findAll()).willReturn(Collections.singletonList(productCategory));
+
+            // when
+            productCategoryService.getAllProductCategoryList();
+
+            // then
+            then(productCategoryRepository).should().findAll();
         }
     }
 
