@@ -135,7 +135,6 @@ class ProductControllerTest {
                         beneathPath("data").withSubsectionId("data"),
                         fieldWithPath("result[].productId").description("상품 ID"),
                         fieldWithPath("result[].name").description("상품명"),
-                        fieldWithPath("result[].description").description("상품 설명"),
                         fieldWithPath("result[].price").description("가격"),
                         fieldWithPath("result[].stockQuantity").description("재고량"),
                         fieldWithPath("result[].categoryName").description("카테고리명"),
