@@ -32,7 +32,7 @@ import potatowoong.potatomallback.product.service.ProductService;
 @RestController
 @RequestMapping("/api/admin/product")
 @RequiredArgsConstructor
-public class ProductController {
+public class AdminProductController {
 
     private final ProductService productService;
 

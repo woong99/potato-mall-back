@@ -61,11 +61,11 @@ import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDeta
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSearchResDto;
 import potatowoong.potatomallback.product.service.ProductService;
 
-@WebMvcTest(controllers = ProductController.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = PortCheckFilter.class)})
+@WebMvcTest(controllers = AdminProductController.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = PortCheckFilter.class)})
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureRestDocs
 @WithMockUser
-class ProductControllerTest {
+class AdminProductControllerTest {
 
     @MockBean
     private ProductService productService;
