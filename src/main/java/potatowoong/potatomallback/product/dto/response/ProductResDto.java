@@ -77,4 +77,20 @@ public class ProductResDto {
                 .build();
         }
     }
+
+    @Builder
+    public record UserProductSearchResDto(
+        Long productId,
+        String name,
+        int price,
+        String thumbnailUrl
+    ) {
+
+        public UserProductSearchResDto(Long productId, String name, int price, String thumbnailUrl) {
+            this.productId = productId;
+            this.name = name;
+            this.price = price;
+            this.thumbnailUrl = StringUtils.isBlank(thumbnailUrl) ? "" : S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
+        }
+    }
 }

@@ -15,6 +15,7 @@ import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductAddRe
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSearchResDto;
+import potatowoong.potatomallback.product.dto.response.ProductResDto.UserProductSearchResDto;
 import potatowoong.potatomallback.product.entity.Product;
 import potatowoong.potatomallback.product.entity.ProductCategory;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
@@ -42,6 +43,11 @@ public class ProductService {
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         return ProductDetailResDto.of(product);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<UserProductSearchResDto> getUserProductList(PageRequestDto pageRequestDto) {
+        return productRepository.findUserProductWithPage(pageRequestDto);
     }
 
     @Transactional

@@ -29,6 +29,7 @@ import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductAddRe
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSearchResDto;
+import potatowoong.potatomallback.product.dto.response.ProductResDto.UserProductSearchResDto;
 import potatowoong.potatomallback.product.entity.Product;
 import potatowoong.potatomallback.product.entity.ProductCategory;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
@@ -65,6 +66,25 @@ class ProductServiceTest {
             // then
             assertThat(result).isNotNull();
             then(productRepository).should().findProductWithPage(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자 - 상품 목록 조회")
+    class 사용자_상품_목록_조회 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() {
+            // given
+            given(productRepository.findUserProductWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(UserProductSearchResDto.builder().build()), 1));
+
+            // when
+            PageResponseDto<UserProductSearchResDto> result = productService.getUserProductList(any());
+
+            // then
+            assertThat(result).isNotNull();
+            then(productRepository).should().findUserProductWithPage(any());
         }
     }
 
