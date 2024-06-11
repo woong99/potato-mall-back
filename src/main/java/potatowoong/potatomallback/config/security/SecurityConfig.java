@@ -23,8 +23,6 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final PortCheckFilter portCheckFilter;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -36,7 +34,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.addFilterBefore(portCheckFilter, UsernamePasswordAuthenticationFilter.class);
         http
             .httpBasic(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
@@ -47,7 +44,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/admin/login", "/api/admin/refresh", "/docs/index.html", "/api/product/search").permitAll()
+                    .requestMatchers("/api/admin/login", "/api/admin/refresh", "/docs/index.html", "/api/product/search", "/health-check").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
