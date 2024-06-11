@@ -41,8 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -55,11 +53,10 @@ import potatowoong.potatomallback.auth.service.AdminLogService;
 import potatowoong.potatomallback.auth.service.AdminManageService;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.config.security.PortCheckFilter;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
 
-@WebMvcTest(controllers = AdminManageController.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = PortCheckFilter.class)})
+@WebMvcTest(controllers = AdminManageController.class)
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureRestDocs
 @WithMockUser

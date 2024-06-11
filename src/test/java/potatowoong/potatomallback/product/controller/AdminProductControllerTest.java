@@ -40,8 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -52,7 +50,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.auth.service.AdminLogService;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.config.security.PortCheckFilter;
 import potatowoong.potatomallback.exception.CustomException;
 import potatowoong.potatomallback.exception.ErrorCode;
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductAddReqDto;
@@ -61,7 +58,7 @@ import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDeta
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSearchResDto;
 import potatowoong.potatomallback.product.service.ProductService;
 
-@WebMvcTest(controllers = AdminProductController.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = PortCheckFilter.class)})
+@WebMvcTest(controllers = AdminProductController.class)
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureRestDocs
 @WithMockUser
