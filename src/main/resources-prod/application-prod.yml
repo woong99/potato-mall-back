@@ -10,3 +10,5 @@ decorator:
     datasource:
         p6spy:
             enable-logging: on
+server:
+    port: 80
