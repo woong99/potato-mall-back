@@ -50,3 +50,8 @@ include::api/product-category.adoc[]
 
 include::api/product.adoc[]
 
+[[RANKING]]
+== 랭킹 API
+
+include::api/ranking.adoc[]
+

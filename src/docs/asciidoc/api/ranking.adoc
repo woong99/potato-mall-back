@@ -1,0 +1,13 @@
+[[ranking]]
+=== 실시간 검색어 Top10 조회
+
+==== HTTP Request
+
+include::{snippets}/recent-top-10-search-keyword/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/recent-top-10-search-keyword/http-response.adoc[]
+include::{snippets}/recent-top-10-search-keyword/response-fields-data.adoc[]
+
+'''
