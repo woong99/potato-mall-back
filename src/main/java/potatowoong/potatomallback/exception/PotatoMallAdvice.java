@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
+@Slf4j
 public class PotatoMallAdvice {
 
     /**
@@ -37,5 +39,14 @@ public class PotatoMallAdvice {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponseEntity> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         return ErrorResponseEntity.toResponseEntity(ErrorCode.EXCEEDED_FILE_SIZE);
+    }
+
+    /**
+     * Handle Exception
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseEntity> handleException(Exception e) {
+        log.error("[Exception] :: ", e);
+        return ErrorResponseEntity.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 }
