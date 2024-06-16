@@ -44,9 +44,9 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/admin/login", "/api/admin/refresh", "/docs/index.html", "/api/product/search", "/health-check").permitAll()
+                    .requestMatchers("/api/admin/login", "/api/admin/refresh").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated())
+                    .anyRequest().permitAll()) // TODO : 사용자 권한이 필요한 API 개발 후 정책 변경
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
