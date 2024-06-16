@@ -12,6 +12,8 @@ spring:
         multipart:
             max-file-size: 10MB
             max-request-size: 10MB
+    elasticsearch:
+        uris: ENC(dx4HOb0p6Ug5qIGhP4mMwk+1qsyMYGXaPp9bUEiHS+U=)
 server:
     forward-headers-strategy: native
 jwt:
@@ -29,5 +31,3 @@ cloud:
                 secret-key: ENC(fGzqAOA7XKgAObfjpk7ip+JrY86jKht8R6KnBWUB4iKvwkKruWRVpt41wYZ6/4dhLCxXGZQXUOc=)
 file:
     image-extension: jpg, jpeg, png, gif
-#logging:
-#    config: classpath:log4j2.xml

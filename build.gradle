@@ -71,6 +71,9 @@ dependencies {
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // ElasticSearch
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
     // MariaDB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
