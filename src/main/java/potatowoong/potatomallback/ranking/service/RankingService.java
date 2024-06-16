@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class RankingService {
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional(readOnly = true)
-    // TODO : 캐싱 적용
+    @Cacheable(value = "recentTop10SearchKeyword", key = "#now")
     public SearchRankingSnapshotResDto getRecentTop10SearchKeyword(LocalDateTime now) {
         List<SearchRankResDto> searchRankResDtos = searchKeywordRankingRepository.findAllByParsedAt(now).stream()
             .map(SearchRankResDto::of)
