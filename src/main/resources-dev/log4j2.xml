@@ -5,7 +5,7 @@
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout disableAnsi="false" pattern="%style{%d{yyyy-MM-dd HH:mm:ss}}{magenta} %highlight${LOG_LEVEL_PATTERN} %style{[%c{1.1.1.*}]}{cyan} %m%n"/>
+            <PatternLayout disableAnsi="false" pattern="%style{%d{yyyy-MM-dd HH:mm:ss}}{magenta} %highlight${LOG_LEVEL_PATTERN} [%style{%thread}{yellow}] %style{[%c{1.1.1.*}]}{cyan} %m%n"/>
         </Console>
     </Appenders>
 
@@ -14,7 +14,12 @@
             <AppenderRef ref="console"/>
         </Logger>
 
-        <Root level="INFO">
+        <!-- Elastic Search Log -->
+        <Logger name="tracer" level="trace" additivity="false">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <Root level="info">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>
