@@ -295,6 +295,88 @@ class AdminProductControllerTest {
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
         }
 
+        @Test
+        @DisplayName("실패 - 상품명 중복")
+        void 실패_상품명_중복() throws Exception {
+            // given
+            ProductAddReqDto productAddReqDto = getProductAddReqDto();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "썸네일 파일".getBytes());
+            MockMultipartFile data = new MockMultipartFile("productAddReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productAddReqDto).getBytes());
+
+            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(productService).addProduct(any(), any());
+
+            // when & then
+            ResultActions actions = mockMvc.perform(multipart(HttpMethod.POST, "/api/admin/product")
+                .file(thumbnailFile)
+                .file(data)
+                .with(csrf().asHeader())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.DUPLICATED_PRODUCT_NAME.getMessage()));
+
+            actions
+                .andDo(document("product-add-fail-duplicated-product-name",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestPartFields(
+                        "productAddReqDto",
+                        fieldWithPath("name").optional().description("상품명"),
+                        fieldWithPath("content").optional().description("상품 설명"),
+                        fieldWithPath("price").optional().description("가격"),
+                        fieldWithPath("stockQuantity").optional().description("재고량"),
+                        fieldWithPath("productCategoryId").optional().description("상품 카테고리 ID")
+                    )
+                ));
+
+            then(productService).should().addProduct(any(), any());
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+
+        @Test
+        @DisplayName("실패 - 존재하지 않는 상품 카테고리 ID")
+        void 실패_존재하지_않는_상품_카테고리_ID() throws Exception {
+            // given
+            ProductAddReqDto productAddReqDto = getProductAddReqDto();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "썸네일 파일".getBytes());
+            MockMultipartFile data = new MockMultipartFile("productAddReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productAddReqDto).getBytes());
+
+            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(productService).addProduct(any(), any());
+
+            // when & then
+            ResultActions actions = mockMvc.perform(multipart(HttpMethod.POST, "/api/admin/product")
+                .file(thumbnailFile)
+                .file(data)
+                .with(csrf().asHeader())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.NOT_FOUND_CATEGORY.getMessage()));
+
+            actions
+                .andDo(document("product-add-fail-not-found-category",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestPartFields(
+                        "productAddReqDto",
+                        fieldWithPath("name").optional().description("상품명"),
+                        fieldWithPath("content").optional().description("상품 설명"),
+                        fieldWithPath("price").optional().description("가격"),
+                        fieldWithPath("stockQuantity").optional().description("재고량"),
+                        fieldWithPath("productCategoryId").optional().description("상품 카테고리 ID")
+                    )
+                ));
+
+            then(productService).should().addProduct(any(), any());
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+
         private ProductAddReqDto getProductAddReqDto() {
             return ProductAddReqDto.builder()
                 .name("감자")
@@ -376,6 +458,92 @@ class AdminProductControllerTest {
 
             actions
                 .andDo(document("product-modify-fail-not-found-product",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestPartFields(
+                        "productModifyReqDto",
+                        fieldWithPath("productId").optional().description("상품 ID"),
+                        fieldWithPath("name").optional().description("상품명"),
+                        fieldWithPath("content").optional().description("상품 설명"),
+                        fieldWithPath("price").optional().description("가격"),
+                        fieldWithPath("stockQuantity").optional().description("재고량"),
+                        fieldWithPath("productCategoryId").optional().description("상품 카테고리 ID"),
+                        fieldWithPath("thumbnailFileId").description("썸네일 파일 ID")
+                    )
+                ));
+
+            then(productService).should().modifyProduct(any(), any());
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+
+        @Test
+        @DisplayName("실패 - 상품명 중복")
+        void 실패_상품명_중복() throws Exception {
+            // given
+            ProductModifyReqDto productModifyReqDto = getProductModifyReqDto();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
+            MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
+
+            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(productService).modifyProduct(any(), any());
+
+            // when & then
+            ResultActions actions = mockMvc.perform(multipart(HttpMethod.PUT, "/api/admin/product")
+                .file(thumbnailFile)
+                .file(data)
+                .with(csrf().asHeader())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.DUPLICATED_PRODUCT_NAME.getMessage()));
+
+            actions
+                .andDo(document("product-modify-fail-duplicated-product-name",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestPartFields(
+                        "productModifyReqDto",
+                        fieldWithPath("productId").optional().description("상품 ID"),
+                        fieldWithPath("name").optional().description("상품명"),
+                        fieldWithPath("content").optional().description("상품 설명"),
+                        fieldWithPath("price").optional().description("가격"),
+                        fieldWithPath("stockQuantity").optional().description("재고량"),
+                        fieldWithPath("productCategoryId").optional().description("상품 카테고리 ID"),
+                        fieldWithPath("thumbnailFileId").description("썸네일 파일 ID")
+                    )
+                ));
+
+            then(productService).should().modifyProduct(any(), any());
+            then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
+        }
+
+        @Test
+        @DisplayName("실패 - 존재하지 않는 상품 카테고리 ID")
+        void 실패_존재하지_않는_상품_카테고리_ID() throws Exception {
+            // given
+            ProductModifyReqDto productModifyReqDto = getProductModifyReqDto();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
+            MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
+
+            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(productService).modifyProduct(any(), any());
+
+            // when & then
+            ResultActions actions = mockMvc.perform(multipart(HttpMethod.PUT, "/api/admin/product")
+                .file(thumbnailFile)
+                .file(data)
+                .with(csrf().asHeader())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.NOT_FOUND_CATEGORY.getMessage()));
+
+            actions
+                .andDo(document("product-modify-fail-not-found-category",
                     getDocumentRequest(),
                     getDocumentResponse(),
                     requestPartFields(

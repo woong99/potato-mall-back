@@ -1,5 +1,7 @@
 package potatowoong.potatomallback.product.service;
 
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,11 @@ public class ProductService {
 
     @Transactional
     public void addProduct(ProductAddReqDto productAddReqDto, MultipartFile thumbnailFile) {
+        // 상품명 중복 체크
+        if (productRepository.findByName(productAddReqDto.name()).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME);
+        }
+
         // 상품 카테고리 조회
         ProductCategory productCategory = productCategoryRepository.findById(productAddReqDto.productCategoryId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
@@ -72,6 +79,12 @@ public class ProductService {
         // 상품 조회
         Product product = productRepository.findWithThumbnailFileByProductId(productModifyReqDto.productId())
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        // 상품명 중복 체크
+        Optional<Product> savedProduct = productRepository.findByName(productModifyReqDto.name());
+        if (savedProduct.isPresent() && !Objects.equals(savedProduct.get().getProductId(), productModifyReqDto.productId())) {
+            throw new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME);
+        }
 
         // 상품 카테고리 조회
         ProductCategory productCategory = productCategoryRepository.findById(productModifyReqDto.productCategoryId())

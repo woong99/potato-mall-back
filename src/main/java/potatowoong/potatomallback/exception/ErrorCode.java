@@ -28,6 +28,7 @@ public enum ErrorCode {
     ATCH_FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PF005", "존재하지 않는 첨부파일입니다."),
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "PD001", "존재하지 않는 상품입니다."),
     NOT_FOUND_THUMBNAIL(HttpStatus.BAD_REQUEST, "PD002", "썸네일 이미지를 등록해주세요."),
+    DUPLICATED_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "PD003", "이미 존재하는 상품명입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ISE001", "서버 내부 오류입니다.");
 
     private final HttpStatus httpStatus;

@@ -153,12 +153,14 @@ class ProductServiceTest {
                 .build();
             MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
 
             // when
             productService.addProduct(productAddReqDto, thumbnailFile);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().save(any());
             then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
@@ -175,12 +177,14 @@ class ProductServiceTest {
                 .productCategoryId(1L)
                 .build();
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
 
             // when
             productService.addProduct(productAddReqDto, null);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().save(any());
             then(fileService).should(never()).saveImageAtchFile(S3Folder.PRODUCT, null);
@@ -207,6 +211,32 @@ class ProductServiceTest {
 
             // then
             then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should(never()).save(any());
+            then(fileService).should(never()).saveImageAtchFile(any(), any());
+        }
+
+        @Test
+        @DisplayName("실패 - 중복된 상품명")
+        void 실패_중복된_상품명() {
+            // given
+            ProductAddReqDto productAddReqDto = ProductAddReqDto.builder()
+                .name("상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+            MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+
+            given(productRepository.findByName("상품")).willReturn(Optional.of(Product.builder().build()));
+
+            // when
+            assertThatThrownBy(() -> productService.addProduct(productAddReqDto, thumbnailFile))
+                .isInstanceOf(CustomException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_PRODUCT_NAME);
+
+            // then
+            then(productRepository).should().findByName("상품");
+            then(productCategoryRepository).should(never()).findById(1L);
             then(productRepository).should(never()).save(any());
             then(fileService).should(never()).saveImageAtchFile(any(), any());
         }
@@ -237,6 +267,7 @@ class ProductServiceTest {
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
 
@@ -244,6 +275,7 @@ class ProductServiceTest {
             productService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().save(any());
@@ -271,6 +303,7 @@ class ProductServiceTest {
                 .thumbnailFile(atchFile)
                 .build();
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
 
@@ -278,6 +311,7 @@ class ProductServiceTest {
             productService.modifyProduct(productModifyReqDto, null);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productRepository).should().save(any());
@@ -303,6 +337,7 @@ class ProductServiceTest {
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
 
@@ -310,6 +345,7 @@ class ProductServiceTest {
             productService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productRepository).should().save(any());
@@ -357,6 +393,7 @@ class ProductServiceTest {
                 .productCategoryId(1L)
                 .build();
 
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(Product.builder().build()));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.empty());
 
@@ -366,8 +403,38 @@ class ProductServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
 
             // then
+            then(productRepository).should().findByName("상품");
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should(never()).save(any());
+            then(fileService).should(never()).saveImageAtchFile(any(), any());
+            then(fileService).should(never()).removeAtchFile(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("실패 - 중복된 상품명")
+        void 실패_중복된_상품명() {
+            // given
+            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
+                .productId(1L)
+                .name("상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+
+            given(productRepository.findByName("상품")).willReturn(Optional.of(Product.builder().build()));
+            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(Product.builder().build()));
+
+            // when
+            assertThatThrownBy(() -> productService.modifyProduct(productModifyReqDto, null))
+                .isInstanceOf(CustomException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_PRODUCT_NAME);
+
+            // then
+            then(productRepository).should().findByName("상품");
+            then(productRepository).should().findWithThumbnailFileByProductId(1L);
+            then(productCategoryRepository).should(never()).findById(1L);
             then(productRepository).should(never()).save(any());
             then(fileService).should(never()).saveImageAtchFile(any(), any());
             then(fileService).should(never()).removeAtchFile(any(Long.class));

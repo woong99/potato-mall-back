@@ -53,6 +53,32 @@ include::{snippets}/product-add/http-response.adoc[]
 
 '''
 
+=== 등록 실패 - 이미 존재하는 상품명을 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-add-fail-duplicated-product-name/http-request.adoc[]
+include::{snippets}/product-add-fail-duplicated-product-name/request-part-productAddReqDto-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-add-fail-duplicated-product-name/http-response.adoc[]
+
+'''
+
+=== 등록 실패 - 존재하지 않는 카테고리 ID를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-add-fail-not-found-category/http-request.adoc[]
+include::{snippets}/product-add-fail-not-found-category/request-part-productAddReqDto-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-add-fail-not-found-category/http-response.adoc[]
+
+'''
+
 === 수정 성공
 
 ==== HTTP Request
@@ -76,6 +102,32 @@ include::{snippets}/product-modify-fail-not-found-product/request-part-productMo
 ==== HTTP Response
 
 include::{snippets}/product-modify-fail-not-found-product/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 이미 존재하는 상품명을 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-modify-fail-duplicated-product-name/http-request.adoc[]
+include::{snippets}/product-modify-fail-duplicated-product-name/request-part-productModifyReqDto-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-modify-fail-duplicated-product-name/http-response.adoc[]
+
+'''
+
+=== 수정 실패 - 존재하지 않는 카테고리 ID를 입력한 경우
+
+==== HTTP Request
+
+include::{snippets}/product-modify-fail-not-found-category/http-request.adoc[]
+include::{snippets}/product-modify-fail-not-found-category/request-part-productModifyReqDto-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-modify-fail-not-found-category/http-response.adoc[]
 
 '''
 
