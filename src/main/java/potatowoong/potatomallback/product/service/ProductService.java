@@ -13,6 +13,7 @@ import potatowoong.potatomallback.exception.ErrorCode;
 import potatowoong.potatomallback.file.entity.AtchFile;
 import potatowoong.potatomallback.file.enums.S3Folder;
 import potatowoong.potatomallback.file.service.FileService;
+import potatowoong.potatomallback.product.document.ProductNameDocument;
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDetailResDto;
@@ -20,6 +21,7 @@ import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSear
 import potatowoong.potatomallback.product.dto.response.ProductResDto.UserProductSearchResDto;
 import potatowoong.potatomallback.product.entity.Product;
 import potatowoong.potatomallback.product.entity.ProductCategory;
+import potatowoong.potatomallback.product.repository.ElasticProductNameRepository;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
 import potatowoong.potatomallback.product.repository.ProductRepository;
 import potatowoong.potatomallback.utils.FileUtils;
@@ -31,6 +33,8 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final ProductCategoryRepository productCategoryRepository;
+
+    private final ElasticProductNameRepository elasticProductNameRepository;
 
     private final FileService fileService;
 
@@ -72,6 +76,9 @@ public class ProductService {
         // 상품 저장
         Product product = Product.addOf(productAddReqDto, productCategory, thumbnail);
         productRepository.save(product);
+
+        // 상품명 Elastic Search에 저장
+        insertProductNameToElasticSearch(productAddReqDto.name());
     }
 
     @Transactional
@@ -79,6 +86,9 @@ public class ProductService {
         // 상품 조회
         Product product = productRepository.findWithThumbnailFileByProductId(productModifyReqDto.productId())
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        // 수정 전 상품명
+        final String productName = product.getName();
 
         // 상품명 중복 체크
         Optional<Product> savedProduct = productRepository.findByName(productModifyReqDto.name());
@@ -95,6 +105,9 @@ public class ProductService {
 
         product.modify(productModifyReqDto, productCategory);
         productRepository.save(product);
+
+        // Elastic Search에 저장된 상품명 수정
+        updateProductNameToElasticsearch(productName, productModifyReqDto.name());
     }
 
     @Transactional
@@ -110,6 +123,9 @@ public class ProductService {
 
         // 상품 삭제
         productRepository.delete(product);
+
+        // Elastic Search에 저장된 상품명 삭제
+        elasticProductNameRepository.deleteByName(product.getName());
     }
 
     /**
@@ -134,6 +150,36 @@ public class ProductService {
             // 기존 썸네일이 없고 새로운 썸네일을 추가하는 경우
             final AtchFile thumbnail = fileService.saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
             product.changeThumbnailFile(thumbnail);
+        }
+    }
+
+    /**
+     * 상품명을 Elastic Search에 저장
+     */
+    private void insertProductNameToElasticSearch(String name) {
+        if (!elasticProductNameRepository.existsByName(name)) {
+            elasticProductNameRepository.save(ProductNameDocument.builder()
+                .name(name)
+                .build());
+        }
+    }
+
+    /**
+     * Elastic Search에 저장된 상품명 수정
+     */
+    private void updateProductNameToElasticsearch(final String savedProductName, final String productName) {
+        Optional<ProductNameDocument> savedProductNameDocument = elasticProductNameRepository.findByName(savedProductName);
+
+        if (savedProductNameDocument.isPresent() && !savedProductName.equals(productName)) {
+            // 저장된 상품명이 있거나 상품명이 변경된 경우
+            ProductNameDocument productNameDocument = savedProductNameDocument.get();
+            productNameDocument.modifyName(productName);
+            elasticProductNameRepository.updateProductNameById(productNameDocument);
+        } else if (savedProductNameDocument.isEmpty()) {
+            // 저장된 상품명이 없는 경우
+            elasticProductNameRepository.save(ProductNameDocument.builder()
+                .name(productName)
+                .build());
         }
     }
 }

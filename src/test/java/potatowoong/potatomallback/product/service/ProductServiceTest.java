@@ -25,6 +25,7 @@ import potatowoong.potatomallback.exception.ErrorCode;
 import potatowoong.potatomallback.file.entity.AtchFile;
 import potatowoong.potatomallback.file.enums.S3Folder;
 import potatowoong.potatomallback.file.service.FileService;
+import potatowoong.potatomallback.product.document.ProductNameDocument;
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductAddReqDto;
 import potatowoong.potatomallback.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductDetailResDto;
@@ -32,6 +33,7 @@ import potatowoong.potatomallback.product.dto.response.ProductResDto.ProductSear
 import potatowoong.potatomallback.product.dto.response.ProductResDto.UserProductSearchResDto;
 import potatowoong.potatomallback.product.entity.Product;
 import potatowoong.potatomallback.product.entity.ProductCategory;
+import potatowoong.potatomallback.product.repository.ElasticProductNameRepository;
 import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
 import potatowoong.potatomallback.product.repository.ProductRepository;
 
@@ -43,6 +45,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductCategoryRepository productCategoryRepository;
+
+    @Mock
+    private ElasticProductNameRepository elasticProductNameRepository;
 
     @Mock
     private FileService fileService;
@@ -155,6 +160,7 @@ class ProductServiceTest {
 
             given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.existsByName("상품")).willReturn(true);
 
             // when
             productService.addProduct(productAddReqDto, thumbnailFile);
@@ -164,6 +170,8 @@ class ProductServiceTest {
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().save(any());
             then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
+            then(elasticProductNameRepository).should().existsByName("상품");
+            then(elasticProductNameRepository).should(never()).save(any());
         }
 
         @Test
@@ -179,6 +187,7 @@ class ProductServiceTest {
 
             given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.existsByName("상품")).willReturn(true);
 
             // when
             productService.addProduct(productAddReqDto, null);
@@ -188,6 +197,35 @@ class ProductServiceTest {
             then(productCategoryRepository).should().findById(1L);
             then(productRepository).should().save(any());
             then(fileService).should(never()).saveImageAtchFile(S3Folder.PRODUCT, null);
+            then(elasticProductNameRepository).should().existsByName("상품");
+            then(elasticProductNameRepository).should(never()).save(any());
+        }
+
+        @Test
+        @DisplayName("성공 - 상품명 Elastic Search에 저장")
+        void 성공_상품명_Elastic_Search에_저장() {
+            // given
+            ProductAddReqDto productAddReqDto = ProductAddReqDto.builder()
+                .name("상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
+            given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.existsByName("상품")).willReturn(false);
+
+            // when
+            productService.addProduct(productAddReqDto, null);
+
+            // then
+            then(productRepository).should().findByName("상품");
+            then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should().save(any());
+            then(fileService).should(never()).saveImageAtchFile(S3Folder.PRODUCT, null);
+            then(elasticProductNameRepository).should().existsByName("상품");
+            then(elasticProductNameRepository).should().save(any());
         }
 
         @Test
@@ -263,6 +301,7 @@ class ProductServiceTest {
 
             Product product = Product.builder()
                 .thumbnailFile(atchFile)
+                .name("상품")
                 .build();
 
             MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
@@ -270,6 +309,7 @@ class ProductServiceTest {
             given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
             productService.modifyProduct(productModifyReqDto, thumbnailFile);
@@ -281,7 +321,9 @@ class ProductServiceTest {
             then(productRepository).should().save(any());
             then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
             then(fileService).should().removeAtchFile(1L);
-
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should(never()).updateProductNameById(any());
+            then(elasticProductNameRepository).should().save(any());
         }
 
         @Test
@@ -300,12 +342,14 @@ class ProductServiceTest {
             given(atchFile.getAtchFileId()).willReturn(1L);
 
             Product product = Product.builder()
+                .name("상품")
                 .thumbnailFile(atchFile)
                 .build();
 
             given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
             productService.modifyProduct(productModifyReqDto, null);
@@ -317,6 +361,9 @@ class ProductServiceTest {
             then(productRepository).should().save(any());
             then(fileService).should(never()).saveImageAtchFile(S3Folder.PRODUCT, null);
             then(fileService).should().removeAtchFile(1L);
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should(never()).updateProductNameById(any());
+            then(elasticProductNameRepository).should().save(any());
         }
 
         @Test
@@ -332,6 +379,7 @@ class ProductServiceTest {
                 .build();
 
             Product product = Product.builder()
+                .name("상품")
                 .thumbnailFile(null)
                 .build();
 
@@ -340,6 +388,7 @@ class ProductServiceTest {
             given(productRepository.findByName("상품")).willReturn(Optional.empty());
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
             given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
             productService.modifyProduct(productModifyReqDto, thumbnailFile);
@@ -351,8 +400,139 @@ class ProductServiceTest {
             then(productRepository).should().save(any());
             then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
             then(fileService).should(never()).removeAtchFile(1L);
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should(never()).updateProductNameById(any());
+            then(elasticProductNameRepository).should().save(any());
         }
 
+        @Test
+        @DisplayName("성공 - Elastic Search에 저장된 상품이 있고 상품명이 그대로인 경우")
+        void 성공_Elastic_Search에_저장된_상품이_있고_상품명이_그대로인_경우() {
+            // given
+            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
+                .productId(1L)
+                .name("상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+
+            Product product = Product.builder()
+                .name("상품")
+                .thumbnailFile(null)
+                .build();
+
+            ProductNameDocument productNameDocument = ProductNameDocument.builder()
+                .name("상품")
+                .build();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+
+            given(productRepository.findByName("상품")).willReturn(Optional.empty());
+            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
+            given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.of(productNameDocument));
+
+            // when
+            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+
+            // then
+            then(productRepository).should().findByName("상품");
+            then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should().findWithThumbnailFileByProductId(1L);
+            then(productRepository).should().save(any());
+            then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
+            then(fileService).should(never()).removeAtchFile(1L);
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should(never()).updateProductNameById(any());
+            then(elasticProductNameRepository).should(never()).save(any());
+        }
+
+        @Test
+        @DisplayName("성공 - Elastic Search에 저장된 상품이 있고 상품명이 변경된 경우")
+        void 성공_Elastic_Search에_저장된_상품이_있고_상품명이_변경된_경우() {
+            // given
+            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
+                .productId(1L)
+                .name("변경된 상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+
+            Product product = Product.builder()
+                .name("상품")
+                .thumbnailFile(null)
+                .build();
+
+            ProductNameDocument productNameDocument = ProductNameDocument.builder()
+                .name("상품")
+                .build();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+
+            given(productRepository.findByName("변경된 상품")).willReturn(Optional.empty());
+            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
+            given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.of(productNameDocument));
+
+            // when
+            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+
+            // then
+            then(productRepository).should().findByName("변경된 상품");
+            then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should().findWithThumbnailFileByProductId(1L);
+            then(productRepository).should().save(any());
+            then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
+            then(fileService).should(never()).removeAtchFile(1L);
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should().updateProductNameById(any());
+            then(elasticProductNameRepository).should(never()).save(any());
+        }
+
+        @Test
+        @DisplayName("성공 - Elastic Search에 저장된 상품이 없는 경우")
+        void 성공_Elastic_Search에_저장된_상품이_없는_경우() {
+            // given
+            ProductModifyReqDto productModifyReqDto = ProductModifyReqDto.builder()
+                .productId(1L)
+                .name("변경된 상품")
+                .price(10000)
+                .stockQuantity(100)
+                .productCategoryId(1L)
+                .build();
+
+            Product product = Product.builder()
+                .name("상품")
+                .thumbnailFile(null)
+                .build();
+
+            ProductNameDocument productNameDocument = ProductNameDocument.builder()
+                .name("상품")
+                .build();
+
+            MockMultipartFile thumbnailFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+
+            given(productRepository.findByName("변경된 상품")).willReturn(Optional.empty());
+            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
+            given(productCategoryRepository.findById(1L)).willReturn(Optional.of(ProductCategory.builder().build()));
+            given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
+
+            // when
+            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+
+            // then
+            then(productRepository).should().findByName("변경된 상품");
+            then(productCategoryRepository).should().findById(1L);
+            then(productRepository).should().findWithThumbnailFileByProductId(1L);
+            then(productRepository).should().save(any());
+            then(fileService).should().saveImageAtchFile(S3Folder.PRODUCT, thumbnailFile);
+            then(fileService).should(never()).removeAtchFile(1L);
+            then(elasticProductNameRepository).should().findByName("상품");
+            then(elasticProductNameRepository).should(never()).updateProductNameById(any());
+            then(elasticProductNameRepository).should().save(any());
+        }
 
         @Test
         @DisplayName("실패 - 존재하지 않는 상품 ID")
@@ -454,6 +634,7 @@ class ProductServiceTest {
 
             Product product = Product.builder()
                 .thumbnailFile(atchFile)
+                .name("상품")
                 .build();
 
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
@@ -465,13 +646,18 @@ class ProductServiceTest {
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productRepository).should().delete(any());
             then(fileService).should().removeAtchFile(any(Long.class));
+            then(elasticProductNameRepository).should().deleteByName(any(String.class));
         }
 
         @Test
         @DisplayName("성공 - 저장된 썸네일 이미지 X")
         void 성공_저장된_썸네일_이미지_X() {
             // given
-            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(Product.builder().build()));
+            Product product = Product.builder()
+                .name("상품")
+                .build();
+
+            given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
 
             // when
             productService.removeProduct(1L);
@@ -480,6 +666,7 @@ class ProductServiceTest {
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productRepository).should().delete(any());
             then(fileService).should(never()).removeAtchFile(any(Long.class));
+            then(elasticProductNameRepository).should().deleteByName(any(String.class));
         }
 
         @Test
@@ -497,6 +684,7 @@ class ProductServiceTest {
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
             then(productRepository).should(never()).save(any());
             then(fileService).should(never()).removeAtchFile(any(Long.class));
+            then(elasticProductNameRepository).should(never()).deleteByName(any(String.class));
         }
     }
 }
