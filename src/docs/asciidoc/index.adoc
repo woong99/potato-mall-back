@@ -55,3 +55,8 @@ include::api/product.adoc[]
 
 include::api/ranking.adoc[]
 
+[[USER-PRODUCT]]
+== 사용자 상품 검색 API
+
+include::api/user-product-search.adoc[]
+

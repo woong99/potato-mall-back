@@ -30,7 +30,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.common.PageRequestDto;
 import potatowoong.potatomallback.common.PageResponseDto;
+import potatowoong.potatomallback.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.product.dto.response.ProductResDto.UserProductSearchResDto;
+import potatowoong.potatomallback.product.service.ProductSearchService;
 import potatowoong.potatomallback.product.service.ProductService;
 
 
@@ -42,6 +44,9 @@ class UserProductControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private ProductSearchService productSearchService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -108,4 +113,48 @@ class UserProductControllerTest {
             then(productService).should().getUserProductList(pageRequestDto);
         }
     }
+
+    @Nested
+    @DisplayName("상품명 검색(자동완성)")
+    class 상품명_검색_자동완성 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() throws Exception {
+            // given
+            String searchWord = "감";
+
+            ProductNameResDto productNameResDto = ProductNameResDto.builder()
+                .name("감자")
+                .build();
+
+            given(productSearchService.searchProductNameWithAutoComplete(searchWord)).willReturn(Collections.singletonList(productNameResDto));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(get("/api/product/search-with-auto-complete")
+                .with(csrf().asHeader())
+                .param("searchWord", searchWord)
+                .contentType("application/json"));
+
+            actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists());
+
+            actions
+                .andDo(document("user-product-search-with-auto-complete",
+                    getNoAuthDocumentRequest(),
+                    getDocumentResponse(),
+                    queryParameters(
+                        parameterWithName("searchWord").description("검색어(상품명)")
+                    ),
+                    responseFields(
+                        beneathPath("data").withSubsectionId("data"),
+                        fieldWithPath("name").description("상품명")
+                    )
+                ));
+
+            then(productSearchService).should().searchProductNameWithAutoComplete(searchWord);
+        }
+    }
+
 }
