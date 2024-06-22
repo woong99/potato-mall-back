@@ -15,6 +15,9 @@ import potatowoong.potatomallback.jwt.component.JwtAccessDeniedHandler;
 import potatowoong.potatomallback.jwt.component.JwtAuthenticationEntryPoint;
 import potatowoong.potatomallback.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.jwt.filter.JwtAuthenticationFilter;
+import potatowoong.potatomallback.oauth.component.OAuth2LoginFailureHandler;
+import potatowoong.potatomallback.oauth.component.OAuth2LoginSuccessHandler;
+import potatowoong.potatomallback.oauth.service.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +30,12 @@ public class SecurityConfig {
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -37,10 +46,16 @@ public class SecurityConfig {
         http
             .httpBasic(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
+                .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
             )
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests

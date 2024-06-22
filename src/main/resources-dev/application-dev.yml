@@ -9,5 +9,15 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+    security:
+        oauth2:
+            client:
+                registration:
+                    kakao:
+                        redirect-uri: ENC(5z0FmAkJfgD1/W9e26vl8vZTzeWEPApb/RIUb6Ws+JHnJsYlZltz72z2KiwW2o8isk7//+iO1SY=)
+                    naver:
+                        redirect-uri: ENC(dAvfzNM47uo/8gmdvUke+VYOkQ6Y2mcSRLudzzFejz0n5L/r255ySfpZ1zhRLG4sf99+WbU5/BE=)
 server:
     port: 8080
+oauth2:
+    redirect-url: ENC(d4c4MxLkpoYKUkjPnvCROz4q/mAA0R7B7mlKODUsf10=)

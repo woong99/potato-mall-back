@@ -6,6 +6,14 @@ spring:
         redis:
             port: 6379
             host: ENC(6lp8JSf2oRVPLNsATCSDPbq+8bf2JR+uV/lm/WF9FHLWUvl46LT+aXP4xENDUDu67bQiIu3hI0ZtfthgeCG9UA==)
+    security:
+        oauth2:
+            client:
+                registration:
+                    kakao:
+                        redirect-uri: ENC(SIYi2eEdbp3+YoiMbP/DiFVoum0C+wctPxcKeyH8GOawVPFzmS+KPM2P+yYy/6oqI/GzmHfUDpCohTDpVgd0Ww==)
+                    naver:
+                        redirect-uri: ENC(lAtreUyac0Jec5Lbaa/xPuOUpxlN3WrRQN6beH9c6xpavi418npRq8hxLyUJYVQF6dhgqgvevl8xRJ6FcpKgoQ==)
 decorator:
     datasource:
         p6spy:
@@ -20,3 +28,5 @@ server:
             prefix: access_log
             suffix: .log
             pattern: '%h %l %u [%{yy-MM-dd HH:mm:ss}t] "%r" %s %b %D %{User-Agent}i'
+oauth2:
+    redirect-url: ENC(5W/E2+SjqSG+Lshia1S554bV9SU8XdaqTxKy+H4ILvdwGC7gHmU3zQ==)
