@@ -1,6 +1,7 @@
 package potatowoong.potatomallback.domain.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
-import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
-import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
+import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.utils.SecurityUtils;
 
 @RestController
@@ -29,14 +29,14 @@ public class AdminLoginController {
      * 관리자 로그인 API
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseEntity<TokenDto>> login(@Valid @RequestBody LoginReqDto loginReqDto) {
+    public ResponseEntity<ApiResponseEntity<AccessTokenDto>> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         // 로그인
-        TokenDto tokenDto = adminLoginService.login(loginReqDto);
+        AccessTokenDto accessTokenDto = adminLoginService.login(loginReqDto, response);
 
         // 로그인 성공 시 로그 저장
         adminLoginLogService.addSuccessAdminLoginLog(loginReqDto.id());
 
-        return ResponseEntity.ok(ApiResponseEntity.of(tokenDto));
+        return ResponseEntity.ok(ApiResponseEntity.of(accessTokenDto));
     }
 
     /**

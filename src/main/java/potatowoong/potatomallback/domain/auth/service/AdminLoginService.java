@@ -2,13 +2,13 @@ package potatowoong.potatomallback.domain.auth.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Duration;
-import java.time.LocalDateTime;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,11 +20,13 @@ import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.entity.Admin;
 import potatowoong.potatomallback.domain.auth.enums.Role;
 import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.global.auth.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
+import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
+import potatowoong.potatomallback.global.utils.CookieUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +42,11 @@ public class AdminLoginService {
 
     private final StringRedisTemplate redisTemplate;
 
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+
     @Transactional(noRollbackFor = {CustomException.class})
-    public TokenDto login(LoginReqDto loginReqDto) {
+    public AccessTokenDto login(LoginReqDto loginReqDto, HttpServletResponse response) {
         final String adminId = loginReqDto.id();
         final String password = loginReqDto.password();
 
@@ -63,13 +68,17 @@ public class AdminLoginService {
 
         // 인증 정보를 기반으로 JWT Token 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
+        RefreshTokenDto refreshTokenDto = tokenDto.refreshTokenDto();
 
         // Refresh Token을 Redis에 저장
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        long refreshTokenExpiredIn = Duration.between(LocalDateTime.now(), tokenDto.refreshTokenDto().tokenExpiresIn()).getSeconds();
-        valueOperations.set(tokenDto.refreshTokenDto().token(), adminId, refreshTokenExpiredIn, TimeUnit.SECONDS);
+        valueOperations.set(tokenDto.refreshTokenDto().token(), adminId, refreshTokenDto.expiresIn(), TimeUnit.SECONDS);
 
-        return tokenDto;
+        // Refresh Token을 쿠키에 담아서 전달
+        Cookie cookie = CookieUtils.createCookie("refreshToken", tokenDto.refreshTokenDto().token(), (int) refreshTokenDto.expiresIn(), activeProfile.equals("prod"));
+        response.addCookie(cookie);
+
+        return tokenDto.accessTokenDto();
     }
 
     // TODO : 사용자와 관리자 공통으로 분리

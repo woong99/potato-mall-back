@@ -9,7 +9,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -23,11 +22,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @Component
 public class JwtTokenProvider {
@@ -77,6 +76,7 @@ public class JwtTokenProvider {
 
         return AccessTokenDto.builder()
             .token(accessToken)
+            .expiresIn(accessTokenExpiresIn.getTime())
             .build();
     }
 
@@ -97,7 +97,7 @@ public class JwtTokenProvider {
 
         return RefreshTokenDto.builder()
             .token(refreshToken)
-            .tokenExpiresIn(refreshTokenExpiresIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+            .expiresIn(refreshTokenExpiresIn.getTime())
             .build();
     }
 

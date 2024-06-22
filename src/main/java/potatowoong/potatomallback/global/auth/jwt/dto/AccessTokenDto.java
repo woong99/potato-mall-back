@@ -4,7 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record AccessTokenDto(
-    String token
+    String token,
+    Long expiresIn
 ) {
 
 }

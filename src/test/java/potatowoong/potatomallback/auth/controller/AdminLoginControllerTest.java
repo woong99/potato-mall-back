@@ -18,7 +18,9 @@ import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDoc
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getNoAuthDocumentRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,11 +39,9 @@ import potatowoong.potatomallback.domain.auth.controller.AdminLoginController;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
+import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
-import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
-import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
-import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
 
 @WebMvcTest(controllers = AdminLoginController.class)
 @ExtendWith(MockitoExtension.class)
@@ -74,17 +74,10 @@ class AdminLoginControllerTest {
             LoginReqDto loginReqDto = new LoginReqDto(adminId, "password");
             AccessTokenDto accessTokenDto = AccessTokenDto.builder()
                 .token("accessToken")
-                .build();
-            RefreshTokenDto refreshTokenDto = RefreshTokenDto.builder()
-                .token("refreshToken")
-                .tokenExpiresIn(LocalDateTime.now())
-                .build();
-            TokenDto tokenDto = TokenDto.builder()
-                .accessTokenDto(accessTokenDto)
-                .refreshTokenDto(refreshTokenDto)
+                .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .build();
 
-            given(adminLoginService.login(any(LoginReqDto.class))).willReturn(tokenDto);
+            given(adminLoginService.login(any(LoginReqDto.class), any(HttpServletResponse.class))).willReturn(accessTokenDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(post("/api/admin/login")
@@ -94,9 +87,8 @@ class AdminLoginControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.accessTokenDto.token").value(tokenDto.accessTokenDto().token()))
-                .andExpect(jsonPath("$.data.refreshTokenDto.token").value(tokenDto.refreshTokenDto().token()))
-                .andExpect(jsonPath("$.data.refreshTokenDto.tokenExpiresIn").exists());
+                .andExpect(jsonPath("$.data.token").value(accessTokenDto.token()))
+                .andExpect(jsonPath("$.data.expiresIn").value(accessTokenDto.expiresIn()));
 
             actions
                 .andDo(document("admin-login",
@@ -108,14 +100,13 @@ class AdminLoginControllerTest {
                         ),
                         responseFields(
                             beneathPath("data").withSubsectionId("data"),
-                            fieldWithPath("accessTokenDto.token").description("액세스 토큰"),
-                            fieldWithPath("refreshTokenDto.token").description("리프레시 토큰"),
-                            fieldWithPath("refreshTokenDto.tokenExpiresIn").description("리프레시 토큰 만료 시간")
+                            fieldWithPath("token").description("액세스 토큰"),
+                            fieldWithPath("expiresIn").description("액세스 토큰 만료 시간")
                         )
                     )
                 );
 
-            then(adminLoginService).should().login(loginReqDto);
+            then(adminLoginService).should().login(any(LoginReqDto.class), any(HttpServletResponse.class));
             then(adminLoginLogService).should().addSuccessAdminLoginLog(loginReqDto.id());
         }
 
@@ -125,7 +116,7 @@ class AdminLoginControllerTest {
             // given
             LoginReqDto loginReqDto = new LoginReqDto(adminId, "invalidPassword");
 
-            given(adminLoginService.login(any(LoginReqDto.class))).willThrow(new CustomException(ErrorCode.FAILED_TO_LOGIN));
+            given(adminLoginService.login(any(LoginReqDto.class), any(HttpServletResponse.class))).willThrow(new CustomException(ErrorCode.FAILED_TO_LOGIN));
 
             // when & then
             ResultActions actions = mockMvc.perform(post("/api/admin/login")
@@ -149,7 +140,7 @@ class AdminLoginControllerTest {
                     )
                 );
 
-            then(adminLoginService).should().login(loginReqDto);
+            then(adminLoginService).should().login(any(LoginReqDto.class), any(HttpServletResponse.class));
         }
     }
 
@@ -194,6 +185,7 @@ class AdminLoginControllerTest {
             // given
             AccessTokenDto accessTokenDto = AccessTokenDto.builder()
                 .token("accessToken")
+                .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .build();
 
             given(adminLoginService.refresh(any())).willReturn(accessTokenDto);
@@ -213,7 +205,8 @@ class AdminLoginControllerTest {
                         getDocumentResponse(),
                         responseFields(
                             beneathPath("data").withSubsectionId("data"),
-                            fieldWithPath("token").description("액세스 토큰")
+                            fieldWithPath("token").description("액세스 토큰"),
+                            fieldWithPath("expiresIn").description("액세스 토큰 만료 시간")
                         )
                     )
                 );

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 
 import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,18 +24,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.entity.Admin;
 import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.global.auth.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
 class AdminLoginServiceTest {
@@ -87,21 +90,24 @@ class AdminLoginServiceTest {
             // given
             AccessTokenDto accessTokenDto = AccessTokenDto.builder()
                 .token("accessToken")
+                .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .build();
             RefreshTokenDto refreshTokenDto = RefreshTokenDto.builder()
                 .token("refreshToken")
-                .tokenExpiresIn(LocalDateTime.now())
+                .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .build();
             TokenDto tokenDto = new TokenDto(accessTokenDto, refreshTokenDto);
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            ReflectionTestUtils.setField(adminLoginService, "activeProfile", "prod");
 
             given(adminRepository.findById(userId)).willReturn(Optional.ofNullable(admin));
             given(passwordEncoder.matches(loginReqDto.password(), admin.getPassword())).willReturn(true);
             given(jwtTokenProvider.generateToken(any())).willReturn(tokenDto);
             given(redisTemplate.opsForValue()).willReturn(valueOperations);
-            willDoNothing().given(valueOperations).set(refreshTokenDto.token(), userId, -1L, TimeUnit.SECONDS);
+            willDoNothing().given(valueOperations).set(refreshTokenDto.token(), userId, refreshTokenDto.expiresIn(), TimeUnit.SECONDS);
 
             // when
-            TokenDto result = adminLoginService.login(loginReqDto);
+            AccessTokenDto result = adminLoginService.login(loginReqDto, response);
 
             // then
             assertThat(result).isNotNull();
@@ -109,7 +115,7 @@ class AdminLoginServiceTest {
             then(passwordEncoder).should().matches(password, password);
             then(jwtTokenProvider).should().generateToken(any());
             then(redisTemplate).should().opsForValue();
-            then(valueOperations).should().set(refreshTokenDto.token(), userId, -1L, TimeUnit.SECONDS);
+            then(valueOperations).should().set(refreshTokenDto.token(), userId, refreshTokenDto.expiresIn(), TimeUnit.SECONDS);
             then(adminLoginLogService).should(never()).addFailAdminLoginLog(userId);
         }
 
@@ -117,10 +123,12 @@ class AdminLoginServiceTest {
         @DisplayName("실패 - 아이디 불일치")
         void 로그인_실패_아이디_불일치() {
             // given
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
             given(adminRepository.findById(userId)).willReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> adminLoginService.login(loginReqDto))
+            assertThatThrownBy(() -> adminLoginService.login(loginReqDto, response))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.FAILED_TO_LOGIN);
             then(adminRepository).should().findById(userId);
@@ -135,11 +143,13 @@ class AdminLoginServiceTest {
         @DisplayName("실패 - 비밀번호 불일치")
         void 로그인_실패_비밀번호_불일치() {
             // given
+            MockHttpServletResponse response = new MockHttpServletResponse();
+
             given(adminRepository.findById("id")).willReturn(Optional.ofNullable(admin));
             given(passwordEncoder.matches(password, password)).willReturn(false);
 
             // when & then
-            assertThatThrownBy(() -> adminLoginService.login(loginReqDto))
+            assertThatThrownBy(() -> adminLoginService.login(loginReqDto, response))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.FAILED_TO_LOGIN);
             then(adminRepository).should().findById(userId);
