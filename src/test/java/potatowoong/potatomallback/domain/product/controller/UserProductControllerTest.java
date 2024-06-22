@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.product.controller;
+package potatowoong.potatomallback.domain.product.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -28,13 +28,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.domain.product.controller.UserProductController;
-import potatowoong.potatomallback.global.common.PageRequestDto;
-import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.UserProductSearchResDto;
 import potatowoong.potatomallback.domain.product.service.ProductSearchService;
 import potatowoong.potatomallback.domain.product.service.ProductService;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
 
 
 @WebMvcTest(controllers = UserProductController.class)

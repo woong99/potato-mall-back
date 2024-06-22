@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.ranking.controller;
+package potatowoong.potatomallback.domain.ranking.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -29,7 +29,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.domain.ranking.controller.RankingController;
 import potatowoong.potatomallback.domain.ranking.dto.SearchSnapshotResDto.SearchRankResDto;
 import potatowoong.potatomallback.domain.ranking.dto.SearchSnapshotResDto.SearchRankingSnapshotResDto;
 import potatowoong.potatomallback.domain.ranking.enums.RankState;

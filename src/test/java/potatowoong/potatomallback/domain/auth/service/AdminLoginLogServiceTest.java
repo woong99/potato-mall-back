@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.auth.service;
+package potatowoong.potatomallback.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,7 +20,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminLoginLogResDto;
 import potatowoong.potatomallback.domain.auth.enums.TryResult;
 import potatowoong.potatomallback.domain.auth.repository.AdminLoginLogRepository;
-import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 

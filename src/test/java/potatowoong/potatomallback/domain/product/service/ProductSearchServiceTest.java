@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.product.service;
+package potatowoong.potatomallback.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import potatowoong.potatomallback.domain.product.document.ProductNameDocument;
 import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
-import potatowoong.potatomallback.domain.product.service.ProductSearchService;
 
 @ExtendWith(MockitoExtension.class)
 class ProductSearchServiceTest {

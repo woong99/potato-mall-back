@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.product.service;
+package potatowoong.potatomallback.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,10 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import potatowoong.potatomallback.domain.product.service.ProductService;
-import potatowoong.potatomallback.global.common.PageResponseDto;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.domain.file.entity.AtchFile;
 import potatowoong.potatomallback.domain.file.enums.S3Folder;
 import potatowoong.potatomallback.domain.file.service.FileService;
@@ -37,6 +33,9 @@ import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
 import potatowoong.potatomallback.domain.product.repository.ProductCategoryRepository;
 import potatowoong.potatomallback.domain.product.repository.ProductRepository;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {

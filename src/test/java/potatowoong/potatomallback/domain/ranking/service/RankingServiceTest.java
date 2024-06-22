@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.ranking.service;
+package potatowoong.potatomallback.domain.ranking.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -21,7 +21,6 @@ import potatowoong.potatomallback.domain.ranking.dto.SearchLogResDto;
 import potatowoong.potatomallback.domain.ranking.entity.SearchKeywordRanking;
 import potatowoong.potatomallback.domain.ranking.repository.AccessLogRepository;
 import potatowoong.potatomallback.domain.ranking.repository.SearchKeywordRankingRepository;
-import potatowoong.potatomallback.domain.ranking.service.RankingService;
 
 @ExtendWith(MockitoExtension.class)
 class RankingServiceTest {

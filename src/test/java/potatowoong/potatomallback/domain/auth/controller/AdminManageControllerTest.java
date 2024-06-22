@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.auth.controller;
+package potatowoong.potatomallback.domain.auth.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,14 +19,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
+import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 import static potatowoong.potatomallback.global.common.LogMessage.ADD;
 import static potatowoong.potatomallback.global.common.LogMessage.ADMIN_MANAGEMENT;
 import static potatowoong.potatomallback.global.common.LogMessage.MODIFY;
 import static potatowoong.potatomallback.global.common.LogMessage.REMOVE;
 import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_DETAIL;
 import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_LIST;
-import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
-import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -46,7 +46,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.domain.auth.controller.AdminManageController;
 import potatowoong.potatomallback.domain.auth.dto.request.AdminAddReqDto;
 import potatowoong.potatomallback.domain.auth.dto.request.AdminModifyReqDto;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminResDto;

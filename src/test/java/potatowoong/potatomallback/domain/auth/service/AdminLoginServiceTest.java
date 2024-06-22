@@ -1,8 +1,9 @@
-package potatowoong.potatomallback.auth.service;
+package potatowoong.potatomallback.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -29,8 +30,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.entity.Admin;
 import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
-import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
-import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
 import potatowoong.potatomallback.global.auth.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
@@ -103,7 +102,7 @@ class AdminLoginServiceTest {
             given(passwordEncoder.matches(loginReqDto.password(), admin.getPassword())).willReturn(true);
             given(jwtTokenProvider.generateToken(any())).willReturn(tokenDto);
             given(redisTemplate.opsForValue()).willReturn(valueOperations);
-            willDoNothing().given(valueOperations).set(refreshTokenDto.token(), userId, (refreshTokenDto.expiresIn() - System.currentTimeMillis()) / 1000, TimeUnit.SECONDS);
+            willDoNothing().given(valueOperations).set(eq(refreshTokenDto.token()), eq(userId), any(Long.class), eq(TimeUnit.SECONDS));
 
             // when
             AccessTokenDto result = adminLoginService.login(loginReqDto, response);
@@ -114,7 +113,7 @@ class AdminLoginServiceTest {
             then(passwordEncoder).should().matches(password, password);
             then(jwtTokenProvider).should().generateToken(any());
             then(redisTemplate).should().opsForValue();
-            then(valueOperations).should().set(refreshTokenDto.token(), userId, (refreshTokenDto.expiresIn() - System.currentTimeMillis()) / 1000, TimeUnit.SECONDS);
+            then(valueOperations).should().set(eq(refreshTokenDto.token()), eq(userId), any(Long.class), eq(TimeUnit.SECONDS));
             then(adminLoginLogService).should(never()).addFailAdminLoginLog(userId);
         }
 

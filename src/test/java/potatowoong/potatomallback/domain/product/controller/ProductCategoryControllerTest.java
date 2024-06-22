@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.product.controller;
+package potatowoong.potatomallback.domain.product.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -19,14 +19,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
+import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 import static potatowoong.potatomallback.global.common.LogMessage.ADD;
 import static potatowoong.potatomallback.global.common.LogMessage.MODIFY;
 import static potatowoong.potatomallback.global.common.LogMessage.PRODUCT_CATEGORY_MANAGEMENT;
 import static potatowoong.potatomallback.global.common.LogMessage.REMOVE;
 import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_DETAIL;
 import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_LIST;
-import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
-import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -46,11 +46,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.domain.auth.service.AdminLogService;
-import potatowoong.potatomallback.domain.product.controller.ProductCategoryController;
-import potatowoong.potatomallback.global.common.PageRequestDto;
-import potatowoong.potatomallback.global.common.PageResponseDto;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
@@ -58,6 +53,10 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryRes
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductRelatedResDto;
 import potatowoong.potatomallback.domain.product.service.ProductCategoryService;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @WebMvcTest(controllers = ProductCategoryController.class)
 @ExtendWith(MockitoExtension.class)

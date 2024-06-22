@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.file.service;
+package potatowoong.potatomallback.domain.file.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,13 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
-import potatowoong.potatomallback.domain.file.service.FileService;
-import potatowoong.potatomallback.domain.file.service.S3Service;
-import potatowoong.potatomallback.global.exception.CustomException;
-import potatowoong.potatomallback.global.exception.ErrorCode;
 import potatowoong.potatomallback.domain.file.entity.AtchFile;
 import potatowoong.potatomallback.domain.file.enums.S3Folder;
 import potatowoong.potatomallback.domain.file.repository.AtchFileRepository;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
 class FileServiceTest {

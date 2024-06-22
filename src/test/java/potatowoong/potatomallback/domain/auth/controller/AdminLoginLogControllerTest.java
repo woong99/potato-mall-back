@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.auth.controller;
+package potatowoong.potatomallback.domain.auth.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -29,7 +29,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.domain.auth.controller.AdminLoginLogController;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminLoginLogResDto;
 import potatowoong.potatomallback.domain.auth.enums.TryResult;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;

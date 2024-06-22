@@ -1,4 +1,4 @@
-package potatowoong.potatomallback.auth.service;
+package potatowoong.potatomallback.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +23,6 @@ import potatowoong.potatomallback.domain.auth.dto.request.AdminModifyReqDto;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminResDto;
 import potatowoong.potatomallback.domain.auth.entity.Admin;
 import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
-import potatowoong.potatomallback.domain.auth.service.AdminManageService;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
