@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
+import potatowoong.potatomallback.domain.auth.service.TokenRefreshService;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.utils.SecurityUtils;
@@ -24,6 +25,8 @@ public class AdminLoginController {
     private final AdminLoginService adminLoginService;
 
     private final AdminLoginLogService adminLoginLogService;
+
+    private final TokenRefreshService tokenRefreshService;
 
     /**
      * 관리자 로그인 API
@@ -54,7 +57,7 @@ public class AdminLoginController {
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponseEntity<AccessTokenDto>> refresh(HttpServletRequest request) {
         // Access Token 갱신
-        AccessTokenDto accessTokenDto = adminLoginService.refresh(request);
+        AccessTokenDto accessTokenDto = tokenRefreshService.adminRefresh(request);
 
         return ResponseEntity.ok(ApiResponseEntity.of(accessTokenDto));
     }

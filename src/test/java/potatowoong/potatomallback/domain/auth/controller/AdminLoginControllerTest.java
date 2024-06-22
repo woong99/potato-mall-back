@@ -38,6 +38,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
+import potatowoong.potatomallback.domain.auth.service.TokenRefreshService;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
@@ -55,6 +56,9 @@ class AdminLoginControllerTest {
 
     @MockBean
     private AdminLoginLogService adminLoginLogService;
+
+    @MockBean
+    private TokenRefreshService tokenRefreshService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -175,7 +179,7 @@ class AdminLoginControllerTest {
     }
 
     @Nested
-    @DisplayName("Access Token 갱신")
+    @DisplayName("관리자 Access Token 갱신")
     class Access_Token_갱신 {
 
         @Test
@@ -187,7 +191,7 @@ class AdminLoginControllerTest {
                 .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                 .build();
 
-            given(adminLoginService.refresh(any())).willReturn(accessTokenDto);
+            given(tokenRefreshService.adminRefresh(any())).willReturn(accessTokenDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(post("/api/admin/refresh")
@@ -199,7 +203,7 @@ class AdminLoginControllerTest {
                 .andExpect(jsonPath("$.data.token").value(accessTokenDto.token()));
 
             actions
-                .andDo(document("refresh-access-token",
+                .andDo(document("admin-refresh-access-token",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         responseFields(
@@ -210,14 +214,14 @@ class AdminLoginControllerTest {
                     )
                 );
 
-            then(adminLoginService).should().refresh(any());
+            then(tokenRefreshService).should().adminRefresh(any());
         }
 
         @Test
         @DisplayName("실패 - Refresh Token이 존재하지 않음")
         void 갱신_실패_Refresh_Token_존재하지_않음() throws Exception {
             // given
-            given(adminLoginService.refresh(any())).willThrow(new CustomException(ErrorCode.UNAUTHORIZED));
+            given(tokenRefreshService.adminRefresh(any())).willThrow(new CustomException(ErrorCode.UNAUTHORIZED));
 
             // when & then
             ResultActions actions = mockMvc.perform(post("/api/admin/refresh")
@@ -230,13 +234,13 @@ class AdminLoginControllerTest {
                 .andExpect(jsonPath("$.code").value(ErrorCode.UNAUTHORIZED.getCode()));
 
             actions
-                .andDo(document("refresh-access-token-fail",
+                .andDo(document("admin-refresh-access-token-fail",
                         getDocumentRequest(),
                         getDocumentResponse()
                     )
                 );
 
-            then(adminLoginService).should().refresh(any());
+            then(tokenRefreshService).should().adminRefresh(any());
         }
     }
 }

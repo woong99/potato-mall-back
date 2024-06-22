@@ -28,7 +28,7 @@ include::api/logout.adoc[]
 [[REFRESH-ACCESS-TOKEN-API]]
 == 액세스 토큰 갱신 API
 
-include::api/refresh-access-token.adoc[]
+include::api/admin-refresh-access-token.adoc[]
 
 [[ADMIN-LOGIN-LOG-API]]
 == 관리자 로그인 로그 API
@@ -60,3 +60,7 @@ include::api/ranking.adoc[]
 
 include::api/user-product-search.adoc[]
 
+[[USER-ACCESS-TOKEN-API]]
+== 사용자 액세스 토큰 갱신 API
+
+include::api/user-refresh-access-token.adoc[]

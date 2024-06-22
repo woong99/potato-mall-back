@@ -1,0 +1,23 @@
+[[refresh-access-token]]
+=== 갱신 성공
+
+==== HTTP Request
+
+include::{snippets}/admin-refresh-access-token/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-refresh-access-token/http-response.adoc[]
+include::{snippets}/admin-refresh-access-token/response-fields-data.adoc[]
+
+'''
+
+=== 갱신 실패 - Refresh Token이 존재하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/admin-refresh-access-token-fail/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/admin-refresh-access-token-fail/http-response.adoc[]

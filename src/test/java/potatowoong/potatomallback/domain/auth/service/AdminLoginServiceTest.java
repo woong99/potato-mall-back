@@ -9,7 +9,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.never;
 
-import jakarta.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
@@ -156,70 +154,6 @@ class AdminLoginServiceTest {
             then(adminLoginLogService).should().addFailAdminLoginLog(userId);
             then(redisTemplate).shouldHaveNoInteractions();
             then(valueOperations).shouldHaveNoInteractions();
-        }
-    }
-
-    @Nested
-    @DisplayName("Access Token 갱신")
-    class Access_Token_갱신 {
-
-        @Test
-        @DisplayName("성공")
-        void 성공() {
-            // given
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.setCookies(new Cookie("ADMIN_REFRESH_TOKEN", "ADMIN_REFRESH_TOKEN"));
-
-            given(redisTemplate.opsForValue()).willReturn(valueOperations);
-            given(redisTemplate.opsForValue().get("ADMIN_REFRESH_TOKEN")).willReturn(userId);
-            given(jwtTokenProvider.generateAccessToken(any())).willReturn(AccessTokenDto.builder().token("accessToken").build());
-
-            // when
-            AccessTokenDto result = adminLoginService.refresh(request);
-
-            // then
-            assertThat(result.token()).isNotBlank();
-            then(redisTemplate.opsForValue()).should().get("ADMIN_REFRESH_TOKEN");
-            then(jwtTokenProvider).should().generateAccessToken(any());
-        }
-
-        @Test
-        @DisplayName("실패 - 쿠키에 Refresh Token이 존재하지 않음")
-        void 실패_Refresh_Token_존재하지_않음() {
-            // given
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.setCookies(new Cookie("invalidToken", "invalidToken"));
-
-            given(redisTemplate.opsForValue()).willReturn(valueOperations);
-
-            // when
-            assertThatThrownBy(() -> adminLoginService.refresh(request))
-                .isInstanceOf(CustomException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED);
-
-            // then
-            then(redisTemplate.opsForValue()).should(never()).get("refreshToken");
-            then(jwtTokenProvider).should(never()).generateAccessToken(any());
-        }
-
-        @Test
-        @DisplayName("실패 - Redis에 Refresh Token이 존재하지 않음")
-        void 실패_Redis에_Refresh_Token_존재하지_않음() {
-            // given
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.setCookies(new Cookie("ADMIN_REFRESH_TOKEN", "ADMIN_REFRESH_TOKEN"));
-
-            given(redisTemplate.opsForValue()).willReturn(valueOperations);
-            given(redisTemplate.opsForValue().get("ADMIN_REFRESH_TOKEN")).willReturn(null);
-
-            // when
-            assertThatThrownBy(() -> adminLoginService.refresh(request))
-                .isInstanceOf(CustomException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED);
-
-            // then
-            then(redisTemplate.opsForValue()).should().get("ADMIN_REFRESH_TOKEN");
-            then(jwtTokenProvider).should(never()).generateAccessToken(any());
         }
     }
 }
