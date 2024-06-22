@@ -169,3 +169,10 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
+
+// application.yaml 파일에 프로퍼티 주입
+processResources {
+    filesMatching('**/application.yaml') {
+        expand(project.properties)
+    }
+}
