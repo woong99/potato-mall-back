@@ -41,7 +41,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         Cookie cookie = new Cookie("refreshToken", tokenDto.refreshTokenDto().token());
         cookie.setPath("/");
         cookie.setMaxAge((int) refreshTokenExpiredIn);
-        cookie.setSecure(!activeProfile.equals("dev"));
+        cookie.setSecure(activeProfile.equals("prod"));
+        cookie.setHttpOnly(activeProfile.equals("prod"));
         response.addCookie(cookie);
 
         // Refresh Token을 Redis에 저장
