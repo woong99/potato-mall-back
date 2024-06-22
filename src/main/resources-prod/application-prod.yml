@@ -13,6 +13,8 @@ spring:
                     kakao:
                         redirect-uri: ENC(SIYi2eEdbp3+YoiMbP/DiFVoum0C+wctPxcKeyH8GOawVPFzmS+KPM2P+yYy/6oqI/GzmHfUDpCohTDpVgd0Ww==)
                     naver:
+                        client-id: ENC(SjViJ6NTWFW/AJ7lvdFSoBhnck5d0UwhUvuqaHWynko=)
+                        client-secret: ENC(n91qKmJqRQzmXOv3raKPDHzd2GnxDg/J)
                         redirect-uri: ENC(lAtreUyac0Jec5Lbaa/xPuOUpxlN3WrRQN6beH9c6xpavi418npRq8hxLyUJYVQF6dhgqgvevl8xRJ6FcpKgoQ==)
 decorator:
     datasource:
@@ -29,4 +31,4 @@ server:
             suffix: .log
             pattern: '%h %l %u [%{yy-MM-dd HH:mm:ss}t] "%r" %s %b %D %{User-Agent}i'
 oauth2:
-    redirect-url: ENC(5W/E2+SjqSG+Lshia1S554bV9SU8XdaqTxKy+H4ILvdwGC7gHmU3zQ==)
+    redirect-url: ENC(hyYKX5dQqCJdAHNj+h3HNat1IHRtRCoShERNTCDNVjshHSny+dSPsw==)

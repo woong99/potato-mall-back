@@ -16,6 +16,8 @@ spring:
                     kakao:
                         redirect-uri: ENC(5z0FmAkJfgD1/W9e26vl8vZTzeWEPApb/RIUb6Ws+JHnJsYlZltz72z2KiwW2o8isk7//+iO1SY=)
                     naver:
+                        client-id: ENC(9x/Agg457X4Tn7r+g1iNIVIDGG6RV8t7OFAu0Qxu698=)
+                        client-secret: ENC(lvpa3qLNXrGBo9FoMt6ObdA28hskg9kR)
                         redirect-uri: ENC(dAvfzNM47uo/8gmdvUke+VYOkQ6Y2mcSRLudzzFejz0n5L/r255ySfpZ1zhRLG4sf99+WbU5/BE=)
 server:
     port: 8080
