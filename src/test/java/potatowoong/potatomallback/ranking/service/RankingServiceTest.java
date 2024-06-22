@@ -17,10 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import potatowoong.potatomallback.ranking.dto.SearchLogResDto;
-import potatowoong.potatomallback.ranking.entity.SearchKeywordRanking;
-import potatowoong.potatomallback.ranking.repository.AccessLogRepository;
-import potatowoong.potatomallback.ranking.repository.SearchKeywordRankingRepository;
+import potatowoong.potatomallback.domain.ranking.dto.SearchLogResDto;
+import potatowoong.potatomallback.domain.ranking.entity.SearchKeywordRanking;
+import potatowoong.potatomallback.domain.ranking.repository.AccessLogRepository;
+import potatowoong.potatomallback.domain.ranking.repository.SearchKeywordRankingRepository;
+import potatowoong.potatomallback.domain.ranking.service.RankingService;
 
 @ExtendWith(MockitoExtension.class)
 class RankingServiceTest {

@@ -12,9 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import potatowoong.potatomallback.product.document.ProductNameDocument;
-import potatowoong.potatomallback.product.dto.response.ProductNameResDto;
-import potatowoong.potatomallback.product.repository.ElasticProductNameRepository;
+import potatowoong.potatomallback.domain.product.document.ProductNameDocument;
+import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
+import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
+import potatowoong.potatomallback.domain.product.service.ProductSearchService;
 
 @ExtendWith(MockitoExtension.class)
 class ProductSearchServiceTest {

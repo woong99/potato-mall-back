@@ -29,10 +29,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.ranking.dto.SearchSnapshotResDto.SearchRankResDto;
-import potatowoong.potatomallback.ranking.dto.SearchSnapshotResDto.SearchRankingSnapshotResDto;
-import potatowoong.potatomallback.ranking.enums.RankState;
-import potatowoong.potatomallback.ranking.service.RankingService;
+import potatowoong.potatomallback.domain.ranking.controller.RankingController;
+import potatowoong.potatomallback.domain.ranking.dto.SearchSnapshotResDto.SearchRankResDto;
+import potatowoong.potatomallback.domain.ranking.dto.SearchSnapshotResDto.SearchRankingSnapshotResDto;
+import potatowoong.potatomallback.domain.ranking.enums.RankState;
+import potatowoong.potatomallback.domain.ranking.service.RankingService;
 
 @WebMvcTest(controllers = RankingController.class)
 @ExtendWith(MockitoExtension.class)

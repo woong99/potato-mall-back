@@ -18,15 +18,16 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import potatowoong.potatomallback.auth.dto.request.AdminAddReqDto;
-import potatowoong.potatomallback.auth.dto.request.AdminModifyReqDto;
-import potatowoong.potatomallback.auth.dto.response.AdminResDto;
-import potatowoong.potatomallback.auth.entity.Admin;
-import potatowoong.potatomallback.auth.repository.AdminRepository;
-import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.exception.CustomException;
-import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.utils.SecurityUtils;
+import potatowoong.potatomallback.domain.auth.dto.request.AdminAddReqDto;
+import potatowoong.potatomallback.domain.auth.dto.request.AdminModifyReqDto;
+import potatowoong.potatomallback.domain.auth.dto.response.AdminResDto;
+import potatowoong.potatomallback.domain.auth.entity.Admin;
+import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
+import potatowoong.potatomallback.domain.auth.service.AdminManageService;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
+import potatowoong.potatomallback.global.utils.SecurityUtils;
 
 @ExtendWith(MockitoExtension.class)
 class AdminManageServiceTest {

@@ -29,11 +29,12 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.auth.dto.response.AdminLoginLogResDto;
-import potatowoong.potatomallback.auth.enums.TryResult;
-import potatowoong.potatomallback.auth.service.AdminLoginLogService;
-import potatowoong.potatomallback.common.PageRequestDto;
-import potatowoong.potatomallback.common.PageResponseDto;
+import potatowoong.potatomallback.domain.auth.controller.AdminLoginLogController;
+import potatowoong.potatomallback.domain.auth.dto.response.AdminLoginLogResDto;
+import potatowoong.potatomallback.domain.auth.enums.TryResult;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
 
 @WebMvcTest(controllers = AdminLoginLogController.class)
 @ExtendWith(MockitoExtension.class)

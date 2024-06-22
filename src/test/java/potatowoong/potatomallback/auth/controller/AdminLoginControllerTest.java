@@ -33,14 +33,15 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.auth.dto.request.LoginReqDto;
-import potatowoong.potatomallback.auth.service.AdminLoginLogService;
-import potatowoong.potatomallback.auth.service.AdminLoginService;
-import potatowoong.potatomallback.exception.CustomException;
-import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.jwt.dto.AccessTokenDto;
-import potatowoong.potatomallback.jwt.dto.RefreshTokenDto;
-import potatowoong.potatomallback.jwt.dto.TokenDto;
+import potatowoong.potatomallback.domain.auth.controller.AdminLoginController;
+import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
+import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
+import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
+import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
 
 @WebMvcTest(controllers = AdminLoginController.class)
 @ExtendWith(MockitoExtension.class)

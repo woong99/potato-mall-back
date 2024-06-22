@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import potatowoong.potatomallback.global.common.DocsController;
 
 @WebMvcTest(controllers = DocsController.class)
 @ExtendWith(MockitoExtension.class)

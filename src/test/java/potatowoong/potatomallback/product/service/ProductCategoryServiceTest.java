@@ -19,17 +19,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.exception.CustomException;
-import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
-import potatowoong.potatomallback.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
-import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
-import potatowoong.potatomallback.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
-import potatowoong.potatomallback.product.entity.Product;
-import potatowoong.potatomallback.product.entity.ProductCategory;
-import potatowoong.potatomallback.product.repository.ProductCategoryRepository;
-import potatowoong.potatomallback.product.repository.ProductRepository;
+import potatowoong.potatomallback.domain.product.service.ProductCategoryService;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
+import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
+import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
+import potatowoong.potatomallback.domain.product.entity.Product;
+import potatowoong.potatomallback.domain.product.entity.ProductCategory;
+import potatowoong.potatomallback.domain.product.repository.ProductCategoryRepository;
+import potatowoong.potatomallback.domain.product.repository.ProductRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ProductCategoryServiceTest {

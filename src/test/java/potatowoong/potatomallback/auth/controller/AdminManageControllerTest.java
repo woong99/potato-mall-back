@@ -19,12 +19,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static potatowoong.potatomallback.common.LogMessage.ADD;
-import static potatowoong.potatomallback.common.LogMessage.ADMIN_MANAGEMENT;
-import static potatowoong.potatomallback.common.LogMessage.MODIFY;
-import static potatowoong.potatomallback.common.LogMessage.REMOVE;
-import static potatowoong.potatomallback.common.LogMessage.SEARCH_DETAIL;
-import static potatowoong.potatomallback.common.LogMessage.SEARCH_LIST;
+import static potatowoong.potatomallback.global.common.LogMessage.ADD;
+import static potatowoong.potatomallback.global.common.LogMessage.ADMIN_MANAGEMENT;
+import static potatowoong.potatomallback.global.common.LogMessage.MODIFY;
+import static potatowoong.potatomallback.global.common.LogMessage.REMOVE;
+import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_DETAIL;
+import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_LIST;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentRequest;
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
@@ -46,15 +46,16 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import potatowoong.potatomallback.auth.dto.request.AdminAddReqDto;
-import potatowoong.potatomallback.auth.dto.request.AdminModifyReqDto;
-import potatowoong.potatomallback.auth.dto.response.AdminResDto;
-import potatowoong.potatomallback.auth.service.AdminLogService;
-import potatowoong.potatomallback.auth.service.AdminManageService;
-import potatowoong.potatomallback.common.PageRequestDto;
-import potatowoong.potatomallback.common.PageResponseDto;
-import potatowoong.potatomallback.exception.CustomException;
-import potatowoong.potatomallback.exception.ErrorCode;
+import potatowoong.potatomallback.domain.auth.controller.AdminManageController;
+import potatowoong.potatomallback.domain.auth.dto.request.AdminAddReqDto;
+import potatowoong.potatomallback.domain.auth.dto.request.AdminModifyReqDto;
+import potatowoong.potatomallback.domain.auth.dto.response.AdminResDto;
+import potatowoong.potatomallback.domain.auth.service.AdminLogService;
+import potatowoong.potatomallback.domain.auth.service.AdminManageService;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @WebMvcTest(controllers = AdminManageController.class)
 @ExtendWith(MockitoExtension.class)

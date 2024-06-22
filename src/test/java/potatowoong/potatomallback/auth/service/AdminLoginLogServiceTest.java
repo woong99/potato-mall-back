@@ -17,11 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import potatowoong.potatomallback.auth.dto.response.AdminLoginLogResDto;
-import potatowoong.potatomallback.auth.enums.TryResult;
-import potatowoong.potatomallback.auth.repository.AdminLoginLogRepository;
-import potatowoong.potatomallback.common.PageRequestDto;
-import potatowoong.potatomallback.common.PageResponseDto;
+import potatowoong.potatomallback.domain.auth.dto.response.AdminLoginLogResDto;
+import potatowoong.potatomallback.domain.auth.enums.TryResult;
+import potatowoong.potatomallback.domain.auth.repository.AdminLoginLogRepository;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
 
 @ExtendWith(MockitoExtension.class)
 class AdminLoginLogServiceTest {

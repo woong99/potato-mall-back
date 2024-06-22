@@ -24,15 +24,17 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import potatowoong.potatomallback.auth.dto.request.LoginReqDto;
-import potatowoong.potatomallback.auth.entity.Admin;
-import potatowoong.potatomallback.auth.repository.AdminRepository;
-import potatowoong.potatomallback.exception.CustomException;
-import potatowoong.potatomallback.exception.ErrorCode;
-import potatowoong.potatomallback.jwt.component.JwtTokenProvider;
-import potatowoong.potatomallback.jwt.dto.AccessTokenDto;
-import potatowoong.potatomallback.jwt.dto.RefreshTokenDto;
-import potatowoong.potatomallback.jwt.dto.TokenDto;
+import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
+import potatowoong.potatomallback.domain.auth.entity.Admin;
+import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
+import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
+import potatowoong.potatomallback.global.exception.CustomException;
+import potatowoong.potatomallback.global.exception.ErrorCode;
+import potatowoong.potatomallback.global.auth.jwt.component.JwtTokenProvider;
+import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
+import potatowoong.potatomallback.global.auth.jwt.dto.RefreshTokenDto;
+import potatowoong.potatomallback.global.auth.jwt.dto.TokenDto;
 
 @ExtendWith(MockitoExtension.class)
 class AdminLoginServiceTest {

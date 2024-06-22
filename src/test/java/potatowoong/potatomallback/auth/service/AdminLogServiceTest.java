@@ -13,7 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import potatowoong.potatomallback.auth.repository.AdminLogRepository;
+import potatowoong.potatomallback.domain.auth.repository.AdminLogRepository;
+import potatowoong.potatomallback.domain.auth.service.AdminLogService;
 
 @ExtendWith(MockitoExtension.class)
 class AdminLogServiceTest {
