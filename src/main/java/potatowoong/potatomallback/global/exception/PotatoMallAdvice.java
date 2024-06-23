@@ -25,7 +25,7 @@ public class PotatoMallAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseEntity> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return ResponseEntity.ok(ErrorResponseEntity.builder()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseEntity.builder()
             .status(HttpStatus.BAD_REQUEST.value())
             .name("Validation Failed")
             .code(HttpStatus.BAD_REQUEST.getReasonPhrase())
