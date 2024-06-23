@@ -29,7 +29,10 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "PD001", "존재하지 않는 상품입니다."),
     NOT_FOUND_THUMBNAIL(HttpStatus.BAD_REQUEST, "PD002", "썸네일 이미지를 등록해주세요."),
     DUPLICATED_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "PD003", "이미 존재하는 상품명입니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ISE001", "서버 내부 오류입니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ISE001", "서버 내부 오류입니다."),
+    DUPLICATE_USER_ID(HttpStatus.BAD_REQUEST, "UA001", "이미 존재하는 아이디입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "UA002", "이미 존재하는 닉네임입니다."),
+    PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "UA003", "비밀번호가 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
 

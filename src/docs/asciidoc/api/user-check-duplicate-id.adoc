@@ -1,0 +1,24 @@
+[[user-check-duplicate-id]]
+=== 아이디 중복 체크 - 중복된 아이디가 존재하는 경우
+
+==== HTTP Request
+
+include::{snippets}/user-check-duplicate-id-duplicate/http-request.adoc[]
+include::{snippets}/user-check-duplicate-id-duplicate/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-check-duplicate-id-duplicate/http-response.adoc[]
+'''
+
+=== 아이디 중복 체크 - 중복된 아이디가 존재하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/user-check-duplicate-id-not-duplicate/http-request.adoc[]
+include::{snippets}/user-check-duplicate-id-not-duplicate/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-check-duplicate-id-not-duplicate/http-response.adoc[]
+'''

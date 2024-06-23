@@ -1,0 +1,49 @@
+[[user-sign-up]]
+=== 회원가입 성공
+
+==== HTTP Request
+
+include::{snippets}/user-sign-up/http-request.adoc[]
+include::{snippets}/user-sign-up/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-sign-up/http-response.adoc[]
+'''
+
+=== 회원가입 실패 - 아이디 중복
+
+==== HTTP Request
+
+include::{snippets}/user-sign-up-fail-duplicate-id/http-request.adoc[]
+include::{snippets}/user-sign-up-fail-duplicate-id/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-sign-up-fail-duplicate-id/http-response.adoc[]
+'''
+
+=== 회원가입 실패 - 닉네임 중복
+
+==== HTTP Request
+
+include::{snippets}/user-sign-up-fail-duplicate-nickname/http-request.adoc[]
+include::{snippets}/user-sign-up-fail-duplicate-nickname/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-sign-up-fail-duplicate-nickname/http-response.adoc[]
+'''
+
+=== 회원가입 실패 - 비밀번호 불일치
+
+==== HTTP Request
+
+include::{snippets}/user-sign-up-fail-password-not-matched/http-request.adoc[]
+include::{snippets}/user-sign-up-fail-password-not-matched/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-sign-up-fail-password-not-matched/http-response.adoc[]
+
+'''

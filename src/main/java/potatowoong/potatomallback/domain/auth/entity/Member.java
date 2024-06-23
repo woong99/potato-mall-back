@@ -18,6 +18,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import potatowoong.potatomallback.domain.auth.dto.request.UserSignUpReqDto;
 import potatowoong.potatomallback.global.auth.oauth.enums.SocialType;
 
 @Entity
@@ -70,5 +71,14 @@ public class Member {
         this.nickname = nickname;
         this.socialType = socialType;
         this.updatedBy = updatedBy;
+    }
+
+    public static Member of(UserSignUpReqDto dto) {
+        return Member.builder()
+            .userId(dto.getUserId())
+            .password(dto.getPassword())
+            .nickname(dto.getNickname())
+            .updatedBy(dto.getUserId())
+            .build();
     }
 }

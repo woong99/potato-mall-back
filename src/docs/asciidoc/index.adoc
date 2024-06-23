@@ -64,3 +64,18 @@ include::api/user-product-search.adoc[]
 == 사용자 액세스 토큰 갱신 API
 
 include::api/user-refresh-access-token.adoc[]
+
+[[USER-SIGN-UP-API]]
+== 사용자 회원가입 API
+
+include::api/user-sign-up.adoc[]
+
+[[USER-CHECK-DUPLICATE-ID-API]]
+== 사용자 아이디 중복 확인 API
+
+include::api/user-check-duplicate-id.adoc[]
+
+[[USER-CHECK-DUPLICATE-NICKNAME-API]]
+== 사용자 닉네임 중복 확인 API
+
+include::api/user-check-duplicate-nickname.adoc[]

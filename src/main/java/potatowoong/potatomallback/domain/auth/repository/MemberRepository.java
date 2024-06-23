@@ -8,4 +8,8 @@ import potatowoong.potatomallback.global.auth.oauth.enums.SocialType;
 public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findByUserIdAndSocialType(String userId, SocialType socialType);
+
+    boolean existsByUserId(String userId);
+
+    boolean existsByNickname(String nickname);
 }
