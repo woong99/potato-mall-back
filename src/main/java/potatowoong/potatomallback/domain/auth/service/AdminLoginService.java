@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.entity.Admin;
 import potatowoong.potatomallback.domain.auth.enums.Role;
+import potatowoong.potatomallback.domain.auth.enums.TokenName;
 import potatowoong.potatomallback.domain.auth.repository.AdminRepository;
 import potatowoong.potatomallback.global.auth.jwt.component.JwtTokenProvider;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
@@ -37,8 +38,6 @@ public class AdminLoginService {
     private final AdminLoginLogService adminLoginLogService;
 
     private final StringRedisTemplate redisTemplate;
-
-    private static final String REFRESH_TOKEN_COOKIE_NAME = "ADMIN_REFRESH_TOKEN";
 
     @Transactional(noRollbackFor = {CustomException.class})
     public AccessTokenDto login(LoginReqDto loginReqDto, HttpServletResponse response) {
@@ -70,7 +69,7 @@ public class AdminLoginService {
         valueOperations.set(tokenDto.refreshTokenDto().token(), adminId, refreshTokenDto.getExpiresInSecond(), TimeUnit.SECONDS);
 
         // Refresh Token을 쿠키에 담아서 전달
-        Cookie cookie = CookieUtils.createCookie(REFRESH_TOKEN_COOKIE_NAME, refreshTokenDto.token(), refreshTokenDto.getExpiresInSecond());
+        Cookie cookie = CookieUtils.createCookie(TokenName.ADMIN_REFRESH_TOKEN.name(), refreshTokenDto.token(), refreshTokenDto.getExpiresInSecond());
         response.addCookie(cookie);
 
         return tokenDto.accessTokenDto();
