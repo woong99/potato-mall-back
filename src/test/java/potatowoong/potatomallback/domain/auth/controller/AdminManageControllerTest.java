@@ -53,6 +53,7 @@ import potatowoong.potatomallback.domain.auth.service.AdminLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminManageService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -243,7 +244,7 @@ class AdminManageControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("관리자 등록 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_ADD_ADMIN));
 
             actions
                 .andDo(document("admin-management-add",
@@ -343,7 +344,7 @@ class AdminManageControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("관리자 수정 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_MODIFY_ADMIN));
 
             actions
                 .andDo(document("admin-management-modify",
@@ -465,7 +466,7 @@ class AdminManageControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("관리자 삭제 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_REMOVE_ADMIN));
 
             actions
                 .andDo(document("admin-management-remove",

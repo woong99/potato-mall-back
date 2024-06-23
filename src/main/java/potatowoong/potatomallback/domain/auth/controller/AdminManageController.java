@@ -26,6 +26,7 @@ import potatowoong.potatomallback.domain.auth.service.AdminManageService;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 
 @RestController
 @RequestMapping("/api/admin/admin-management")
@@ -69,7 +70,7 @@ public class AdminManageController {
 
         // 로그 저장
         adminLogService.addAdminLog(ADMIN_MANAGEMENT, ADD, dto.getAdminId(), dto.getName());
-        return ResponseEntity.ok(ApiResponseEntity.of("관리자 등록 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_ADD_ADMIN));
     }
 
     /**
@@ -81,7 +82,7 @@ public class AdminManageController {
 
         // 로그 저장
         adminLogService.addAdminLog(ADMIN_MANAGEMENT, MODIFY, dto.getAdminId(), dto.getName());
-        return ResponseEntity.ok(ApiResponseEntity.of("관리자 수정 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_MODIFY_ADMIN));
     }
 
     /**
@@ -93,7 +94,7 @@ public class AdminManageController {
 
         // 로그 저장
         adminLogService.addAdminLog(ADMIN_MANAGEMENT, REMOVE, adminId);
-        return ResponseEntity.ok(ApiResponseEntity.of("관리자 삭제 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_REMOVE_ADMIN));
     }
 
     /**

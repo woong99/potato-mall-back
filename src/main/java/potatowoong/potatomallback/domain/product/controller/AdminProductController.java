@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import potatowoong.potatomallback.domain.auth.service.AdminLogService;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
 import potatowoong.potatomallback.domain.product.service.ProductService;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 
 @RestController
 @RequestMapping("/api/admin/product")
@@ -76,7 +77,7 @@ public class AdminProductController {
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 등록 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_ADD_PRODUCT));
     }
 
     /**
@@ -90,7 +91,7 @@ public class AdminProductController {
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, MODIFY, productModifyReqDto.productId(), productModifyReqDto.name());
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 수정 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_MODIFY_PRODUCT));
     }
 
     /**
@@ -104,6 +105,6 @@ public class AdminProductController {
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, REMOVE, productId, "");
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 삭제 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_REMOVE_PRODUCT));
     }
 }

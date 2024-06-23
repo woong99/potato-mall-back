@@ -20,15 +20,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import potatowoong.potatomallback.domain.auth.service.AdminLogService;
-import potatowoong.potatomallback.global.common.ApiResponseEntity;
-import potatowoong.potatomallback.global.common.PageRequestDto;
-import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryAddReqDto;
 import potatowoong.potatomallback.domain.product.dto.request.ProductCategoryReqDto.ProductCategoryModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategoryDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategoryListResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.domain.product.service.ProductCategoryService;
+import potatowoong.potatomallback.global.common.ApiResponseEntity;
+import potatowoong.potatomallback.global.common.PageRequestDto;
+import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 
 @RestController
 @RequestMapping("/api/admin/product-category")
@@ -83,7 +84,7 @@ public class ProductCategoryController {
         // 로그 저장
         adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, ADD, "", dto.name());
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 등록 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_ADD_PRODUCT_CATEGORY));
     }
 
     /**
@@ -97,7 +98,7 @@ public class ProductCategoryController {
         // 로그 저장
         adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, MODIFY, dto.productCategoryId(), dto.name());
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 수정 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_MODIFY_PRODUCT_CATEGORY));
     }
 
     /**
@@ -114,6 +115,6 @@ public class ProductCategoryController {
         // 로그 저장
         adminLogService.addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, REMOVE, id, categoryName);
 
-        return ResponseEntity.ok(ApiResponseEntity.of("상품 카테고리 삭제 성공"));
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_REMOVE_PRODUCT_CATEGORY));
     }
 }

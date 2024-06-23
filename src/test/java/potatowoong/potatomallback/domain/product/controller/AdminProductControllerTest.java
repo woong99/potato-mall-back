@@ -55,6 +55,7 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.Prod
 import potatowoong.potatomallback.domain.product.service.ProductService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -275,7 +276,7 @@ class AdminProductControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 등록 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_ADD_PRODUCT));
 
             actions
                 .andDo(document("product-add",
@@ -411,7 +412,7 @@ class AdminProductControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 수정 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_MODIFY_PRODUCT));
 
             actions
                 .andDo(document("product-modify",
@@ -589,7 +590,7 @@ class AdminProductControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 삭제 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_REMOVE_PRODUCT));
 
             actions
                 .andDo(document("product-remove",

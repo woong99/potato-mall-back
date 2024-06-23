@@ -40,6 +40,7 @@ import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginService;
 import potatowoong.potatomallback.domain.auth.service.TokenRefreshService;
 import potatowoong.potatomallback.global.auth.jwt.dto.AccessTokenDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -165,7 +166,7 @@ class AdminLoginControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("로그아웃 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_LOGOUT));
 
             actions
                 .andDo(document("admin-logout",

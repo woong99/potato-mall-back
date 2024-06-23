@@ -55,6 +55,7 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.Prod
 import potatowoong.potatomallback.domain.product.service.ProductCategoryService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -287,7 +288,7 @@ class ProductCategoryControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 카테고리 등록 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_ADD_PRODUCT_CATEGORY));
 
             actions
                 .andDo(document("product-category-add",
@@ -357,7 +358,7 @@ class ProductCategoryControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 카테고리 수정 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_MODIFY_PRODUCT_CATEGORY));
 
             actions
                 .andDo(document("product-category-modify",
@@ -461,7 +462,7 @@ class ProductCategoryControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("상품 카테고리 삭제 성공"));
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_REMOVE_PRODUCT_CATEGORY));
 
             actions
                 .andDo(document("product-category-remove",
