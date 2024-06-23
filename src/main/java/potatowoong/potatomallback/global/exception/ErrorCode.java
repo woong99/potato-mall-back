@@ -33,7 +33,9 @@ public enum ErrorCode {
     DUPLICATE_USER_ID(HttpStatus.BAD_REQUEST, "UA001", "이미 존재하는 아이디입니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "UA002", "이미 존재하는 닉네임입니다."),
     PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "UA003", "비밀번호가 일치하지 않습니다."),
-    WRONG_LOGIN_TYPE(HttpStatus.BAD_REQUEST, "UA004", "잘못된 로그인 타입입니다.");
+    WRONG_LOGIN_TYPE(HttpStatus.BAD_REQUEST, "UA004", "잘못된 로그인 타입입니다."),
+    ALREADY_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL001", "이미 좋아요한 상품입니다."),
+    NOT_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL002", "좋아요하지 않은 상품입니다.");
 
     private final HttpStatus httpStatus;
 

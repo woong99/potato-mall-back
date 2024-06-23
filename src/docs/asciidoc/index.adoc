@@ -84,3 +84,8 @@ include::api/user-check-duplicate-nickname.adoc[]
 == 사용자 로그인 API
 
 include::api/user-login.adoc[]
+
+[[USER-PRODUCT-LIKE-API]]
+== 사용자 상품 좋아요 API
+
+include::api/user-product-like.adoc[]

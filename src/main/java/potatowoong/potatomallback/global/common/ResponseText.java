@@ -31,4 +31,8 @@ public class ResponseText {
     public static final String SUCCESS_MODIFY_PRODUCT_CATEGORY = "상품 카테고리 수정 성공";
 
     public static final String SUCCESS_REMOVE_PRODUCT_CATEGORY = "상품 카테고리 삭제 성공";
+
+    public static final String SUCCESS_ADD_PRODUCT_LIKE = "상품 좋아요 추가 성공";
+
+    public static final String SUCCESS_REMOVE_PRODUCT_LIKE = "상품 좋아요 삭제 성공";
 }

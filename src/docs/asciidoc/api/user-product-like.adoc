@@ -1,0 +1,63 @@
+[[user-product-like-add]]
+=== 상품 좋아요 추가 성공
+
+==== HTTP Request
+
+include::{snippets}/product-like-add/http-request.adoc[]
+include::{snippets}/product-like-add/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-like-add/http-response.adoc[]
+'''
+
+=== 상품 좋아요 추가 실패 - 이미 좋아요한 상품
+
+==== HTTP Request
+
+include::{snippets}/product-like-add-fail-already-liked/http-request.adoc[]
+include::{snippets}/product-like-add-fail-already-liked/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-like-add-fail-already-liked/http-response.adoc[]
+'''
+
+=== 상품 좋아요 추가 실패 - 상품이 존재하지 않음
+
+==== HTTP Request
+
+include::{snippets}/product-like-add-fail-product-not-found/http-request.adoc[]
+include::{snippets}/product-like-add-fail-product-not-found/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-like-add-fail-product-not-found/http-response.adoc[]
+'''
+
+[[user-product-like-remove]]
+
+=== 상품 좋아요 삭제 성공
+
+==== HTTP Request
+
+include::{snippets}/product-like-remove/http-request.adoc[]
+include::{snippets}/product-like-remove/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-like-remove/http-response.adoc[]
+
+'''
+
+=== 상품 좋아요 삭제 실패 - 좋아요한 상품이 아님
+
+==== HTTP Request
+
+include::{snippets}/product-like-remove-fail-not-liked/http-request.adoc[]
+include::{snippets}/product-like-remove-fail-not-liked/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/product-like-remove-fail-not-liked/http-response.adoc[]
+'''
