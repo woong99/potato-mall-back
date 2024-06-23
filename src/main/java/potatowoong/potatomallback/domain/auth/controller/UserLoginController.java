@@ -1,6 +1,7 @@
 package potatowoong.potatomallback.domain.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.dto.request.UserSignUpReqDto;
 import potatowoong.potatomallback.domain.auth.service.TokenRefreshService;
 import potatowoong.potatomallback.domain.auth.service.UserLoginService;
@@ -25,6 +27,17 @@ public class UserLoginController {
     private final UserLoginService userLoginService;
 
     private final TokenRefreshService tokenRefreshService;
+
+    /**
+     * 로그인 API
+     */
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponseEntity<AccessTokenDto>> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
+        // 로그인
+        AccessTokenDto accessTokenDto = userLoginService.login(loginReqDto, response);
+
+        return ResponseEntity.ok(ApiResponseEntity.of(accessTokenDto));
+    }
 
     /**
      * 회원가입 API

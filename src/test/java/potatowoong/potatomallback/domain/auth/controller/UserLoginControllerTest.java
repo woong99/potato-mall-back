@@ -21,6 +21,7 @@ import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDoc
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +38,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import potatowoong.potatomallback.domain.auth.dto.request.LoginReqDto;
 import potatowoong.potatomallback.domain.auth.dto.request.UserSignUpReqDto;
 import potatowoong.potatomallback.domain.auth.service.TokenRefreshService;
 import potatowoong.potatomallback.domain.auth.service.UserLoginService;
@@ -62,6 +64,128 @@ class UserLoginControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Nested
+    @DisplayName("로그인")
+    class 로그인 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() throws Exception {
+            // given
+            LoginReqDto loginReqDto = LoginReqDto.builder()
+                .id("userId")
+                .password("password")
+                .build();
+            AccessTokenDto accessTokenDto = AccessTokenDto.builder()
+                .token("accessToken")
+                .expiresIn(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .build();
+
+            given(userLoginService.login(any(LoginReqDto.class), any(HttpServletResponse.class))).willReturn(accessTokenDto);
+
+            // when & then
+            ResultActions actions = mockMvc.perform(post("/api/user/login")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(loginReqDto)));
+
+            actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.token").value(accessTokenDto.token()))
+                .andExpect(jsonPath("$.data.expiresIn").value(accessTokenDto.expiresIn()));
+
+            actions
+                .andDo(document("user-login",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                            fieldWithPath("id").type(JsonFieldType.STRING).optional().description("아이디"),
+                            fieldWithPath("password").type(JsonFieldType.STRING).optional().description("비밀번호")
+                        ),
+                        responseFields(
+                            beneathPath("data").withSubsectionId("data"),
+                            fieldWithPath("token").type(JsonFieldType.STRING).description("액세스 토큰"),
+                            fieldWithPath("expiresIn").type(JsonFieldType.NUMBER).description("액세스 토큰 만료 시간")
+                        )
+                    )
+                );
+
+            then(userLoginService).should().login(any(LoginReqDto.class), any(HttpServletResponse.class));
+        }
+
+        @Test
+        @DisplayName("실패 - 아이디 혹은 비밀번호 불일치")
+        void 실패_아이디_혹은_비밀번호_불일치() throws Exception {
+            // given
+            LoginReqDto loginReqDto = LoginReqDto.builder()
+                .id("userId")
+                .password("invalidPassword")
+                .build();
+
+            given(userLoginService.login(any(LoginReqDto.class), any(HttpServletResponse.class))).willThrow(new CustomException(ErrorCode.FAILED_TO_LOGIN));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(post("/api/user/login")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(loginReqDto)));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.FAILED_TO_LOGIN.getMessage()))
+                .andExpect(jsonPath("$.code").value(ErrorCode.FAILED_TO_LOGIN.getCode()));
+
+            actions
+                .andDo(document("user-login-fail",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                            fieldWithPath("id").type(JsonFieldType.STRING).optional().description("아이디"),
+                            fieldWithPath("password").type(JsonFieldType.STRING).optional().description("비밀번호")
+                        )
+                    )
+                );
+
+            then(userLoginService).should().login(any(LoginReqDto.class), any(HttpServletResponse.class));
+        }
+
+        @Test
+        @DisplayName("실패 - 소셜 로그인 사용자인 경우")
+        void 실패_소셜_로그인_사용자인_경우() throws Exception {
+            // given
+            LoginReqDto loginReqDto = LoginReqDto.builder()
+                .id("userId")
+                .password("password")
+                .build();
+
+            given(userLoginService.login(any(LoginReqDto.class), any(HttpServletResponse.class))).willThrow(new CustomException(ErrorCode.WRONG_LOGIN_TYPE));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(post("/api/user/login")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(loginReqDto)));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.WRONG_LOGIN_TYPE.getMessage()))
+                .andExpect(jsonPath("$.code").value(ErrorCode.WRONG_LOGIN_TYPE.getCode()));
+
+            actions
+                .andDo(document("user-login-fail-wrong-login-type",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                            fieldWithPath("id").type(JsonFieldType.STRING).optional().description("아이디"),
+                            fieldWithPath("password").type(JsonFieldType.STRING).optional().description("비밀번호")
+                        )
+                    )
+                );
+
+            then(userLoginService).should().login(any(LoginReqDto.class), any(HttpServletResponse.class));
+        }
+    }
 
     @Nested
     @DisplayName("회원가입")

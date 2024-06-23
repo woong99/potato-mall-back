@@ -129,7 +129,7 @@ class AdminLoginControllerTest {
                 .content(objectMapper.writeValueAsString(loginReqDto)));
 
             actions
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(ErrorCode.FAILED_TO_LOGIN.getMessage()))
                 .andExpect(jsonPath("$.code").value(ErrorCode.FAILED_TO_LOGIN.getCode()));
 

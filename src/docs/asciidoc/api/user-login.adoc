@@ -1,0 +1,39 @@
+[[user-login]]
+=== 로그인 성공
+
+==== HTTP Request
+
+include::{snippets}/user-login/http-request.adoc[]
+include::{snippets}/user-login/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-login/http-response.adoc[]
+include::{snippets}/user-login/response-fields-data.adoc[]
+
+'''
+
+=== 로그인 실패 - 아이디 혹은 비밀번호 불일치
+
+==== HTTP Request
+
+include::{snippets}/user-login-fail/http-request.adoc[]
+include::{snippets}/user-login-fail/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-login-fail/http-response.adoc[]
+'''
+
+=== 로그인 실패 - 소셜 로그인 사용자인 경우
+
+==== HTTP Request
+
+include::{snippets}/user-login-fail-wrong-login-type/http-request.adoc[]
+include::{snippets}/user-login-fail-wrong-login-type/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-login-fail-wrong-login-type/http-response.adoc[]
+
+'''

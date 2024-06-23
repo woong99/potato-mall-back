@@ -79,3 +79,8 @@ include::api/user-check-duplicate-id.adoc[]
 == 사용자 닉네임 중복 확인 API
 
 include::api/user-check-duplicate-nickname.adoc[]
+
+[[USER-LOGIN-API]]
+== 사용자 로그인 API
+
+include::api/user-login.adoc[]
