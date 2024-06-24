@@ -6,9 +6,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import potatowoong.potatomallback.domain.file.entity.AtchFile;
+import potatowoong.potatomallback.domain.file.enums.S3Folder;
+import potatowoong.potatomallback.domain.file.service.FileService;
 import potatowoong.potatomallback.domain.product.document.ProductNameDocument;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductAddReqDto;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
+import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
+import potatowoong.potatomallback.domain.product.entity.Product;
+import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
 import potatowoong.potatomallback.domain.product.repository.ProductCategoryRepository;
 import potatowoong.potatomallback.domain.product.repository.ProductRepository;
@@ -16,14 +24,6 @@ import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
-import potatowoong.potatomallback.domain.file.entity.AtchFile;
-import potatowoong.potatomallback.domain.file.enums.S3Folder;
-import potatowoong.potatomallback.domain.file.service.FileService;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.UserProductSearchResDto;
-import potatowoong.potatomallback.domain.product.entity.Product;
-import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.global.utils.FileUtils;
 
 @Service
@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponseDto<UserProductSearchResDto> getUserProductList(PageRequestDto pageRequestDto) {
+    public PageResponseDto<UserProductResDto.Search> getUserProductList(PageRequestDto pageRequestDto) {
         return productRepository.findUserProductWithPage(pageRequestDto);
     }
 

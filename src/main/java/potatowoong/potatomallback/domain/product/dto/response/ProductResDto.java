@@ -5,9 +5,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.file.entity.AtchFile;
 import potatowoong.potatomallback.domain.file.enums.S3Folder;
+import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.global.utils.S3Utils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -75,22 +75,6 @@ public class ProductResDto {
                 .name(product.getName())
                 .price(product.getPrice())
                 .build();
-        }
-    }
-
-    @Builder
-    public record UserProductSearchResDto(
-        Long productId,
-        String name,
-        int price,
-        String thumbnailUrl
-    ) {
-
-        public UserProductSearchResDto(Long productId, String name, int price, String thumbnailUrl) {
-            this.productId = productId;
-            this.name = name;
-            this.price = price;
-            this.thumbnailUrl = StringUtils.isBlank(thumbnailUrl) ? "" : S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
         }
     }
 }

@@ -29,7 +29,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.UserProductSearchResDto;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.service.ProductSearchService;
 import potatowoong.potatomallback.domain.product.service.ProductService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
@@ -66,13 +66,13 @@ class UserProductControllerTest {
                 .sortCondition("lowPrice")
                 .build();
 
-            UserProductSearchResDto resDto = UserProductSearchResDto.builder()
+            UserProductResDto.Search resDto = UserProductResDto.Search.builder()
                 .productId(1L)
                 .name("감자")
                 .price(1000)
                 .thumbnailUrl("http://localhost:8080/api/file/download/1")
                 .build();
-            PageResponseDto<UserProductSearchResDto> pageResponseDto = new PageResponseDto<>(Collections.singletonList(resDto), 1L);
+            PageResponseDto<UserProductResDto.Search> pageResponseDto = new PageResponseDto<>(Collections.singletonList(resDto), 1L);
 
             given(productService.getUserProductList(pageRequestDto)).willReturn(pageResponseDto);
 

@@ -27,7 +27,7 @@ import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.Produ
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.UserProductSearchResDto;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
@@ -82,10 +82,10 @@ class ProductServiceTest {
         @DisplayName("성공")
         void 성공() {
             // given
-            given(productRepository.findUserProductWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(UserProductSearchResDto.builder().build()), 1));
+            given(productRepository.findUserProductWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(UserProductResDto.Search.builder().build()), 1));
 
             // when
-            PageResponseDto<UserProductSearchResDto> result = productService.getUserProductList(any());
+            PageResponseDto<UserProductResDto.Search> result = productService.getUserProductList(any());
 
             // then
             assertThat(result).isNotNull();

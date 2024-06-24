@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.SortDirection;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.UserProductSearchResDto;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 
@@ -31,8 +31,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public PageResponseDto<UserProductSearchResDto> findUserProductWithPage(PageRequestDto pageRequestDto) {
-        List<UserProductSearchResDto> result = getUserProductPagingResult(pageRequestDto);
+    public PageResponseDto<UserProductResDto.Search> findUserProductWithPage(PageRequestDto pageRequestDto) {
+        List<UserProductResDto.Search> result = getUserProductPagingResult(pageRequestDto);
         final long totalElements = getProductTotalElements(pageRequestDto);
 
         return new PageResponseDto<>(result, totalElements);
@@ -56,9 +56,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     /**
      * 사용자 - 페이징 결과 조회
      */
-    private List<UserProductSearchResDto> getUserProductPagingResult(PageRequestDto pageRequestDto) {
+    private List<UserProductResDto.Search> getUserProductPagingResult(PageRequestDto pageRequestDto) {
         return jpaQueryFactory.select(
-                Projections.constructor(UserProductSearchResDto.class, product.productId, product.name, product.price, product.thumbnailFile.storedFileName))
+                Projections.constructor(UserProductResDto.Search.class, product.productId, product.name, product.price, product.thumbnailFile.storedFileName))
             .from(product)
             .leftJoin(product.thumbnailFile, atchFile)
             .where(getSearchConditions(pageRequestDto))
