@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/user/product")
 @RequiredArgsConstructor
 public class UserProductController {
 
@@ -44,5 +45,16 @@ public class UserProductController {
         List<ProductNameResDto> result = productSearchService.searchProductNameWithAutoComplete(searchWord);
 
         return ResponseEntity.ok(ApiResponseEntity.of(result));
+    }
+
+    /**
+     * 상품 상세 조회 API
+     */
+    @GetMapping("/{productId}")
+    public ResponseEntity<ApiResponseEntity<UserProductResDto.Detail>> detail(@PathVariable long productId) {
+        // 상품 상세 조회
+        UserProductResDto.Detail userProductResDto = userProductService.getUserProduct(productId);
+
+        return ResponseEntity.ok(ApiResponseEntity.of(userProductResDto));
     }
 }

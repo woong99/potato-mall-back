@@ -29,4 +29,28 @@ public class UserProductResDto {
             this.isLike = isLike;
         }
     }
+
+    @Builder
+    public record Detail(
+        Long productId,
+        String name,
+        String description,
+        int price,
+        int stockQuantity,
+        String thumbnailUrl,
+        long likeCount,
+        boolean isLike
+    ) {
+
+        public Detail(Long productId, String name, String description, int price, int stockQuantity, String thumbnailUrl, long likeCount, boolean isLike) {
+            this.productId = productId;
+            this.name = name;
+            this.description = description;
+            this.price = price;
+            this.stockQuantity = stockQuantity;
+            this.thumbnailUrl = StringUtils.isBlank(thumbnailUrl) ? "" : S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
+            this.likeCount = likeCount;
+            this.isLike = isLike;
+        }
+    }
 }

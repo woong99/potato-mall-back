@@ -44,6 +44,11 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return new PageResponseDto<>(result, totalElements);
     }
 
+    @Override
+    public Optional<UserProductResDto.Detail> findUserProductById(long productId) {
+        return Optional.ofNullable(getUserProductDetailResult(productId));
+    }
+
     /**
      * 페이징 결과 조회
      */
@@ -94,6 +99,45 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
 
         return query.fetch();
+    }
+
+    /**
+     * 사용자 - 상품 상세 조회
+     *
+     * @param productId 상품 ID
+     * @return 상품 상세 정보 + 썸네일 URL + 좋아요 개수 + 좋아요 여부(로그인 시)
+     */
+    private UserProductResDto.Detail getUserProductDetailResult(final long productId) {
+        final String userId = SecurityUtils.getCurrentUserId();
+
+        JPAQuery<UserProductResDto.Detail> query = jpaQueryFactory.select(
+                Projections.constructor(
+                    UserProductResDto.Detail.class,
+                    product.productId,
+                    product.name,
+                    product.content,
+                    product.price,
+                    product.stockQuantity,
+                    product.thumbnailFile.storedFileName,
+                    JPAExpressions.select(productLike.count())
+                        .from(productLike)
+                        .where(productLike.product.eq(product)),
+                    StringUtils.isNotBlank(userId) ? new CaseBuilder()
+                        .when(productLike.product.productId.isNotNull())
+                        .then(true)
+                        .otherwise(false) :
+                        Expressions.asBoolean(false)
+                )
+            )
+            .from(product)
+            .leftJoin(product.thumbnailFile, atchFile)
+            .where(product.productId.eq(productId));
+
+        if (StringUtils.isNotBlank(userId)) {
+            query.leftJoin(product.productLikes, productLike).on(productLike.member.userId.eq(userId));
+        }
+
+        return query.fetchOne();
     }
 
     /**
