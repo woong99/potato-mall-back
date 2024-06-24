@@ -59,7 +59,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/admin/login", "/api/admin/refresh").permitAll()
+                    .requestMatchers("/api/admin/login", "/api/admin/refresh", "/favicon.ico").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/user/product/{productId}/like").hasRole("USER")
                     .anyRequest().permitAll())
