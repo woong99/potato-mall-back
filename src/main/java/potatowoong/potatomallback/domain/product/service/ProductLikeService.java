@@ -51,7 +51,7 @@ public class ProductLikeService {
         productLikeRepository.save(productLike);
 
         // 상품 좋아요 개수 조회
-        return getProductLikeCount(productId, userId);
+        return getProductLikeCount(productId);
     }
 
     /**
@@ -69,14 +69,14 @@ public class ProductLikeService {
         productLikeRepository.delete(productLike);
 
         // 상품 좋아요 개수 조회
-        return getProductLikeCount(productId, userId);
+        return getProductLikeCount(productId);
     }
 
     /**
      * 상품 좋아요 개수 조회
      */
-    private UserProductLikeResDto getProductLikeCount(final long productId, final String userId) {
-        final int likeCount = productLikeRepository.countByProductProductIdAndMemberUserId(productId, userId);
+    private UserProductLikeResDto getProductLikeCount(final long productId) {
+        final int likeCount = productLikeRepository.countByProductProductId(productId);
         return new UserProductLikeResDto(likeCount);
     }
 }

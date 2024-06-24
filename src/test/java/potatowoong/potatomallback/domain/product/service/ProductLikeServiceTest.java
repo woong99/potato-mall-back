@@ -61,6 +61,7 @@ class ProductLikeServiceTest {
             then(productRepository).should().findById(any());
             then(memberRepository).should().getReferenceById(any());
             then(productLikeRepository).should().save(any());
+            then(productLikeRepository).should().countByProductProductId(anyLong());
         }
 
         @Test
@@ -78,6 +79,7 @@ class ProductLikeServiceTest {
             then(productRepository).should(never()).findById(any());
             then(memberRepository).should(never()).getReferenceById(any());
             then(productLikeRepository).should(never()).save(any());
+            then(productLikeRepository).should(never()).countByProductProductId(anyLong());
         }
 
         @Test
@@ -96,6 +98,7 @@ class ProductLikeServiceTest {
             then(productRepository).should().findById(any());
             then(memberRepository).should(never()).getReferenceById(any());
             then(productLikeRepository).should(never()).save(any());
+            then(productLikeRepository).should(never()).countByProductProductId(anyLong());
         }
     }
 
@@ -116,6 +119,7 @@ class ProductLikeServiceTest {
             // then
             then(productLikeRepository).should().findByProductProductIdAndMemberUserId(anyLong(), any());
             then(productLikeRepository).should().delete(any());
+            then(productLikeRepository).should().countByProductProductId(anyLong());
         }
 
         @Test
@@ -131,6 +135,7 @@ class ProductLikeServiceTest {
 
             then(productLikeRepository).should().findByProductProductIdAndMemberUserId(anyLong(), any());
             then(productLikeRepository).should(never()).delete(any());
+            then(productLikeRepository).should(never()).countByProductProductId(anyLong());
         }
     }
 }
