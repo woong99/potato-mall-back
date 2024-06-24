@@ -52,7 +52,7 @@ import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.Produ
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.service.ProductService;
+import potatowoong.potatomallback.domain.product.service.AdminProductService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.common.ResponseText;
@@ -66,7 +66,7 @@ import potatowoong.potatomallback.global.exception.ErrorCode;
 class AdminProductControllerTest {
 
     @MockBean
-    private ProductService productService;
+    private AdminProductService adminProductService;
 
     @MockBean
     private AdminLogService adminLogService;
@@ -99,7 +99,7 @@ class AdminProductControllerTest {
             ProductSearchResDto resDto = getProductSearchResDto();
             PageResponseDto<ProductSearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), productId);
 
-            given(productService.getProductList(pageRequestDto)).willReturn(pageResponseDto);
+            given(adminProductService.getProductList(pageRequestDto)).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/admin/product/search")
@@ -142,7 +142,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getProductList(pageRequestDto);
+            then(adminProductService).should().getProductList(pageRequestDto);
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
         }
 
@@ -169,7 +169,7 @@ class AdminProductControllerTest {
             // given
             ProductDetailResDto resDto = getProductDetailResDto();
 
-            given(productService.getProduct(productId)).willReturn(resDto);
+            given(adminProductService.getProduct(productId)).willReturn(resDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", productId)
@@ -207,7 +207,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getProduct(productId);
+            then(adminProductService).should().getProduct(productId);
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, productId, resDto.name());
         }
 
@@ -215,7 +215,7 @@ class AdminProductControllerTest {
         @DisplayName("실패 - 존재하지 않는 상품 ID")
         void 실패_존재하지_않는_상품_ID() throws Exception {
             // given
-            given(productService.getProduct(productId)).willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+            given(adminProductService.getProduct(productId)).willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
             // when & then
             ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.get("/api/admin/product/{productId}", productId)
@@ -235,7 +235,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getProduct(productId);
+            then(adminProductService).should().getProduct(productId);
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -292,7 +292,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().addProduct(any(), any());
+            then(adminProductService).should().addProduct(any(), any());
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
         }
 
@@ -305,7 +305,7 @@ class AdminProductControllerTest {
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "썸네일 파일".getBytes());
             MockMultipartFile data = new MockMultipartFile("productAddReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productAddReqDto).getBytes());
 
-            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(productService).addProduct(any(), any());
+            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(adminProductService).addProduct(any(), any());
 
             // when & then
             ResultActions actions = mockMvc.perform(multipart(HttpMethod.POST, "/api/admin/product")
@@ -333,7 +333,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().addProduct(any(), any());
+            then(adminProductService).should().addProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -346,7 +346,7 @@ class AdminProductControllerTest {
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "썸네일 파일".getBytes());
             MockMultipartFile data = new MockMultipartFile("productAddReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productAddReqDto).getBytes());
 
-            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(productService).addProduct(any(), any());
+            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(adminProductService).addProduct(any(), any());
 
             // when & then
             ResultActions actions = mockMvc.perform(multipart(HttpMethod.POST, "/api/admin/product")
@@ -374,7 +374,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().addProduct(any(), any());
+            then(adminProductService).should().addProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -430,7 +430,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().modifyProduct(any(), any());
+            then(adminProductService).should().modifyProduct(any(), any());
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, MODIFY, productId, productModifyReqDto.name());
         }
 
@@ -443,7 +443,7 @@ class AdminProductControllerTest {
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
             MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
 
-            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(productService).modifyProduct(any(), any());
+            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(adminProductService).modifyProduct(any(), any());
 
             // when & then
             ResultActions actions = mockMvc.perform(multipart(HttpMethod.PUT, "/api/admin/product")
@@ -473,7 +473,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().modifyProduct(any(), any());
+            then(adminProductService).should().modifyProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -486,7 +486,7 @@ class AdminProductControllerTest {
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
             MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
 
-            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(productService).modifyProduct(any(), any());
+            willThrow(new CustomException(ErrorCode.DUPLICATED_PRODUCT_NAME)).given(adminProductService).modifyProduct(any(), any());
 
             // when & then
             ResultActions actions = mockMvc.perform(multipart(HttpMethod.PUT, "/api/admin/product")
@@ -516,7 +516,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().modifyProduct(any(), any());
+            then(adminProductService).should().modifyProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -529,7 +529,7 @@ class AdminProductControllerTest {
             MockMultipartFile thumbnailFile = new MockMultipartFile("thumbnailFile", "test.png", "image/png", "test".getBytes());
             MockMultipartFile data = new MockMultipartFile("productModifyReqDto", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(productModifyReqDto).getBytes());
 
-            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(productService).modifyProduct(any(), any());
+            willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(adminProductService).modifyProduct(any(), any());
 
             // when & then
             ResultActions actions = mockMvc.perform(multipart(HttpMethod.PUT, "/api/admin/product")
@@ -559,7 +559,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().modifyProduct(any(), any());
+            then(adminProductService).should().modifyProduct(any(), any());
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
 
@@ -601,7 +601,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().removeProduct(productId);
+            then(adminProductService).should().removeProduct(productId);
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, REMOVE, productId, "");
         }
 
@@ -609,7 +609,7 @@ class AdminProductControllerTest {
         @DisplayName("실패 - 존재하지 않는 상품 ID")
         void 실패_존재하지_않는_상품_ID() throws Exception {
             // given
-            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(productService).removeProduct(productId);
+            willThrow(new CustomException(ErrorCode.PRODUCT_NOT_FOUND)).given(adminProductService).removeProduct(productId);
 
             // when & then
             ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/admin/product/{productId}", productId)
@@ -629,7 +629,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(productService).should().removeProduct(productId);
+            then(adminProductService).should().removeProduct(productId);
             then(adminLogService).should(never()).addAdminLog(any(), any(), any(), any());
         }
     }

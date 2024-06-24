@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.service.ProductSearchService;
-import potatowoong.potatomallback.domain.product.service.ProductService;
+import potatowoong.potatomallback.domain.product.service.UserProductService;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
@@ -20,7 +20,7 @@ import potatowoong.potatomallback.global.common.PageResponseDto;
 @RequiredArgsConstructor
 public class UserProductController {
 
-    private final ProductService productService;
+    private final UserProductService userProductService;
 
     private final ProductSearchService productSearchService;
 
@@ -30,7 +30,7 @@ public class UserProductController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponseEntity<PageResponseDto<UserProductResDto.Search>>> search(PageRequestDto pageRequestDto) {
         // 상품 목록 조회
-        PageResponseDto<UserProductResDto.Search> productSearchResDto = productService.getUserProductList(pageRequestDto);
+        PageResponseDto<UserProductResDto.Search> productSearchResDto = userProductService.getUserProductList(pageRequestDto);
 
         return ResponseEntity.ok(ApiResponseEntity.of(productSearchResDto));
     }

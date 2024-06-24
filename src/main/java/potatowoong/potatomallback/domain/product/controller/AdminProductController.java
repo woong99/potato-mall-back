@@ -23,7 +23,7 @@ import potatowoong.potatomallback.domain.auth.service.AdminLogService;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.service.ProductService;
+import potatowoong.potatomallback.domain.product.service.AdminProductService;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
@@ -34,7 +34,7 @@ import potatowoong.potatomallback.global.common.ResponseText;
 @RequiredArgsConstructor
 public class AdminProductController {
 
-    private final ProductService productService;
+    private final AdminProductService adminProductService;
 
     private final AdminLogService adminLogService;
 
@@ -44,7 +44,7 @@ public class AdminProductController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponseEntity<PageResponseDto<ProductSearchResDto>>> getProductList(PageRequestDto pageRequestDto) {
         // 상품 목록 조회
-        PageResponseDto<ProductSearchResDto> productSearchResDto = productService.getProductList(pageRequestDto);
+        PageResponseDto<ProductSearchResDto> productSearchResDto = adminProductService.getProductList(pageRequestDto);
 
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
@@ -58,7 +58,7 @@ public class AdminProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ApiResponseEntity<ProductDetailResDto>> getProduct(@PathVariable Long productId) {
         // 상품 조회
-        ProductDetailResDto productDetailResDto = productService.getProduct(productId);
+        ProductDetailResDto productDetailResDto = adminProductService.getProduct(productId);
 
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, SEARCH_DETAIL, productId, productDetailResDto.name());
@@ -72,7 +72,7 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<ApiResponseEntity<String>> addProduct(@Valid @RequestPart ProductReqDto.ProductAddReqDto productAddReqDto, @RequestPart(required = false) MultipartFile thumbnailFile) {
         // 상품 등록
-        productService.addProduct(productAddReqDto, thumbnailFile);
+        adminProductService.addProduct(productAddReqDto, thumbnailFile);
 
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, ADD, "", productAddReqDto.name());
@@ -86,7 +86,7 @@ public class AdminProductController {
     @PutMapping
     public ResponseEntity<ApiResponseEntity<String>> modifyProduct(@Valid @RequestPart ProductReqDto.ProductModifyReqDto productModifyReqDto, @RequestPart(required = false) MultipartFile thumbnailFile) {
         // 상품 수정
-        productService.modifyProduct(productModifyReqDto, thumbnailFile);
+        adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, MODIFY, productModifyReqDto.productId(), productModifyReqDto.name());
@@ -100,7 +100,7 @@ public class AdminProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponseEntity<String>> removeProduct(@PathVariable Long productId) {
         // 상품 삭제
-        productService.removeProduct(productId);
+        adminProductService.removeProduct(productId);
 
         // 관리자 로그 등록
         adminLogService.addAdminLog(PRODUCT_MANAGEMENT, REMOVE, productId, "");

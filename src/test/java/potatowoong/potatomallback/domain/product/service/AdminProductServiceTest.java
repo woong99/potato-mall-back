@@ -27,7 +27,6 @@ import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.Produ
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
@@ -38,7 +37,7 @@ import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class AdminProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -53,7 +52,7 @@ class ProductServiceTest {
     private FileService fileService;
 
     @InjectMocks
-    private ProductService productService;
+    private AdminProductService adminProductService;
 
     @Nested
     @DisplayName("상품 목록 조회")
@@ -66,30 +65,11 @@ class ProductServiceTest {
             given(productRepository.findProductWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(ProductSearchResDto.builder().build()), 1));
 
             // when
-            PageResponseDto<ProductSearchResDto> result = productService.getProductList(any());
+            PageResponseDto<ProductSearchResDto> result = adminProductService.getProductList(any());
 
             // then
             assertThat(result).isNotNull();
             then(productRepository).should().findProductWithPage(any());
-        }
-    }
-
-    @Nested
-    @DisplayName("사용자 - 상품 목록 조회")
-    class 사용자_상품_목록_조회 {
-
-        @Test
-        @DisplayName("성공")
-        void 성공() {
-            // given
-            given(productRepository.findUserProductWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(UserProductResDto.Search.builder().build()), 1));
-
-            // when
-            PageResponseDto<UserProductResDto.Search> result = productService.getUserProductList(any());
-
-            // then
-            assertThat(result).isNotNull();
-            then(productRepository).should().findUserProductWithPage(any());
         }
     }
 
@@ -119,7 +99,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
 
             // when
-            ProductDetailResDto result = productService.getProduct(1L);
+            ProductDetailResDto result = adminProductService.getProduct(1L);
 
             // then
             assertThat(result).isNotNull();
@@ -133,7 +113,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.empty());
 
             // when
-            assertThatThrownBy(() -> productService.getProduct(1L))
+            assertThatThrownBy(() -> adminProductService.getProduct(1L))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PRODUCT_NOT_FOUND);
 
@@ -163,7 +143,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.existsByName("상품")).willReturn(true);
 
             // when
-            productService.addProduct(productAddReqDto, thumbnailFile);
+            adminProductService.addProduct(productAddReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -190,7 +170,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.existsByName("상품")).willReturn(true);
 
             // when
-            productService.addProduct(productAddReqDto, null);
+            adminProductService.addProduct(productAddReqDto, null);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -217,7 +197,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.existsByName("상품")).willReturn(false);
 
             // when
-            productService.addProduct(productAddReqDto, null);
+            adminProductService.addProduct(productAddReqDto, null);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -243,7 +223,7 @@ class ProductServiceTest {
             willThrow(new CustomException(ErrorCode.NOT_FOUND_CATEGORY)).given(productCategoryRepository).findById(1L);
 
             // when
-            assertThatThrownBy(() -> productService.addProduct(productAddReqDto, thumbnailFile))
+            assertThatThrownBy(() -> adminProductService.addProduct(productAddReqDto, thumbnailFile))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
 
@@ -268,7 +248,7 @@ class ProductServiceTest {
             given(productRepository.findByName("상품")).willReturn(Optional.of(Product.builder().build()));
 
             // when
-            assertThatThrownBy(() -> productService.addProduct(productAddReqDto, thumbnailFile))
+            assertThatThrownBy(() -> adminProductService.addProduct(productAddReqDto, thumbnailFile))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_PRODUCT_NAME);
 
@@ -312,7 +292,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
-            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+            adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -352,7 +332,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
-            productService.modifyProduct(productModifyReqDto, null);
+            adminProductService.modifyProduct(productModifyReqDto, null);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -391,7 +371,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
-            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+            adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -434,7 +414,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.of(productNameDocument));
 
             // when
-            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+            adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("상품");
@@ -477,7 +457,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.of(productNameDocument));
 
             // when
-            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+            adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("변경된 상품");
@@ -520,7 +500,7 @@ class ProductServiceTest {
             given(elasticProductNameRepository.findByName("상품")).willReturn(Optional.empty());
 
             // when
-            productService.modifyProduct(productModifyReqDto, thumbnailFile);
+            adminProductService.modifyProduct(productModifyReqDto, thumbnailFile);
 
             // then
             then(productRepository).should().findByName("변경된 상품");
@@ -549,7 +529,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.empty());
 
             // when
-            assertThatThrownBy(() -> productService.modifyProduct(productModifyReqDto, null))
+            assertThatThrownBy(() -> adminProductService.modifyProduct(productModifyReqDto, null))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PRODUCT_NOT_FOUND);
 
@@ -578,7 +558,7 @@ class ProductServiceTest {
             given(productCategoryRepository.findById(1L)).willReturn(Optional.empty());
 
             // when
-            assertThatThrownBy(() -> productService.modifyProduct(productModifyReqDto, null))
+            assertThatThrownBy(() -> adminProductService.modifyProduct(productModifyReqDto, null))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_FOUND_CATEGORY);
 
@@ -607,7 +587,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(Product.builder().build()));
 
             // when
-            assertThatThrownBy(() -> productService.modifyProduct(productModifyReqDto, null))
+            assertThatThrownBy(() -> adminProductService.modifyProduct(productModifyReqDto, null))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATED_PRODUCT_NAME);
 
@@ -640,7 +620,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
 
             // when
-            productService.removeProduct(1L);
+            adminProductService.removeProduct(1L);
 
             // then
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
@@ -660,7 +640,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.of(product));
 
             // when
-            productService.removeProduct(1L);
+            adminProductService.removeProduct(1L);
 
             // then
             then(productRepository).should().findWithThumbnailFileByProductId(1L);
@@ -676,7 +656,7 @@ class ProductServiceTest {
             given(productRepository.findWithThumbnailFileByProductId(1L)).willReturn(Optional.empty());
 
             // when
-            assertThatThrownBy(() -> productService.removeProduct(1L))
+            assertThatThrownBy(() -> adminProductService.removeProduct(1L))
                 .isInstanceOf(CustomException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PRODUCT_NOT_FOUND);
 

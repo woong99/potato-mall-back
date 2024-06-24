@@ -14,7 +14,6 @@ import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.Produ
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
-import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.entity.ProductCategory;
 import potatowoong.potatomallback.domain.product.repository.ElasticProductNameRepository;
@@ -28,7 +27,7 @@ import potatowoong.potatomallback.global.utils.FileUtils;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class AdminProductService {
 
     private final ProductRepository productRepository;
 
@@ -38,11 +37,17 @@ public class ProductService {
 
     private final FileService fileService;
 
+    /**
+     * 상품 목록 조회
+     */
     @Transactional(readOnly = true)
     public PageResponseDto<ProductSearchResDto> getProductList(PageRequestDto pageRequestDto) {
         return productRepository.findProductWithPage(pageRequestDto);
     }
 
+    /**
+     * 상품 상세 조회
+     */
     @Transactional(readOnly = true)
     public ProductDetailResDto getProduct(final long productId) {
         Product product = productRepository.findWithThumbnailFileByProductId(productId)
@@ -51,11 +56,9 @@ public class ProductService {
         return ProductDetailResDto.of(product);
     }
 
-    @Transactional(readOnly = true)
-    public PageResponseDto<UserProductResDto.Search> getUserProductList(PageRequestDto pageRequestDto) {
-        return productRepository.findUserProductWithPage(pageRequestDto);
-    }
-
+    /**
+     * 상품 등록
+     */
     @Transactional
     public void addProduct(ProductAddReqDto productAddReqDto, MultipartFile thumbnailFile) {
         // 상품명 중복 체크
@@ -81,6 +84,9 @@ public class ProductService {
         insertProductNameToElasticSearch(productAddReqDto.name());
     }
 
+    /**
+     * 상품 수정
+     */
     @Transactional
     public void modifyProduct(ProductModifyReqDto productModifyReqDto, MultipartFile thumbnailFile) {
         // 상품 조회
@@ -110,6 +116,9 @@ public class ProductService {
         updateProductNameToElasticsearch(productName, productModifyReqDto.name());
     }
 
+    /**
+     * 상품 삭제
+     */
     @Transactional
     public void removeProduct(final long productId) {
         // 상품 조회

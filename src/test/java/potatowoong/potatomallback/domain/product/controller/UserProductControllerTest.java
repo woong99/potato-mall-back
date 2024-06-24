@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.service.ProductSearchService;
-import potatowoong.potatomallback.domain.product.service.ProductService;
+import potatowoong.potatomallback.domain.product.service.UserProductService;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 
@@ -43,7 +43,7 @@ import potatowoong.potatomallback.global.common.PageResponseDto;
 class UserProductControllerTest {
 
     @MockBean
-    private ProductService productService;
+    private UserProductService userProductService;
 
     @MockBean
     private ProductSearchService productSearchService;
@@ -74,7 +74,7 @@ class UserProductControllerTest {
                 .build();
             PageResponseDto<UserProductResDto.Search> pageResponseDto = new PageResponseDto<>(Collections.singletonList(resDto), 1L);
 
-            given(productService.getUserProductList(pageRequestDto)).willReturn(pageResponseDto);
+            given(userProductService.getUserProductList(pageRequestDto)).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/product/search")
@@ -112,7 +112,7 @@ class UserProductControllerTest {
                     )
                 ));
 
-            then(productService).should().getUserProductList(pageRequestDto);
+            then(userProductService).should().getUserProductList(pageRequestDto);
         }
     }
 
