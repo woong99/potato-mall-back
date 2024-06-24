@@ -1,8 +1,12 @@
 package potatowoong.potatomallback.domain.product.controller;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -25,8 +29,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductLikeResDto;
 import potatowoong.potatomallback.domain.product.service.ProductLikeService;
-import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -49,6 +53,9 @@ class UserProductLikeControllerTest {
         @Test
         @DisplayName("성공")
         void 성공() throws Exception {
+            // given
+            given(productLikeService.addProductLike(productId)).willReturn(new UserProductLikeResDto(1));
+
             // when & then
             ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/user/product/{productId}/like", productId)
                 .with(csrf().asHeader())
@@ -56,7 +63,7 @@ class UserProductLikeControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_ADD_PRODUCT_LIKE));
+                .andExpect(jsonPath("$.data.likeCount").value(1));
 
             actions
                 .andDo(document("product-like-add",
@@ -64,6 +71,10 @@ class UserProductLikeControllerTest {
                     getDocumentResponse(),
                     pathParameters(
                         parameterWithName("productId").description("상품 ID")
+                    ),
+                    responseFields(
+                        beneathPath("data").withSubsectionId("data"),
+                        fieldWithPath("likeCount").description("좋아요 수")
                     )
                 ));
 
@@ -134,6 +145,9 @@ class UserProductLikeControllerTest {
         @Test
         @DisplayName("성공")
         void 성공() throws Exception {
+            // given
+            given(productLikeService.removeProductLike(productId)).willReturn(new UserProductLikeResDto(1));
+
             // when & then
             ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/user/product/{productId}/like", productId)
                 .with(csrf().asHeader())
@@ -141,7 +155,7 @@ class UserProductLikeControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_REMOVE_PRODUCT_LIKE));
+                .andExpect(jsonPath("$.data.likeCount").value(1));
 
             actions
                 .andDo(document("product-like-remove",
@@ -149,6 +163,10 @@ class UserProductLikeControllerTest {
                     getDocumentResponse(),
                     pathParameters(
                         parameterWithName("productId").description("상품 ID")
+                    ),
+                    responseFields(
+                        beneathPath("data").withSubsectionId("data"),
+                        fieldWithPath("likeCount").description("좋아요 수")
                     )
                 ));
 

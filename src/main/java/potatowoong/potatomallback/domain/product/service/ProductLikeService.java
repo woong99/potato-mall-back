@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import potatowoong.potatomallback.domain.auth.entity.Member;
 import potatowoong.potatomallback.domain.auth.repository.MemberRepository;
+import potatowoong.potatomallback.domain.product.dto.response.UserProductLikeResDto;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.entity.ProductLike;
 import potatowoong.potatomallback.domain.product.repository.ProductLikeRepository;
@@ -27,7 +28,7 @@ public class ProductLikeService {
      * 상품 좋아요 추가
      */
     @Transactional
-    public void addProductLike(long productId) {
+    public UserProductLikeResDto addProductLike(long productId) {
         final String userId = SecurityUtils.getCurrentUserId();
 
         // 이미 좋아요한 상품인지 확인
@@ -42,24 +43,40 @@ public class ProductLikeService {
         // 사용자 정보 조회
         Member member = memberRepository.getReferenceById(userId);
 
+        // 상품 좋아요 추가
         ProductLike productLike = ProductLike.builder()
             .product(product)
             .member(member)
             .build();
         productLikeRepository.save(productLike);
+
+        // 상품 좋아요 개수 조회
+        return getProductLikeCount(productId, userId);
     }
 
     /**
      * 상품 좋아요 삭제
      */
     @Transactional
-    public void removeProductLike(long productId) {
+    public UserProductLikeResDto removeProductLike(long productId) {
         final String userId = SecurityUtils.getCurrentUserId();
 
         // 좋아요한 상품인지 확인
         ProductLike productLike = productLikeRepository.findByProductProductIdAndMemberUserId(productId, userId)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_LIKED_PRODUCT));
 
+        // 상품 좋아요 삭제
         productLikeRepository.delete(productLike);
+
+        // 상품 좋아요 개수 조회
+        return getProductLikeCount(productId, userId);
+    }
+
+    /**
+     * 상품 좋아요 개수 조회
+     */
+    private UserProductLikeResDto getProductLikeCount(final long productId, final String userId) {
+        final int likeCount = productLikeRepository.countByProductProductIdAndMemberUserId(productId, userId);
+        return new UserProductLikeResDto(likeCount);
     }
 }
