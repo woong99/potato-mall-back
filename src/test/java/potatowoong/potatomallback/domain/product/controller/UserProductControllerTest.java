@@ -106,6 +106,8 @@ class UserProductControllerTest {
                         fieldWithPath("result[].name").description("상품명"),
                         fieldWithPath("result[].price").description("가격"),
                         fieldWithPath("result[].thumbnailUrl").description("썸네일 URL"),
+                        fieldWithPath("result[].likeCount").description("좋아요 개수"),
+                        fieldWithPath("result[].isLike").description("좋아요 여부"),
                         fieldWithPath("totalElements").description("전체 개수")
                     )
                 ));

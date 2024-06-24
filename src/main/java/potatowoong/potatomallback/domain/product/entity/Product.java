@@ -8,17 +8,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
+import potatowoong.potatomallback.domain.file.entity.AtchFile;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductAddReqDto;
 import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.ProductModifyReqDto;
 import potatowoong.potatomallback.global.config.db.BaseEntity;
-import potatowoong.potatomallback.domain.file.entity.AtchFile;
 
 @Entity
 @Comment("상품 정보")
@@ -57,6 +59,9 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "atch_file_id")
     @Comment("썸네일 이미지 정보 IDX")
     private AtchFile thumbnailFile;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductLike> productLikes;
 
     @Builder
     public Product(String name, int price, String content, int stockQuantity, ProductCategory productCategory, AtchFile thumbnailFile) {

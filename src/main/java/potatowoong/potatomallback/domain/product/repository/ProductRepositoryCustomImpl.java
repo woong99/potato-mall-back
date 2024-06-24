@@ -2,10 +2,15 @@ package potatowoong.potatomallback.domain.product.repository;
 
 import static potatowoong.potatomallback.domain.file.entity.QAtchFile.atchFile;
 import static potatowoong.potatomallback.domain.product.entity.QProduct.product;
+import static potatowoong.potatomallback.domain.product.entity.QProductLike.productLike;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,7 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.Prod
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.utils.SecurityUtils;
 
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
@@ -57,15 +63,37 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
      * 사용자 - 페이징 결과 조회
      */
     private List<UserProductResDto.Search> getUserProductPagingResult(PageRequestDto pageRequestDto) {
-        return jpaQueryFactory.select(
-                Projections.constructor(UserProductResDto.Search.class, product.productId, product.name, product.price, product.thumbnailFile.storedFileName))
+        final String userId = SecurityUtils.getCurrentUserId();
+
+        JPAQuery<UserProductResDto.Search> query = jpaQueryFactory.select(
+                Projections.constructor(
+                    UserProductResDto.Search.class,
+                    product.productId,
+                    product.name,
+                    product.price,
+                    product.thumbnailFile.storedFileName,
+                    JPAExpressions.select(productLike.count())
+                        .from(productLike)
+                        .where(productLike.product.eq(product)),
+                    StringUtils.isNotBlank(userId) ? new CaseBuilder()
+                        .when(productLike.product.productId.isNotNull())
+                        .then(true)
+                        .otherwise(false) :
+                        Expressions.asBoolean(false)
+                )
+            )
             .from(product)
             .leftJoin(product.thumbnailFile, atchFile)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
             .limit(pageRequestDto.size())
-            .orderBy(getUserProductOrderConditions(pageRequestDto))
-            .fetch();
+            .orderBy(getUserProductOrderConditions(pageRequestDto));
+
+        if (StringUtils.isNotBlank(userId)) {
+            query.leftJoin(product.productLikes, productLike).on(productLike.member.userId.eq(userId));
+        }
+
+        return query.fetch();
     }
 
     /**
