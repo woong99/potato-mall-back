@@ -3,6 +3,7 @@ package potatowoong.potatomallback.global.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -62,6 +63,9 @@ public class SecurityConfig {
                     .requestMatchers("/api/admin/login", "/api/admin/refresh", "/favicon.ico").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/user/product/{productId}/like").hasRole("USER")
+                    .requestMatchers(HttpMethod.POST, "/api/user/review").hasRole("USER")
+                    .requestMatchers(HttpMethod.PUT, "/api/user/review").hasRole("USER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/user/review").hasRole("USER")
                     .anyRequest().permitAll())
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 

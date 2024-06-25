@@ -35,7 +35,9 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "UA003", "비밀번호가 일치하지 않습니다."),
     WRONG_LOGIN_TYPE(HttpStatus.BAD_REQUEST, "UA004", "잘못된 로그인 타입입니다."),
     ALREADY_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL001", "이미 좋아요한 상품입니다."),
-    NOT_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL002", "좋아요하지 않은 상품입니다.");
+    NOT_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL002", "좋아요하지 않은 상품입니다."),
+    REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "RV001", "이미 리뷰를 작성한 상품입니다."),
+    REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "RV002", "존재하지 않는 리뷰입니다.");
 
     private final HttpStatus httpStatus;
 

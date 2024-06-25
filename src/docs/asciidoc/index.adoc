@@ -89,3 +89,8 @@ include::api/user-login.adoc[]
 == 사용자 상품 좋아요 API
 
 include::api/user-product-like.adoc[]
+
+[[USER-PRODUCT-REVIEW]]
+== 사용자 상품 리뷰 API
+
+include::api/user-review.adoc[]
