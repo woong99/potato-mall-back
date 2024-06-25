@@ -7,9 +7,11 @@ import static potatowoong.potatomallback.domain.product.entity.QProductLike.prod
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -50,7 +52,10 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     /**
-     * 페이징 결과 조회
+     * 관리자 - 페이징 결과 조회
+     *
+     * @param pageRequestDto 페이징 요청 DTO
+     * @return 상품 상세 정보 + 썸네일 URL
      */
     private List<ProductSearchResDto> getProductPagingResult(PageRequestDto pageRequestDto) {
         return jpaQueryFactory.select(
@@ -66,6 +71,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     /**
      * 사용자 - 페이징 결과 조회
+     *
+     * @param pageRequestDto 페이징 요청 DTO
+     * @return 상품 상세 정보 + 썸네일 URL + 좋아요 개수 + 좋아요 여부(로그인 시)
      */
     private List<UserProductResDto.Search> getUserProductPagingResult(PageRequestDto pageRequestDto) {
         final String userId = SecurityUtils.getCurrentUserId();
@@ -77,14 +85,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     product.name,
                     product.price,
                     product.thumbnailFile.storedFileName,
-                    JPAExpressions.select(productLike.count())
-                        .from(productLike)
-                        .where(productLike.product.eq(product)),
-                    StringUtils.isNotBlank(userId) ? new CaseBuilder()
-                        .when(productLike.product.productId.isNotNull())
-                        .then(true)
-                        .otherwise(false) :
-                        Expressions.asBoolean(false)
+                    getLikeCountQuery(),
+                    getIsLikeCaseBuilder(userId)
                 )
             )
             .from(product)
@@ -119,14 +121,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     product.price,
                     product.stockQuantity,
                     product.thumbnailFile.storedFileName,
-                    JPAExpressions.select(productLike.count())
-                        .from(productLike)
-                        .where(productLike.product.eq(product)),
-                    StringUtils.isNotBlank(userId) ? new CaseBuilder()
-                        .when(productLike.product.productId.isNotNull())
-                        .then(true)
-                        .otherwise(false) :
-                        Expressions.asBoolean(false)
+                    getLikeCountQuery(),
+                    getIsLikeCaseBuilder(userId)
                 )
             )
             .from(product)
@@ -138,6 +134,26 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
 
         return query.fetchOne();
+    }
+
+    /**
+     * 좋아요 개수 조회 서브 쿼리
+     */
+    private JPQLQuery<Long> getLikeCountQuery() {
+        return JPAExpressions.select(productLike.count())
+            .from(productLike)
+            .where(productLike.product.eq(product));
+    }
+
+    /**
+     * 사용자 - 좋아요 여부 CaseBuilder
+     */
+    private BooleanExpression getIsLikeCaseBuilder(final String userId) {
+        return StringUtils.isNotBlank(userId) ? new CaseBuilder()
+            .when(productLike.product.productId.isNotNull())
+            .then(true)
+            .otherwise(false) :
+            Expressions.asBoolean(false);
     }
 
     /**
@@ -163,7 +179,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     /**
-     * 정렬 조건
+     * 관리자 페이징 - 정렬 조건
      */
     private OrderSpecifier<?> getProductOrderConditions(PageRequestDto pageRequestDto) {
         final String sortCondition = pageRequestDto.sortCondition();
@@ -182,7 +198,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     /**
-     * 사용자 - 정렬 조건
+     * 사용자 페이징 - 정렬 조건
      */
     private OrderSpecifier<?> getUserProductOrderConditions(PageRequestDto pageRequestDto) {
         return switch (pageRequestDto.sortCondition()) {
