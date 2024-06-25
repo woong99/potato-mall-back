@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.domain.auth.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
@@ -16,7 +17,6 @@ import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDoc
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import org.hibernate.query.SortDirection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminLoginLogResDto;
 import potatowoong.potatomallback.domain.auth.enums.TryResult;
 import potatowoong.potatomallback.domain.auth.service.AdminLoginLogService;
-import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 
 @WebMvcTest(controllers = AdminLoginLogController.class)
@@ -51,25 +50,16 @@ class AdminLoginLogControllerTest {
     @DisplayName("관리자 로그인 내역 목록 조회 성공")
     void 로그인_내역_목록_조회_성공() throws Exception {
         // given
-        PageRequestDto pageRequestDto = PageRequestDto.builder()
-            .page(0)
-            .size(10)
-            .searchWord("admin")
-            .searchCondition("adminId")
-            .sortDirection(SortDirection.DESCENDING)
-            .sortCondition("tryDate")
-            .build();
         AdminLoginLogResDto adminLoginLogResDto = AdminLoginLogResDto.builder()
             .adminLoginLogId(1L)
             .adminId("admin")
             .tryIp("127.0.0.1")
             .tryResult(TryResult.SUCCESS)
             .tryDate(LocalDateTime.now())
-
             .build();
         PageResponseDto<AdminLoginLogResDto> pageResponseDto = new PageResponseDto<>(Collections.singletonList(adminLoginLogResDto), 1);
 
-        given(adminLoginLogService.getAdminLoginLogWithPage(pageRequestDto)).willReturn(pageResponseDto);
+        given(adminLoginLogService.getAdminLoginLogWithPage(any())).willReturn(pageResponseDto);
 
         // when & then
         ResultActions actions = mockMvc.perform(get("/api/admin/login-logs")

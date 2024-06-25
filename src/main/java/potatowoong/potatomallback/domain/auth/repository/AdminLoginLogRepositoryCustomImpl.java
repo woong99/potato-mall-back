@@ -36,7 +36,7 @@ public class AdminLoginLogRepositoryCustomImpl implements AdminLoginLogRepositor
             .from(adminLoginLog)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.getFirstIndex() + pageRequestDto.size())
+            .limit(pageRequestDto.getFirstIndex() + pageRequestDto.getSize())
             .orderBy(getOrderConditions(pageRequestDto))
             .fetch();
     }
@@ -57,8 +57,8 @@ public class AdminLoginLogRepositoryCustomImpl implements AdminLoginLogRepositor
      * 검색 조건
      */
     private BooleanBuilder getSearchConditions(PageRequestDto pageRequestDto) {
-        final String searchCondition = pageRequestDto.searchCondition();
-        final String searchWord = pageRequestDto.searchWord();
+        final String searchCondition = pageRequestDto.getSearchCondition();
+        final String searchWord = pageRequestDto.getSearchWord();
         BooleanBuilder builder = new BooleanBuilder();
 
         return builder
@@ -73,8 +73,8 @@ public class AdminLoginLogRepositoryCustomImpl implements AdminLoginLogRepositor
      * 정렬 조건
      */
     private OrderSpecifier<?> getOrderConditions(PageRequestDto pageRequestDto) {
-        final String sortCondition = pageRequestDto.sortCondition();
-        final SortDirection sortDirection = pageRequestDto.sortDirection();
+        final String sortCondition = pageRequestDto.getSortCondition();
+        final SortDirection sortDirection = pageRequestDto.getSortDirection();
         if (!StringUtils.hasText(sortCondition)) {
             return adminLoginLog.tryDate.desc();
         }

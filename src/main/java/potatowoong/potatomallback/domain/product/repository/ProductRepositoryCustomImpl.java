@@ -64,7 +64,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(product.thumbnailFile, atchFile)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.size())
+            .limit(pageRequestDto.getSize())
             .orderBy(getProductOrderConditions(pageRequestDto))
             .fetch();
     }
@@ -93,7 +93,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(product.thumbnailFile, atchFile)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.size())
+            .limit(pageRequestDto.getSize())
             .orderBy(getUserProductOrderConditions(pageRequestDto));
 
         if (StringUtils.isNotBlank(userId)) {
@@ -175,15 +175,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         return builder
-            .and(StringUtils.isNotBlank(pageRequestDto.searchWord()) ? product.name.contains(pageRequestDto.searchWord()) : null);
+            .and(StringUtils.isNotBlank(pageRequestDto.getSearchWord()) ? product.name.contains(pageRequestDto.getSearchWord()) : null);
     }
 
     /**
      * 관리자 페이징 - 정렬 조건
      */
     private OrderSpecifier<?> getProductOrderConditions(PageRequestDto pageRequestDto) {
-        final String sortCondition = pageRequestDto.sortCondition();
-        final SortDirection sortDirection = pageRequestDto.sortDirection();
+        final String sortCondition = pageRequestDto.getSortCondition();
+        final SortDirection sortDirection = pageRequestDto.getSortDirection();
         if (StringUtils.isBlank(sortCondition)) {
             return product.productId.desc();
         }
@@ -201,7 +201,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
      * 사용자 페이징 - 정렬 조건
      */
     private OrderSpecifier<?> getUserProductOrderConditions(PageRequestDto pageRequestDto) {
-        return switch (pageRequestDto.sortCondition()) {
+        return switch (pageRequestDto.getSortCondition()) {
             case "lowPrice" -> product.price.asc();
             case "highPrice" -> product.price.desc();
             // TODO : 판매량 순 추가 예정

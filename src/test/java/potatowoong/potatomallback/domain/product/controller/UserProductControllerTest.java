@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.domain.product.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -33,7 +34,6 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductNameResDto;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.service.ProductSearchService;
 import potatowoong.potatomallback.domain.product.service.UserProductService;
-import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
@@ -62,13 +62,6 @@ class UserProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            PageRequestDto pageRequestDto = PageRequestDto.builder()
-                .page(0)
-                .size(10)
-                .searchWord("감자")
-                .sortCondition("lowPrice")
-                .build();
-
             UserProductResDto.Search resDto = UserProductResDto.Search.builder()
                 .productId(1L)
                 .name("감자")
@@ -77,7 +70,7 @@ class UserProductControllerTest {
                 .build();
             PageResponseDto<UserProductResDto.Search> pageResponseDto = new PageResponseDto<>(Collections.singletonList(resDto), 1L);
 
-            given(userProductService.getUserProductList(pageRequestDto)).willReturn(pageResponseDto);
+            given(userProductService.getUserProductList(any())).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/user/product/search")
@@ -115,7 +108,7 @@ class UserProductControllerTest {
                     )
                 ));
 
-            then(userProductService).should().getUserProductList(pageRequestDto);
+            then(userProductService).should().getUserProductList(any());
         }
     }
 

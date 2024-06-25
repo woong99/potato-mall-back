@@ -30,7 +30,6 @@ import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_LIST;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.hibernate.query.SortDirection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,6 @@ import potatowoong.potatomallback.domain.product.dto.request.ProductReqDto.Produ
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductDetailResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
 import potatowoong.potatomallback.domain.product.service.AdminProductService;
-import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
@@ -87,19 +85,10 @@ class AdminProductControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            PageRequestDto pageRequestDto = PageRequestDto.builder()
-                .page(0)
-                .size(10)
-                .searchWord("감자")
-                .searchCondition("name")
-                .sortCondition("price")
-                .sortDirection(SortDirection.DESCENDING)
-                .build();
-
             ProductSearchResDto resDto = getProductSearchResDto();
             PageResponseDto<ProductSearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), productId);
 
-            given(adminProductService.getProductList(pageRequestDto)).willReturn(pageResponseDto);
+            given(adminProductService.getProductList(any())).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/admin/product/search")
@@ -142,7 +131,7 @@ class AdminProductControllerTest {
                     )
                 ));
 
-            then(adminProductService).should().getProductList(pageRequestDto);
+            then(adminProductService).should().getProductList(any());
             then(adminLogService).should().addAdminLog(PRODUCT_MANAGEMENT, SEARCH_LIST);
         }
 

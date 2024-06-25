@@ -48,7 +48,7 @@ public class ProductCategoryRepositoryCustomImpl implements ProductCategoryRepos
             .from(productCategory)
             .where(getSearchConditions(pageRequestDto))
             .offset(pageRequestDto.getFirstIndex())
-            .limit(pageRequestDto.size())
+            .limit(pageRequestDto.getSize())
             .orderBy(productCategory.productCategoryId.desc())
             .fetch();
     }
@@ -69,7 +69,7 @@ public class ProductCategoryRepositoryCustomImpl implements ProductCategoryRepos
      * 검색 조건
      */
     private BooleanBuilder getSearchConditions(PageRequestDto pageRequestDto) {
-        final String searchWord = pageRequestDto.searchWord();
+        final String searchWord = pageRequestDto.getSearchWord();
         BooleanBuilder builder = new BooleanBuilder();
 
         return builder

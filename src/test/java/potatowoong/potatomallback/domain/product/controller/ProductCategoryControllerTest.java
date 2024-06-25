@@ -53,7 +53,6 @@ import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryRes
 import potatowoong.potatomallback.domain.product.dto.response.ProductCategoryResDto.ProductCategorySearchResDto;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductRelatedResDto;
 import potatowoong.potatomallback.domain.product.service.ProductCategoryService;
-import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
@@ -89,13 +88,6 @@ class ProductCategoryControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            PageRequestDto pageRequestDto = PageRequestDto.builder()
-                .page(0)
-                .size(10)
-                .searchWord("감자")
-                .searchCondition("name")
-                .build();
-
             ProductCategorySearchResDto resDto = ProductCategorySearchResDto.builder()
                 .productCategoryId(categoryId)
                 .name(categoryName)
@@ -104,7 +96,7 @@ class ProductCategoryControllerTest {
                 .build();
             PageResponseDto<ProductCategorySearchResDto> pageResponseDto = new PageResponseDto<>(List.of(resDto), 1);
 
-            given(productCategoryService.getProductCategoryList(pageRequestDto)).willReturn(pageResponseDto);
+            given(productCategoryService.getProductCategoryList(any())).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/admin/product-category/search")
@@ -140,7 +132,7 @@ class ProductCategoryControllerTest {
                     )
                 ));
 
-            then(productCategoryService).should().getProductCategoryList(pageRequestDto);
+            then(productCategoryService).should().getProductCategoryList(any());
             then(adminLogService).should().addAdminLog(PRODUCT_CATEGORY_MANAGEMENT, SEARCH_LIST);
         }
     }

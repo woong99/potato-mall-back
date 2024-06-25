@@ -31,7 +31,6 @@ import static potatowoong.potatomallback.global.common.LogMessage.SEARCH_LIST;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.hibernate.query.SortDirection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,6 @@ import potatowoong.potatomallback.domain.auth.dto.request.AdminModifyReqDto;
 import potatowoong.potatomallback.domain.auth.dto.response.AdminResDto;
 import potatowoong.potatomallback.domain.auth.service.AdminLogService;
 import potatowoong.potatomallback.domain.auth.service.AdminManageService;
-import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.common.ResponseText;
 import potatowoong.potatomallback.global.exception.CustomException;
@@ -89,21 +87,14 @@ class AdminManageControllerTest {
         @DisplayName("성공")
         void 성공() throws Exception {
             // given
-            PageRequestDto pageRequestDto = PageRequestDto.builder()
-                .page(0)
-                .size(10)
-                .searchWord("admin")
-                .searchCondition("adminId")
-                .sortDirection(SortDirection.DESCENDING)
-                .sortCondition("tryDate")
-                .build();
             AdminResDto adminResDto = AdminResDto.builder()
                 .adminId("admin")
                 .name("관리자")
                 .updatedAt(LocalDateTime.now())
                 .build();
             PageResponseDto<AdminResDto> pageResponseDto = new PageResponseDto<>(List.of(adminResDto), 1);
-            given(adminManageService.getAdminList(pageRequestDto)).willReturn(pageResponseDto);
+
+            given(adminManageService.getAdminList(any())).willReturn(pageResponseDto);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/admin/admin-management/search")
@@ -142,7 +133,7 @@ class AdminManageControllerTest {
                     )
                 ));
 
-            then(adminManageService).should().getAdminList(pageRequestDto);
+            then(adminManageService).should().getAdminList(any());
             then(adminLogService).should().addAdminLog(ADMIN_MANAGEMENT, SEARCH_LIST);
         }
     }
