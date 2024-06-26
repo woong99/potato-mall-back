@@ -25,6 +25,7 @@ import potatowoong.potatomallback.domain.auth.repository.MemberRepository;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.repository.ProductRepository;
 import potatowoong.potatomallback.domain.review.dto.request.UserReviewReqDto;
+import potatowoong.potatomallback.domain.review.dto.request.UserReviewReqDto.Search;
 import potatowoong.potatomallback.domain.review.dto.response.UserReviewResDto;
 import potatowoong.potatomallback.domain.review.entity.Review;
 import potatowoong.potatomallback.domain.review.repository.ReviewRepository;
@@ -55,10 +56,12 @@ class UserReviewServiceTest {
         @DisplayName("성공")
         void 성공() {
             // given
+            UserReviewReqDto.Search dto = new Search("", null, 10, 1, null, null, 1L);
             given(reviewRepository.findReviewWithPage(any())).willReturn(new PageResponseDto<>(Collections.singletonList(UserReviewResDto.Detail.builder().build()), 0L));
+            given(reviewRepository.sumScoreByProductId(anyLong())).willReturn(5);
 
             // when
-            PageResponseDto<UserReviewResDto.Detail> result = userReviewService.getReviewList(any());
+            UserReviewResDto.Search result = userReviewService.getReviewList(dto);
 
             // then
             assertThat(result).isNotNull();

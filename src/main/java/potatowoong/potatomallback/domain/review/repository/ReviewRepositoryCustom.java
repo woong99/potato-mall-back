@@ -7,4 +7,6 @@ import potatowoong.potatomallback.global.common.PageResponseDto;
 public interface ReviewRepositoryCustom {
 
     PageResponseDto<UserReviewResDto.Detail> findReviewWithPage(UserReviewReqDto.Search dto);
+
+    int sumScoreByProductId(long productId);
 }

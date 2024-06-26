@@ -32,6 +32,22 @@ public class ReviewRepositoryCustomImpl implements ReviewRepositoryCustom {
     }
 
     /**
+     * 해당 상품의 리뷰 평점 합계 조회
+     *
+     * @param productId 상품 ID
+     * @return 리뷰 평점 합계
+     */
+    @Override
+    public int sumScoreByProductId(final long productId) {
+        return Optional.ofNullable(jpaQueryFactory.select(
+                review.score.sum()
+            )
+            .from(review)
+            .where(review.product.productId.eq(productId))
+            .fetchOne()).orElse(0);
+    }
+
+    /**
      * 사용자 - 페이징 결과 조회
      *
      * @param dto 페이지 요청 DTO
@@ -46,7 +62,7 @@ public class ReviewRepositoryCustomImpl implements ReviewRepositoryCustom {
                     review.contents,
                     review.score,
                     review.member.nickname,
-                    Expressions.stringTemplate("DATE_FORMAT({0}, {1})", review.createdAt, "%Y-%m-%d %H:%i:%s")
+                    Expressions.stringTemplate("DATE_FORMAT({0}, {1})", review.createdAt, "%Y-%m-%d")
                 ))
             .from(review)
             .where(review.product.productId.eq(dto.getProductId()))

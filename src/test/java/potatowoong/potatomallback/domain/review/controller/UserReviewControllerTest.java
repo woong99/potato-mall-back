@@ -76,8 +76,12 @@ class UserReviewControllerTest {
                 .createdAt("2021-08-01 00:00:00")
                 .build();
             PageResponseDto<UserReviewResDto.Detail> response = new PageResponseDto<>(Collections.singletonList(detail), 1);
+            UserReviewResDto.Search search = UserReviewResDto.Search.builder()
+                .pageResponseDto(response)
+                .averageScore(5.0)
+                .build();
 
-            given(userReviewService.getReviewList(any())).willReturn(response);
+            given(userReviewService.getReviewList(any())).willReturn(search);
 
             // when & then
             ResultActions actions = mockMvc.perform(get("/api/user/review/search")
@@ -92,8 +96,9 @@ class UserReviewControllerTest {
 
             actions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.result").exists())
-                .andExpect(jsonPath("$.data.totalElements").value(1));
+                .andExpect(jsonPath("$.data.pageResponseDto").exists())
+                .andExpect(jsonPath("$.data.pageResponseDto.totalElements").value(1))
+                .andExpect(jsonPath("$.data.averageScore").value(5.0));
 
             actions
                 .andDo(document("user-review-search",
@@ -109,12 +114,13 @@ class UserReviewControllerTest {
                     ),
                     responseFields(
                         beneathPath("data").withSubsectionId("data"),
-                        fieldWithPath("result[].reviewId").description("리뷰 ID"),
-                        fieldWithPath("result[].contents").description("리뷰 내용"),
-                        fieldWithPath("result[].score").description("별점"),
-                        fieldWithPath("result[].nickname").description("작성자 닉네임"),
-                        fieldWithPath("result[].createdAt").description("작성일"),
-                        fieldWithPath("totalElements").description("전체 개수")
+                        fieldWithPath("pageResponseDto.result[].reviewId").description("리뷰 ID"),
+                        fieldWithPath("pageResponseDto.result[].contents").description("리뷰 내용"),
+                        fieldWithPath("pageResponseDto.result[].score").description("별점"),
+                        fieldWithPath("pageResponseDto.result[].nickname").description("작성자 닉네임"),
+                        fieldWithPath("pageResponseDto.result[].createdAt").description("작성일"),
+                        fieldWithPath("pageResponseDto.totalElements").description("전체 개수"),
+                        fieldWithPath("averageScore").description("평균 평점")
                     )
                 ));
 

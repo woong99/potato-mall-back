@@ -31,8 +31,20 @@ public class UserReviewService {
      * 리뷰 목록 조회
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<UserReviewResDto.Detail> getReviewList(UserReviewReqDto.Search dto) {
-        return reviewRepository.findReviewWithPage(dto);
+    public UserReviewResDto.Search getReviewList(UserReviewReqDto.Search dto) {
+        // 리뷰 목록 조회
+        PageResponseDto<UserReviewResDto.Detail> pageResponseDto = reviewRepository.findReviewWithPage(dto);
+
+        // 상품의 총 평점 조회
+        final int totalScore = reviewRepository.sumScoreByProductId(dto.getProductId());
+
+        // 평균 평점 계산
+        double averageScore = getAverageScore(totalScore, pageResponseDto.totalElements());
+
+        return UserReviewResDto.Search.builder()
+            .pageResponseDto(pageResponseDto)
+            .averageScore(averageScore)
+            .build();
     }
 
     /**
@@ -96,5 +108,22 @@ public class UserReviewService {
 
         // 리뷰 삭제
         reviewRepository.delete(review);
+    }
+
+    /**
+     * 평균 평점 계산
+     *
+     * @param totalScore    총 평점
+     * @param totalElements 총 리뷰 수
+     * @return 평균 평점
+     */
+    private double getAverageScore(final int totalScore, final long totalElements) {
+        double averageScore = 0;
+
+        if (totalScore > 0 && totalElements > 0) {
+            averageScore = (double) totalScore / totalElements;
+        }
+
+        return averageScore;
     }
 }

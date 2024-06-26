@@ -15,7 +15,6 @@ import potatowoong.potatomallback.domain.review.dto.request.UserReviewReqDto;
 import potatowoong.potatomallback.domain.review.dto.response.UserReviewResDto;
 import potatowoong.potatomallback.domain.review.service.UserReviewService;
 import potatowoong.potatomallback.global.common.ApiResponseEntity;
-import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.common.ResponseText;
 
 @RestController
@@ -29,7 +28,7 @@ public class UserReviewController {
      * 리뷰 목록 조회 API
      */
     @GetMapping("/search")
-    public ResponseEntity<ApiResponseEntity<PageResponseDto<UserReviewResDto.Detail>>> search(@Valid UserReviewReqDto.Search dto) {
+    public ResponseEntity<ApiResponseEntity<UserReviewResDto.Search>> search(@Valid UserReviewReqDto.Search dto) {
         return ResponseEntity.ok(ApiResponseEntity.of(userReviewService.getReviewList(dto)));
     }
 
