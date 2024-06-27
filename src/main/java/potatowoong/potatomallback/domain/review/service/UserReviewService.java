@@ -111,7 +111,7 @@ public class UserReviewService {
     }
 
     /**
-     * 평균 평점 계산
+     * 평균 평점 계산(소수점 첫째자리 반올림)
      *
      * @param totalScore    총 평점
      * @param totalElements 총 리뷰 수
@@ -124,6 +124,6 @@ public class UserReviewService {
             averageScore = (double) totalScore / totalElements;
         }
 
-        return averageScore;
+        return Math.round(averageScore * 10) / 10.0;
     }
 }
