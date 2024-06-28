@@ -82,4 +82,15 @@ public class UserLoginController {
 
         return ResponseEntity.ok(ApiResponseEntity.of(accessTokenDto));
     }
+
+    /**
+     * 로그아웃 API
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseEntity<String>> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 로그아웃
+        userLoginService.logout(request, response);
+
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_LOGOUT));
+    }
 }

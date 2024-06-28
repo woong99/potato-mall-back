@@ -532,4 +532,31 @@ class UserLoginControllerTest {
             then(tokenRefreshService).should().userRefresh(any());
         }
     }
+
+    @Nested
+    @DisplayName("로그아웃")
+    class 로그아웃 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() throws Exception {
+            // when & then
+            ResultActions actions = mockMvc.perform(post("/api/user/logout")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON));
+
+            actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_LOGOUT));
+
+            actions
+                .andDo(document("user-logout",
+                        getDocumentRequest(),
+                        getDocumentResponse()
+                    )
+                );
+
+            then(userLoginService).should().logout(any(), any());
+        }
+    }
 }

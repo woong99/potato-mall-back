@@ -1,0 +1,12 @@
+[[user-logout]]
+=== 로그아웃 성공
+
+==== HTTP Request
+
+include::{snippets}/user-logout/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-logout/http-response.adoc[]
+
+'''

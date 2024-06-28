@@ -1,6 +1,7 @@
 package potatowoong.potatomallback.domain.auth.service;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -104,5 +105,20 @@ public class UserLoginService {
     @Transactional(readOnly = true)
     public boolean checkDuplicateNickname(final String nickname) {
         return memberRepository.existsByNickname(nickname);
+    }
+
+    /**
+     * 로그아웃
+     */
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        // Refresh Token 쿠키 조회
+        final String refreshToken = CookieUtils.getCookieValue(request.getCookies(), TokenName.USER_REFRESH_TOKEN.name());
+
+        // Redis에 저장된 Refresh Token 삭제
+        redisTemplate.delete(refreshToken);
+
+        // Refresh Token 쿠키 삭제
+        Cookie cookie = CookieUtils.getCookieForRemove(TokenName.USER_REFRESH_TOKEN.name());
+        response.addCookie(cookie);
     }
 }

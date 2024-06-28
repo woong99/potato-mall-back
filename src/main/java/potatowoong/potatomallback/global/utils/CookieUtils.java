@@ -46,4 +46,18 @@ public class CookieUtils {
         return null;
     }
 
+    /**
+     * 쿠키 삭제
+     *
+     * @param cookieName 쿠키명
+     */
+    public static Cookie getCookieForRemove(final String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        return cookie;
+    }
 }
