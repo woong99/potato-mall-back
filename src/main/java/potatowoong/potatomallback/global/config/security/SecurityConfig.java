@@ -62,7 +62,7 @@ public class SecurityConfig {
                 authorizeRequests
                     .requestMatchers("/api/admin/login", "/api/admin/refresh", "/favicon.ico").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/user/product/{productId}/like").hasRole("USER")
+                    .requestMatchers("/api/user/product/{productId}/like", "/api/user/shopping-cart/**").hasRole("USER")
                     .requestMatchers(HttpMethod.POST, "/api/user/review").hasRole("USER")
                     .requestMatchers(HttpMethod.PUT, "/api/user/review").hasRole("USER")
                     .requestMatchers(HttpMethod.DELETE, "/api/user/review").hasRole("USER")

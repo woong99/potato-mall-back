@@ -41,4 +41,10 @@ public class ResponseText {
     public static final String SUCCESS_MODIFY_REVIEW = "리뷰 수정 성공";
 
     public static final String SUCCESS_REMOVE_REVIEW = "리뷰 삭제 성공";
+
+    public static final String SUCCESS_ADD_SHOPPING_CART = "장바구니 상품 등록 성공";
+
+    public static final String SUCCESS_MODIFY_SHOPPING_CART = "장바구니 상품 수정 성공";
+
+    public static final String SUCCESS_REMOVE_SHOPPING_CART = "장바구니 상품 삭제 성공";
 }

@@ -51,6 +51,10 @@ public enum ErrorCode {
     REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "RV001", "이미 리뷰를 작성한 상품입니다."),
     REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "RV002", "존재하지 않는 리뷰입니다."),
 
+    // 장바구니 관련 에러코드
+    PRODUCT_QUANTITY_EXCEEDED(HttpStatus.BAD_REQUEST, "SC001", "상품 재고량을 초과하였습니다."),
+    SHOPPING_CART_NOT_FOUND(HttpStatus.BAD_REQUEST, "SC002", "존재하지 않는 장바구니 상품입니다."),
+
     // 공통 에러코드
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ISE001", "서버 내부 오류입니다.");
 
