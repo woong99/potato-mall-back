@@ -38,6 +38,11 @@ public enum ErrorCode {
     NOT_FOUND_THUMBNAIL(HttpStatus.BAD_REQUEST, "PD002", "썸네일 이미지를 등록해주세요."),
     DUPLICATED_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "PD003", "이미 존재하는 상품명입니다."),
 
+    // 상품 카테고리 관련 에러코드
+    DUPLICATED_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "PC001", "이미 존재하는 카테고리명입니다."),
+    NOT_FOUND_CATEGORY(HttpStatus.BAD_REQUEST, "PC002", "존재하지 않는 카테고리입니다."),
+    EXIST_PRODUCT_IN_CATEGORY(HttpStatus.BAD_REQUEST, "PC003", "해당 카테고리에 상품이 존재합니다."),
+
     // 상품 좋아요 관련 에러코드
     ALREADY_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL001", "이미 좋아요한 상품입니다."),
     NOT_LIKED_PRODUCT(HttpStatus.BAD_REQUEST, "PL002", "좋아요하지 않은 상품입니다."),
