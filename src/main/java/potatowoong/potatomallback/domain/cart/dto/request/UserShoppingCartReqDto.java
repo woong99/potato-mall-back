@@ -1,5 +1,6 @@
 package potatowoong.potatomallback.domain.cart.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,10 +15,11 @@ public class UserShoppingCartReqDto {
     @Builder
     public record Add(
 
-        @NotNull
+        @NotNull(message = "상품 ID를 입력해주세요.")
         Long productId,
 
-        @NotNull
+        @NotNull(message = "수량을 입력해주세요.")
+        @Min(value = 1, message = "최소 1개 이상의 상품을 담아주세요.")
         Integer quantity
     ) {
 
@@ -29,10 +31,11 @@ public class UserShoppingCartReqDto {
     @Builder
     public record Modify(
 
-        @NotNull
+        @NotNull(message = "장바구니 ID를 입력해주세요.")
         Long shoppingCartId,
 
-        @NotNull
+        @NotNull(message = "수량을 입력해주세요.")
+        @Min(value = 1, message = "최소 1개 이상의 상품을 담아주세요.")
         Integer quantity
     ) {
 
