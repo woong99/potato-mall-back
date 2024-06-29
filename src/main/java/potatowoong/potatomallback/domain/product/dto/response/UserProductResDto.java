@@ -17,16 +17,18 @@ public class UserProductResDto {
         int price,
         String thumbnailUrl,
         long likeCount,
-        boolean isLike
+        boolean isLike,
+        long reviewCount
     ) {
 
-        public Search(Long productId, String name, int price, String thumbnailUrl, long likeCount, boolean isLike) {
+        public Search(Long productId, String name, int price, String thumbnailUrl, long likeCount, boolean isLike, long reviewCount) {
             this.productId = productId;
             this.name = name;
             this.price = price;
             this.thumbnailUrl = StringUtils.isBlank(thumbnailUrl) ? "" : S3Utils.getS3FileUrl() + S3Folder.PRODUCT.getFolderName() + "/" + thumbnailUrl;
             this.likeCount = likeCount;
             this.isLike = isLike;
+            this.reviewCount = reviewCount;
         }
     }
 

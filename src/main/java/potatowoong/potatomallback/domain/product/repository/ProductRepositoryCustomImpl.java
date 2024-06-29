@@ -3,6 +3,7 @@ package potatowoong.potatomallback.domain.product.repository;
 import static potatowoong.potatomallback.domain.file.entity.QAtchFile.atchFile;
 import static potatowoong.potatomallback.domain.product.entity.QProduct.product;
 import static potatowoong.potatomallback.domain.product.entity.QProductLike.productLike;
+import static potatowoong.potatomallback.domain.review.entity.QReview.review;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -73,7 +74,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
      * 사용자 - 페이징 결과 조회
      *
      * @param pageRequestDto 페이징 요청 DTO
-     * @return 상품 상세 정보 + 썸네일 URL + 좋아요 개수 + 좋아요 여부(로그인 시)
+     * @return 상품 상세 정보 + 썸네일 URL + 좋아요 개수 + 좋아요 여부(로그인 시) + 리뷰 개수
      */
     private List<UserProductResDto.Search> getUserProductPagingResult(PageRequestDto pageRequestDto) {
         final String userId = SecurityUtils.getCurrentUserId();
@@ -86,7 +87,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     product.price,
                     product.thumbnailFile.storedFileName,
                     getLikeCountQuery(),
-                    getIsLikeCaseBuilder(userId)
+                    getIsLikeCaseBuilder(userId),
+                    getReviewCountQuery()
                 )
             )
             .from(product)
@@ -143,6 +145,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return JPAExpressions.select(productLike.count())
             .from(productLike)
             .where(productLike.product.eq(product));
+    }
+
+    /**
+     * 리뷰 개수 조회 서브 쿼리
+     */
+    private JPQLQuery<Long> getReviewCountQuery() {
+        return JPAExpressions.select(review.count())
+            .from(review)
+            .where(review.product.eq(product));
     }
 
     /**
