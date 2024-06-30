@@ -112,7 +112,7 @@ include::{snippets}/user-shopping-cart-modify-fail-product-sold-out/request-fiel
 include::{snippets}/user-shopping-cart-modify-fail-product-sold-out/http-response.adoc[]
 '''
 
-=== 삭제 성공
+=== 단일 삭제 성공
 
 ==== HTTP Request
 
@@ -122,7 +122,7 @@ include::{snippets}/user-shopping-cart-remove/http-request.adoc[]
 
 include::{snippets}/user-shopping-cart-remove/http-response.adoc[]
 
-=== 삭제 실패 - 존재하지 않는 장바구니 상품
+=== 단일 삭제 실패 - 존재하지 않는 장바구니 상품
 
 ==== HTTP Request
 
@@ -132,6 +132,19 @@ include::{snippets}/user-shopping-cart-remove-fail-shopping-cart-not-found/http-
 
 include::{snippets}/user-shopping-cart-remove-fail-shopping-cart-not-found/http-response.adoc[]
 '''
+
+=== 다중 삭제 성공
+
+==== HTTP Request
+
+include::{snippets}/user-shopping-cart-bulk-remove/http-request.adoc[]
+include::{snippets}/user-shopping-cart-bulk-remove/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/user-shopping-cart-bulk-remove/http-response.adoc[]
+'''
+
 
 
 

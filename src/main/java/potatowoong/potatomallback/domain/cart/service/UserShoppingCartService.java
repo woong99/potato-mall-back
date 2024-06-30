@@ -100,7 +100,7 @@ public class UserShoppingCartService {
     }
 
     /**
-     * 장바구니 상품 삭제
+     * 장바구니 상품 단일 삭제
      */
     @Transactional
     public void removeShoppingCart(final long shoppingCartId) {
@@ -110,5 +110,22 @@ public class UserShoppingCartService {
 
         // 장바구니 삭제
         shoppingCartRepository.delete(shoppingCart);
+    }
+
+    /**
+     * 장바구니 상품 다중 삭제
+     */
+    @Transactional
+    public void removeShoppingCarts(List<Long> shoppingCartIds) {
+        // 장바구니 조회
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByShoppingCartIdInAndMemberUserId(shoppingCartIds, SecurityUtils.getCurrentUserId());
+
+        // 본인의 장바구니 상품이 아닌 경우
+        if (shoppingCartIds.size() != shoppingCarts.size()) {
+            throw new CustomException(ErrorCode.SHOPPING_CART_NOT_FOUND);
+        }
+
+        // 장바구니 삭제
+        shoppingCartRepository.deleteByShoppingCartIdIn(shoppingCartIds);
     }
 }

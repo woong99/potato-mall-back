@@ -82,12 +82,23 @@ public class UserShoppingCartController {
     }
 
     /**
-     * 장바구니 상품 삭제 API
+     * 장바구니 상품 단일 삭제 API
      */
     @DeleteMapping("/{shoppingCartId}")
     public ResponseEntity<ApiResponseEntity<String>> removeShoppingCart(@PathVariable long shoppingCartId) {
         // 장바구니 상품 삭제
         userShoppingCartService.removeShoppingCart(shoppingCartId);
+
+        return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_REMOVE_SHOPPING_CART));
+    }
+
+    /**
+     * 장바구니 상품 다중 삭제 API
+     */
+    @DeleteMapping("/bulk")
+    public ResponseEntity<ApiResponseEntity<String>> bulkRemoveShoppingCart(@Valid @RequestBody UserShoppingCartReqDto.BulkRemove dto) {
+        // 장바구니 상품 다중 삭제
+        userShoppingCartService.removeShoppingCarts(dto.shoppingCartIds());
 
         return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_REMOVE_SHOPPING_CART));
     }

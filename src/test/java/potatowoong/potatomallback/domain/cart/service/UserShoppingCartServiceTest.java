@@ -265,7 +265,7 @@ class UserShoppingCartServiceTest {
     }
 
     @Nested
-    @DisplayName("장바구니 상품 삭제")
+    @DisplayName("장바구니 상품 단일 삭제")
     class 삭제 {
 
         @Test
@@ -301,5 +301,46 @@ class UserShoppingCartServiceTest {
             .product(Product.builder().stockQuantity(1).build())
             .quantity(1)
             .build();
+    }
+
+    @Nested
+    @DisplayName("장바구니 상품 다중 삭제")
+    class 다중_삭제 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() {
+            // given
+            given(shoppingCartRepository.findByShoppingCartIdInAndMemberUserId(any(), anyString())).willReturn(Collections.singletonList(shoppingCart));
+
+            // when
+            userShoppingCartService.removeShoppingCarts(shoppingCartIds);
+
+            // then
+            then(shoppingCartRepository).should().findByShoppingCartIdInAndMemberUserId(any(), anyString());
+            then(shoppingCartRepository).should().deleteByShoppingCartIdIn(any());
+        }
+
+        @Test
+        @DisplayName("실패 - 존재하지 않는 장바구니 상품")
+        void 실패_존재하지_않는_장바구니() {
+            // given
+            given(shoppingCartRepository.findByShoppingCartIdInAndMemberUserId(any(), anyString())).willReturn(Collections.emptyList());
+
+            // when
+            assertThatThrownBy(() -> userShoppingCartService.removeShoppingCarts(shoppingCartIds))
+                .isInstanceOf(CustomException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.SHOPPING_CART_NOT_FOUND);
+
+            then(shoppingCartRepository).should().findByShoppingCartIdInAndMemberUserId(any(), anyString());
+            then(shoppingCartRepository).should(never()).deleteByShoppingCartIdIn(any());
+        }
+
+        private final ShoppingCart shoppingCart = ShoppingCart.builder()
+            .product(Product.builder().stockQuantity(1).build())
+            .quantity(1)
+            .build();
+
+        private final List<Long> shoppingCartIds = Collections.singletonList(1L);
     }
 }

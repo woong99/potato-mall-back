@@ -1,7 +1,9 @@
 package potatowoong.potatomallback.domain.cart.dto.request;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,18 @@ public class UserShoppingCartReqDto {
         @NotNull(message = "수량을 입력해주세요.")
         @Min(value = 1, message = "최소 1개 이상의 상품을 담아주세요.")
         Integer quantity
+    ) {
+
+    }
+
+    /**
+     * 장바구니 상품 다중 삭제 요청 DTO
+     */
+    @Builder
+    public record BulkRemove(
+
+        @NotEmpty(message = "장바구니 ID를 입력해주세요.")
+        List<Long> shoppingCartIds
     ) {
 
     }

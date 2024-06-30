@@ -20,6 +20,7 @@ import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDoc
 import static potatowoong.potatomallback.config.restdocs.ApiDocumentUtils.getDocumentResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -402,8 +403,8 @@ class UserShoppingCartControllerTest {
     }
 
     @Nested
-    @DisplayName("장바구니 상품 삭제")
-    class 장바구니_상품_삭제 {
+    @DisplayName("장바구니 상품 단일 삭제")
+    class 장바구니_상품_단일_삭제 {
 
         @Test
         @DisplayName("성공")
@@ -452,5 +453,70 @@ class UserShoppingCartControllerTest {
 
             then(userShoppingCartService).should().removeShoppingCart(1L);
         }
+    }
+
+    @Nested
+    @DisplayName("장바구니 상품 다중 삭제")
+    class 장바구니_상품_다중_삭제 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() throws Exception {
+            // given
+            willDoNothing().given(userShoppingCartService).removeShoppingCarts(Arrays.asList(1L, 2L));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(delete("/api/user/shopping-cart/bulk")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)));
+
+            actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").value(ResponseText.SUCCESS_REMOVE_SHOPPING_CART));
+
+            actions
+                .andDo(document("user-shopping-cart-bulk-remove",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestFields(
+                        fieldWithPath("shoppingCartIds").optional().description("장바구니 ID")
+                    )
+                ));
+
+            then(userShoppingCartService).should().removeShoppingCarts(Arrays.asList(1L, 2L));
+        }
+
+        @Test
+        @DisplayName("실패 - 존재하지 않는 장바구니 상품")
+        void 실패_존재하지_않는_장바구니_상품() throws Exception {
+            // given
+            willThrow(new CustomException(ErrorCode.SHOPPING_CART_NOT_FOUND)).given(userShoppingCartService).removeShoppingCarts(Arrays.asList(1L, 2L));
+
+            // when & then
+            ResultActions actions = mockMvc.perform(delete("/api/user/shopping-cart/bulk")
+                .with(csrf().asHeader())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)));
+
+            actions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.SHOPPING_CART_NOT_FOUND.getMessage()));
+
+            actions
+                .andDo(document("user-shopping-cart-bulk-remove-fail-shopping-cart-not-found",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    requestFields(
+                        fieldWithPath("shoppingCartIds").optional().description("장바구니 ID")
+                    )
+                ));
+
+            then(userShoppingCartService).should().removeShoppingCarts(Arrays.asList(1L, 2L));
+        }
+
+        private final UserShoppingCartReqDto.BulkRemove dto = UserShoppingCartReqDto.BulkRemove.builder()
+            .shoppingCartIds(Arrays.asList(1L, 2L))
+            .build();
     }
 }
