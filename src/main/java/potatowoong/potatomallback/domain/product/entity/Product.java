@@ -99,4 +99,12 @@ public class Product extends BaseEntity {
     public void removeThumbnailFile() {
         this.thumbnailFile = null;
     }
+
+    public void decreaseStockQuantity(int quantity) {
+        this.stockQuantity -= quantity;
+    }
+
+    public void increaseStockQuantity(int quantity) {
+        this.stockQuantity += quantity;
+    }
 }

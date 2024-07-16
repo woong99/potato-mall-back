@@ -47,4 +47,10 @@ public class ResponseText {
     public static final String SUCCESS_MODIFY_SHOPPING_CART = "장바구니 상품 수정 성공";
 
     public static final String SUCCESS_REMOVE_SHOPPING_CART = "장바구니 상품 삭제 성공";
+
+    public static final String SUCCESS_CHECK_AVAILABLE_PAY = "결제 가능 여부 확인 성공";
+    
+    public static final String SUCCESS_CHECK_AFTER_PAY = "결제 후 파라미터 검증 성공";
+
+    public static final String SUCCESS_PAY = "결제 성공";
 }

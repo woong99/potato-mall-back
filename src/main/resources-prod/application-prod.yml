@@ -16,6 +16,11 @@ spring:
                         client-id: ENC(SjViJ6NTWFW/AJ7lvdFSoBhnck5d0UwhUvuqaHWynko=)
                         client-secret: ENC(n91qKmJqRQzmXOv3raKPDHzd2GnxDg/J)
                         redirect-uri: ENC(lAtreUyac0Jec5Lbaa/xPuOUpxlN3WrRQN6beH9c6xpavi418npRq8hxLyUJYVQF6dhgqgvevl8xRJ6FcpKgoQ==)
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        url: ENC(IX2K1DrI0zuHAXcbl2+p2noyvWL0yvEqebr2KDadmv9WDBxgDKu4H6e2O4SJqSuEiW+Jlw6bHQOiw/7S9SzSkWVJwEwU/+ev881BRVWTECR2OxJ5UrmUjzym9zhUr+cp)
+        username: ENC(8MbDWgxEMu5l//DlOOFgyA==)
+        password: ENC(JH36foeMmGWJH1BfjYCeuyrWHnYm2+7W)
 decorator:
     datasource:
         p6spy:

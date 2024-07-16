@@ -37,6 +37,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "PD001", "존재하지 않는 상품입니다."),
     NOT_FOUND_THUMBNAIL(HttpStatus.BAD_REQUEST, "PD002", "썸네일 이미지를 등록해주세요."),
     DUPLICATED_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "PD003", "이미 존재하는 상품명입니다."),
+    PRODUCT_STOCK_NOT_ENOUGH(HttpStatus.BAD_REQUEST, "PD004", "상품 재고량이 부족합니다."),
 
     // 상품 카테고리 관련 에러코드
     DUPLICATED_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "PC001", "이미 존재하는 카테고리명입니다."),
@@ -54,6 +55,11 @@ public enum ErrorCode {
     // 장바구니 관련 에러코드
     PRODUCT_QUANTITY_EXCEEDED(HttpStatus.BAD_REQUEST, "SC001", "상품 재고량을 초과하였습니다."),
     SHOPPING_CART_NOT_FOUND(HttpStatus.BAD_REQUEST, "SC002", "존재하지 않는 장바구니 상품입니다."),
+
+    // 결제 관련 에러코드
+    PAY_TRANSACTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "PT001", "존재하지 않는 결제 트랜잭션입니다."),
+    PAY_AMOUNT_NOT_MATCH(HttpStatus.BAD_REQUEST, "PT002", "결제 금액이 일치하지 않습니다."),
+    PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "PT003", "결제에 실패하였습니다."),
 
     // 공통 에러코드
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ISE001", "서버 내부 오류입니다.");

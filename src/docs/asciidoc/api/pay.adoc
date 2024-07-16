@@ -1,0 +1,108 @@
+[[pay]]
+=== 결제 가능 여부 확인 성공
+
+==== HTTP Request
+
+include::{snippets}/pay-check-available/http-request.adoc[]
+include::{snippets}/pay-check-available/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-check-available/http-response.adoc[]
+'''
+
+=== 결제 가능 여부 확인 실패 - 상품 정보가 존재하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/pay-check-available-not-found-product/http-request.adoc[]
+include::{snippets}/pay-check-available-not-found-product/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-check-available-not-found-product/http-response.adoc[]
+'''
+
+=== 결제 가능 여부 확인 실패 - 결제 금액이 일치하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/pay-check-available-amount-not-match/http-request.adoc[]
+include::{snippets}/pay-check-available-amount-not-match/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-check-available-amount-not-match/http-response.adoc[]
+'''
+
+=== 결제 후 파라미터 검증 성공
+
+=== HTTP Request
+
+include::{snippets}/pay-verify-payment/http-request.adoc[]
+include::{snippets}/pay-verify-payment/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-verify-payment/http-response.adoc[]
+'''
+
+=== 결제 후 파라미터 검증 실패 - 결제 트랜잭션 정보가 존재하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/pay-verify-payment-not-found-transaction/http-request.adoc[]
+include::{snippets}/pay-verify-payment-not-found-transaction/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-verify-payment-not-found-transaction/http-response.adoc[]
+'''
+
+=== 결제 후 파라미터 검증 실패 - 결제 금액이 일치하지 않는 경우
+
+==== HTTP Request
+
+include::{snippets}/pay-verify-payment-amount-not-match/http-request.adoc[]
+include::{snippets}/pay-verify-payment-amount-not-match/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-verify-payment-amount-not-match/http-response.adoc[]
+'''
+
+=== 결제 승인 성공
+
+==== HTTP Request
+
+include::{snippets}/pay-confirm/http-request.adoc[]
+include::{snippets}/pay-confirm/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-confirm/http-response.adoc[]
+'''
+
+=== 결제 승인 실패 - 재고량 확인 및 수정 과정에서 오류 발생
+
+==== HTTP Request
+
+include::{snippets}/pay-confirm-failed-modify-stock-quantity/http-request.adoc[]
+include::{snippets}/pay-confirm-failed-modify-stock-quantity/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-confirm-failed-modify-stock-quantity/http-response.adoc[]
+'''
+
+=== 결제 승인 실패 - 결제 승인 API 호출 과정에서 오류 발생
+
+==== HTTP Request
+
+include::{snippets}/pay-confirm-failed-pay-confirm/http-request.adoc[]
+include::{snippets}/pay-confirm-failed-pay-confirm/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/pay-confirm-failed-pay-confirm/http-response.adoc[]
+'''

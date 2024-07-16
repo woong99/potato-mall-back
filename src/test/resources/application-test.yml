@@ -1,7 +1,7 @@
 spring:
     config:
         activate:
-            on-profile: dev
+            on-profile: test
     data:
         redis:
             port: 6379
@@ -9,6 +9,9 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MariaDBDialect
     security:
         oauth2:
             client:
@@ -20,11 +23,16 @@ spring:
                         client-secret: ENC(lvpa3qLNXrGBo9FoMt6ObdA28hskg9kR)
                         redirect-uri: ENC(dAvfzNM47uo/8gmdvUke+VYOkQ6Y2mcSRLudzzFejz0n5L/r255ySfpZ1zhRLG4sf99+WbU5/BE=)
     datasource:
-        driver-class-name: org.mariadb.jdbc.Driver
-        url: ENC(IX2K1DrI0zuHAXcbl2+p2noyvWL0yvEqebr2KDadmv9WDBxgDKu4H6e2O4SJqSuEiW+Jlw6bHQOiw/7S9SzSkWVJwEwU/+ev881BRVWTECR2OxJ5UrmUjzym9zhUr+cp)
-        username: ENC(8MbDWgxEMu5l//DlOOFgyA==)
-        password: ENC(JH36foeMmGWJH1BfjYCeuyrWHnYm2+7W)
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:mem:testdb;MODE=MARIADB;
+        username: sa
+        password:
+
 server:
     port: 8080
 oauth2:
     redirect-url: ENC(d4c4MxLkpoYKUkjPnvCROz4q/mAA0R7B7mlKODUsf10=)
+logging:
+    level:
+        com.zaxxer.hikari.HikariConfig: DEBUG
+        com.zaxxer.hikari: TRACE

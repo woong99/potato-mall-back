@@ -49,4 +49,12 @@ public class PotatoMallAdvice {
         log.error("[Exception] :: ", e);
         return ErrorResponseEntity.toResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * Handle PayApiException
+     */
+    @ExceptionHandler(PayApiException.class)
+    public ResponseEntity<ErrorResponseEntity> handlePayApiException() {
+        return ErrorResponseEntity.toResponseEntity(ErrorCode.PAYMENT_FAILED);
+    }
 }

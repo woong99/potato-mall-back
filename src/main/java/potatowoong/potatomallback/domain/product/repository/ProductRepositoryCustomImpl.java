@@ -15,6 +15,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.SortDirection;
 import potatowoong.potatomallback.domain.product.dto.response.ProductResDto.ProductSearchResDto;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
+import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
 import potatowoong.potatomallback.global.utils.SecurityUtils;
@@ -50,6 +52,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     @Override
     public Optional<UserProductResDto.Detail> findUserProductById(long productId) {
         return Optional.ofNullable(getUserProductDetailResult(productId));
+    }
+
+    @Override
+    public Optional<Product> findByIdWithLock(final long productId) {
+        return Optional.ofNullable(jpaQueryFactory.from(product)
+            .where(product.productId.eq(productId))
+            .select(product)
+            .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+            .fetchOne());
     }
 
     /**
