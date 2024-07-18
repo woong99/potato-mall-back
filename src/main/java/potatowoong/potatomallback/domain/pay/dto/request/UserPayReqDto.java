@@ -44,7 +44,9 @@ public class UserPayReqDto {
 
         @NotNull(message = "구매량은 필수값입니다.")
         @Min(value = 1, message = "구매량은 1개 이상이어야 합니다.")
-        Integer quantity
+        Integer quantity,
+
+        Long shoppingCartId
     ) {
 
     }

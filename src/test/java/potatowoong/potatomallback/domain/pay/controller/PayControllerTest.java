@@ -90,6 +90,7 @@ class PayControllerTest {
                         fieldWithPath("products").optional().description("상품 정보"),
                         fieldWithPath("products[].productId").optional().description("상품 ID"),
                         fieldWithPath("products[].quantity").optional().description("상품 수량"),
+                        fieldWithPath("products[].shoppingCartId").description("장바구니 ID"),
                         fieldWithPath("amount").optional().description("결제 금액")
                     )
                 ));
@@ -123,6 +124,7 @@ class PayControllerTest {
                         fieldWithPath("products").optional().description("상품 정보"),
                         fieldWithPath("products[].productId").optional().description("상품 ID"),
                         fieldWithPath("products[].quantity").optional().description("상품 수량"),
+                        fieldWithPath("products[].shoppingCartId").description("장바구니 ID"),
                         fieldWithPath("amount").optional().description("결제 금액")
                     )
                 ));
@@ -156,6 +158,7 @@ class PayControllerTest {
                         fieldWithPath("products").optional().description("상품 정보"),
                         fieldWithPath("products[].productId").optional().description("상품 ID"),
                         fieldWithPath("products[].quantity").optional().description("상품 수량"),
+                        fieldWithPath("products[].shoppingCartId").description("장바구니 ID"),
                         fieldWithPath("amount").optional().description("결제 금액")
                     )
                 ));
@@ -168,6 +171,7 @@ class PayControllerTest {
             .products(Collections.singletonList(UserPayReqDto.CheckProduct.builder()
                 .productId(1L)
                 .quantity(1)
+                .shoppingCartId(1L)
                 .build()))
             .amount(1000)
             .build();
@@ -309,6 +313,7 @@ class PayControllerTest {
 
             then(payConfirmService).should().modifyProductStockQuantity(transactionMap, verifyPayment.orderId());
             then(payConfirmService).should().payConfirm(tossPaymentPayTransaction, verifyPayment);
+            then(payConfirmService).should().removeShoppingCart(verifyPayment.orderId());
         }
 
         @Test
@@ -341,6 +346,7 @@ class PayControllerTest {
 
             then(payConfirmService).should().modifyProductStockQuantity(transactionMap, verifyPayment.orderId());
             then(payConfirmService).should(never()).payConfirm(tossPaymentPayTransaction, verifyPayment);
+            then(payConfirmService).should(never()).removeShoppingCart(verifyPayment.orderId());
         }
 
         @Test
@@ -374,6 +380,7 @@ class PayControllerTest {
 
             then(payConfirmService).should().modifyProductStockQuantity(transactionMap, verifyPayment.orderId());
             then(payConfirmService).should().payConfirm(tossPaymentPayTransaction, verifyPayment);
+            then(payConfirmService).should(never()).removeShoppingCart(verifyPayment.orderId());
         }
 
         private final Map<Long, Integer> transactionMap = new HashMap<>();

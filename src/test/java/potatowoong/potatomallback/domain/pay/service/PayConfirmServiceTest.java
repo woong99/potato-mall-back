@@ -33,6 +33,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 import potatowoong.potatomallback.domain.auth.repository.MemberRepository;
+import potatowoong.potatomallback.domain.cart.entity.ShoppingCart;
+import potatowoong.potatomallback.domain.cart.repository.ShoppingCartRepository;
 import potatowoong.potatomallback.domain.pay.dto.request.UserPayReqDto;
 import potatowoong.potatomallback.domain.pay.entity.PayTransaction;
 import potatowoong.potatomallback.domain.pay.entity.TossPaymentPayTransaction;
@@ -73,6 +75,9 @@ class PayConfirmServiceTest {
 
     @Mock
     private UserProductService userProductService;
+
+    @Mock
+    private ShoppingCartRepository shoppingCartRepository;
 
     @InjectMocks
     private PayConfirmService payConfirmService;
@@ -345,5 +350,40 @@ class PayConfirmServiceTest {
 
             return jsonObject;
         }
+    }
+
+    @Nested
+    @DisplayName("장바구니 정보 삭제")
+    class 장바구니_정보_삭제 {
+
+        @Test
+        @DisplayName("성공")
+        void 성공() {
+            // given
+            final String orderId = "orderId";
+
+            given(shoppingCart.getShoppingCartId()).willReturn(1L);
+            given(tossPaymentPayTransaction.getPayTransactions()).willReturn(Collections.singletonList(payTransaction));
+            given(tossPaymentPayTransactionRepository.findTossPaymentPayTransactionAndPayTransactionAndProductAndShoppingCartByOrderId(orderId)).willReturn(Optional.of(tossPaymentPayTransaction));
+
+            // when
+            payConfirmService.removeShoppingCart(orderId);
+
+            // then
+            then(tossPaymentPayTransactionRepository).should().findTossPaymentPayTransactionAndPayTransactionAndProductAndShoppingCartByOrderId(orderId);
+            then(shoppingCartRepository).should().deleteByShoppingCartIdIn(Collections.singletonList(1L));
+        }
+
+        private final ShoppingCart shoppingCart = spy(ShoppingCart.builder()
+            .build());
+
+        private final PayTransaction payTransaction = PayTransaction.builder()
+            .shoppingCart(shoppingCart)
+            .build();
+
+        private final TossPaymentPayTransaction tossPaymentPayTransaction = spy(TossPaymentPayTransaction.builder()
+            .orderId("orderId")
+            .build());
+
     }
 }

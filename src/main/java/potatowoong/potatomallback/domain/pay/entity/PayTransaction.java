@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import potatowoong.potatomallback.domain.cart.entity.ShoppingCart;
 import potatowoong.potatomallback.domain.product.entity.Product;
 
 @Entity
@@ -41,6 +42,11 @@ public class PayTransaction {
     @Comment("상품 정보 IDX")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shopping_cart_id", updatable = false)
+    @Comment("장바구니 정보 IDX")
+    private ShoppingCart shoppingCart;
+
     @Column(nullable = false, updatable = false)
     @Comment("상품 가격")
     private int price;
@@ -50,10 +56,15 @@ public class PayTransaction {
     private int quantity;
 
     @Builder
-    public PayTransaction(TossPaymentPayTransaction tossPaymentPayTransaction, Product product, int price, int quantity) {
+    public PayTransaction(TossPaymentPayTransaction tossPaymentPayTransaction, Product product, ShoppingCart shoppingCart, int price, int quantity) {
         this.tossPaymentPayTransaction = tossPaymentPayTransaction;
         this.product = product;
+        this.shoppingCart = shoppingCart;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public void deleteShoppingCart() {
+        this.shoppingCart = null;
     }
 }

@@ -152,8 +152,14 @@ class PayServiceTest {
         }
 
         private final List<UserPayReqDto.CheckProduct> checkProducts = Arrays.asList(
-            new CheckProduct(1L, 1),
-            new CheckProduct(2L, 2)
+            CheckProduct.builder()
+                .productId(1L)
+                .quantity(1)
+                .build(),
+            CheckProduct.builder()
+                .productId(2L)
+                .quantity(2)
+                .build()
         );
 
         private final UserPayReqDto.CheckRequest checkRequest = UserPayReqDto.CheckRequest.builder()

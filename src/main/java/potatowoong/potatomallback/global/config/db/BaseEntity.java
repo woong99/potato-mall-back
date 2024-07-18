@@ -2,6 +2,8 @@ package potatowoong.potatomallback.global.config.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -44,4 +46,14 @@ public class BaseEntity {
     @Column(name = "upd_id", nullable = false)
     @Comment("수정자")
     private String updatedBy;
+
+    @Column(name = "USE_FLAG", nullable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    @Comment("사용여부")
+    @ColumnDefault("'Y'")
+    private UseFlag useFlag;
+
+    public void deleteEntity() {
+        this.useFlag = UseFlag.N;
+    }
 }

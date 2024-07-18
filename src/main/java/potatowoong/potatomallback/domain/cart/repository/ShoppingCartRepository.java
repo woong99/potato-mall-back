@@ -20,6 +20,8 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long
     List<ShoppingCart> findByShoppingCartIdInAndMemberUserId(List<Long> shoppingCartIds, String userId);
 
     @Modifying
-    @Query("DELETE FROM ShoppingCart s WHERE s.shoppingCartId IN :shoppingCartIds")
+    @Query("UPDATE ShoppingCart s SET s.useFlag = 'N' WHERE s.shoppingCartId IN :shoppingCartIds")
     void deleteByShoppingCartIdIn(List<Long> shoppingCartIds);
+
+    List<ShoppingCart> findByShoppingCartIdIn(List<Long> shoppingCartIds);
 }

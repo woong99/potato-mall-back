@@ -12,4 +12,7 @@ public interface TossPaymentPayTransactionRepository extends JpaRepository<TossP
 
     @Query("SELECT t FROM TossPaymentPayTransaction t JOIN FETCH t.payTransactions pt JOIN FETCH pt.product WHERE t.orderId = :orderId")
     Optional<TossPaymentPayTransaction> findTossPaymentPayTransactionAndPayTransactionAndProductByOrderId(String orderId);
+
+    @Query("SELECT t FROM TossPaymentPayTransaction t JOIN FETCH t.payTransactions pt JOIN FETCH pt.product LEFT JOIN FETCH pt.shoppingCart WHERE t.orderId = :orderId")
+    Optional<TossPaymentPayTransaction> findTossPaymentPayTransactionAndPayTransactionAndProductAndShoppingCartByOrderId(String orderId);
 }

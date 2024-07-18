@@ -8,13 +8,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SQLRestriction;
 import potatowoong.potatomallback.domain.auth.entity.Member;
+import potatowoong.potatomallback.domain.pay.entity.PayTransaction;
 import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.global.config.db.BaseEntity;
 
@@ -23,6 +27,7 @@ import potatowoong.potatomallback.global.config.db.BaseEntity;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("use_flag = 'Y'")
 public class ShoppingCart extends BaseEntity {
 
     @Id
@@ -39,6 +44,9 @@ public class ShoppingCart extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @Comment("사용자 ID")
     private Member member;
+
+    @OneToMany(mappedBy = "shoppingCart")
+    private List<PayTransaction> payTransactions;
 
     @Column(nullable = false)
     @Comment("수량")

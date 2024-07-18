@@ -80,6 +80,9 @@ public class PayController {
             throw new PayApiException();
         }
 
+        // 장바구니 정보 삭제(비동기)
+        payConfirmService.removeShoppingCart(dto.orderId());
+
         return ResponseEntity.ok(ApiResponseEntity.of(ResponseText.SUCCESS_PAY));
     }
 

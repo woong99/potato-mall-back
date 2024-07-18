@@ -1,12 +1,18 @@
 package potatowoong.potatomallback.domain.pay.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import potatowoong.potatomallback.domain.cart.entity.ShoppingCart;
+import potatowoong.potatomallback.domain.cart.repository.ShoppingCartRepository;
 import potatowoong.potatomallback.domain.pay.dto.request.UserPayReqDto;
 import potatowoong.potatomallback.domain.pay.dto.request.UserPayReqDto.CheckProduct;
 import potatowoong.potatomallback.domain.pay.entity.PayTransaction;
@@ -27,6 +33,8 @@ public class PayService {
     private final ProductRepository productRepository;
 
     private final TossPaymentPayTransactionRepository tossPaymentPayTransactionRepository;
+
+    private final ShoppingCartRepository shoppingCartRepository;
 
     /**
      * 결제 가능 여부 확인
@@ -53,6 +61,9 @@ public class PayService {
             throw new CustomException(ErrorCode.PAY_AMOUNT_NOT_MATCH);
         }
 
+        // 장바구니 정보 조회
+        Map<Long, ShoppingCart> shoppingCartMap = getShoppingCartMap(dto);
+
         // 결제 정보 - 결제 트랜잭션 정보 연결 테이블 저장
         TossPaymentPayTransaction tossPaymentPayTransaction = TossPaymentPayTransaction.builder()
             .orderId(dto.orderId())
@@ -60,14 +71,20 @@ public class PayService {
         tossPaymentPayTransactionRepository.save(tossPaymentPayTransaction);
 
         // 결제 트랜잭션 저장
-        List<PayTransaction> payTransactions = dto.products().stream()
-            .map(product -> PayTransaction.builder()
+        List<PayTransaction> payTransactions = new ArrayList<>();
+        for (UserPayReqDto.CheckProduct checkProduct : dto.products()) {
+            Product product = savedProductMap.get(checkProduct.productId());
+            ShoppingCart shoppingCart = shoppingCartMap.get(checkProduct.shoppingCartId());
+
+            PayTransaction payTransaction = PayTransaction.builder()
                 .tossPaymentPayTransaction(tossPaymentPayTransaction)
-                .product(savedProductMap.get(product.productId()))
-                .quantity(product.quantity())
-                .price(savedProductMap.get(product.productId()).getPrice())
-                .build())
-            .toList();
+                .product(product)
+                .shoppingCart(shoppingCart)
+                .quantity(checkProduct.quantity())
+                .price(product.getPrice())
+                .build();
+            payTransactions.add(payTransaction);
+        }
         payTransactionRepository.saveAll(payTransactions);
     }
 
@@ -109,4 +126,26 @@ public class PayService {
             .sum();
     }
 
+    /**
+     * 장바구니 정보 조회
+     */
+    private Map<Long, ShoppingCart> getShoppingCartMap(UserPayReqDto.CheckRequest checkRequest) {
+        // 장바구니 ID 파싱
+        List<Long> shoppingCartIds = Optional.ofNullable(checkRequest.products())
+            .orElse(Collections.emptyList())
+            .stream()
+            .map(CheckProduct::shoppingCartId)
+            .filter(Objects::nonNull)
+            .distinct()
+            .toList();
+
+        // 장바구니 정보 조회
+        List<ShoppingCart> shoppingCarts = shoppingCartIds.isEmpty() ? Collections.emptyList() : shoppingCartRepository.findByShoppingCartIdIn(shoppingCartIds);
+        if (shoppingCartIds.size() != shoppingCarts.size()) {
+            throw new CustomException(ErrorCode.SHOPPING_CART_NOT_FOUND);
+        }
+
+        return shoppingCarts.stream()
+            .collect(Collectors.toMap(ShoppingCart::getShoppingCartId, Function.identity()));
+    }
 }

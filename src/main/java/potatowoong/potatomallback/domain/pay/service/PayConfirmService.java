@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import java.security.InvalidKeyException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,11 +14,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import potatowoong.potatomallback.domain.auth.entity.Member;
 import potatowoong.potatomallback.domain.auth.repository.MemberRepository;
+import potatowoong.potatomallback.domain.cart.entity.ShoppingCart;
+import potatowoong.potatomallback.domain.cart.repository.ShoppingCartRepository;
 import potatowoong.potatomallback.domain.pay.dto.request.UserPayReqDto;
 import potatowoong.potatomallback.domain.pay.dto.response.PaymentConfirmApiResDto;
 import potatowoong.potatomallback.domain.pay.dto.response.PaymentResDto;
@@ -59,6 +63,8 @@ public class PayConfirmService {
     private final PayCancelService payCancelService;
 
     private final UserProductService userProductService;
+
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Value("${toss.secret-key}")
     private String tossSecretKey;
@@ -107,6 +113,27 @@ public class PayConfirmService {
             }
             throw new PayApiException();
         }
+    }
+
+    /**
+     * 장바구니 정보 삭제
+     */
+    @Async
+    @Transactional
+    public void removeShoppingCart(final String orderId) {
+        // 결제 트랜잭션 정보 조회
+        TossPaymentPayTransaction tossPaymentPayTransaction = tossPaymentPayTransactionRepository.findTossPaymentPayTransactionAndPayTransactionAndProductAndShoppingCartByOrderId(orderId)
+            .orElseThrow(() -> new CustomException(ErrorCode.PAY_TRANSACTION_NOT_FOUND));
+
+        // 장바구니 ID 파싱
+        List<Long> shoppingCartIds = tossPaymentPayTransaction.getPayTransactions().stream()
+            .map(PayTransaction::getShoppingCart)
+            .filter(Objects::nonNull)
+            .map(ShoppingCart::getShoppingCartId)
+            .toList();
+
+        // 장바구니 정보 삭제
+        shoppingCartRepository.deleteByShoppingCartIdIn(shoppingCartIds);
     }
 
     /**
