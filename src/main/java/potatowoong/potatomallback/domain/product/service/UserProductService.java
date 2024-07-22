@@ -2,7 +2,6 @@ package potatowoong.potatomallback.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto;
 import potatowoong.potatomallback.domain.product.dto.response.UserProductResDto.Search;
@@ -10,6 +9,7 @@ import potatowoong.potatomallback.domain.product.entity.Product;
 import potatowoong.potatomallback.domain.product.repository.ProductRepository;
 import potatowoong.potatomallback.global.common.PageRequestDto;
 import potatowoong.potatomallback.global.common.PageResponseDto;
+import potatowoong.potatomallback.global.config.redis.DistributeLock;
 import potatowoong.potatomallback.global.exception.CustomException;
 import potatowoong.potatomallback.global.exception.ErrorCode;
 
@@ -37,11 +37,11 @@ public class UserProductService {
     }
 
     /**
-     * 상품 재고량 감소 + 베타락
+     * 상품 재고량 감소 + 분산락
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DistributeLock(key = "T(java.lang.String).format('Product%d', #productId)")
     public void decreaseProductQuantityWithLock(final long productId, final int quantity) {
-        Product product = productRepository.findByIdWithLock(productId)
+        Product product = productRepository.findById(productId)
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // 재고량 검증
@@ -54,11 +54,11 @@ public class UserProductService {
     }
 
     /**
-     * 상품 재고량 복원 + 베타락
+     * 상품 재고량 복원 + 분산락
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DistributeLock(key = "T(java.lang.String).format('Product%d', #productId)")
     public void increaseProductQuantityWithLock(final long productId, final int quantity) {
-        Product product = productRepository.findByIdWithLock(productId)
+        Product product = productRepository.findById(productId)
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.increaseStockQuantity(quantity);
