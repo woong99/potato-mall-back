@@ -77,19 +77,19 @@
 ### 로그인 기능
 
 <p align="center">
-  <img src="/assets/login.png"/>
+  <img src="/assets/login.png" alt="로그인 기능"/>
 </p>
 
 ### 실시간 검색어 기능
 
 <p align="center">
-  <img src="/assets/search.png"/>
+  <img src="/assets/search.png" alt="실시간 검색어 기능 "/>
 </p>
 
 ### 결제 기능
 
 <p align="center">
-  <img src="/assets/pay.png"/>
+  <img src="/assets/pay.gif" alt="결제"/>
 </p>
 
 ---
